@@ -1,0 +1,76 @@
+<br>
+<div class="menu_border_blue">
+<span id="my_button"><%= link_to '編輯', edit_ip_map_path(@ip_map) %></span> 
+<span id="my_button"><%= link_to '回IP使用單位對照表', ip_maps_path %></span> 
+</div>
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>IP:</b>
+  <%= @ip_map.IPv4_1 %>.<%= @ip_map.IPv4_2 %>.<%= @ip_map.IPv4_3 %>.<%= @ip_map.IPv4_4 %>
+</p>
+
+<p>
+  <b>作業系統:</b>
+  <%unless @ip_map.OS=="其它"%>
+  <%= @ip_map.OS %>
+  <%else%>
+  <%= @ip_map.OS_others %>
+  <%end%>
+</p>
+
+<p>
+  <b>版本:</b>
+  <%= @ip_map.version %>
+</p>
+
+<p>
+  <b>類別:</b>
+  <%unless @ip_map.place=="其它"%>
+  <%= @ip_map.place %>
+  <%else%>
+  <%= @ip_map.place_others %>
+  <%end%>
+</p>
+
+<p>
+  <b>用途:</b>
+  <%unless @ip_map.use=="其它"%>
+  <%= @ip_map.use%>
+  <%else%>
+  <%= @ip_map.use_others %>
+  <%end%>
+</p>
+
+<p>
+  <b>使用者/管理者:</b>
+  <%= @ip_map.user%>
+</p>
+
+<p>
+  <b>網管人員:</b>
+  <%if !@ip_map.adm_user_id.blank?%>
+  	<%= AdmUser.find(@ip_map.adm_user_id).name %>
+  <%else%>
+   	無
+  <%end%>
+</p>   
+ 
+<p>
+  <b>校區建築:</b>    
+  <%if !@ip_map.campus_buildings_list_id.blank?%>   	
+  	<%= CampusBuildingsList.find(@ip_map.campus_buildings_list_id).campus_name+"-"+CampusBuildingsList.find(@ip_map.campus_buildings_list_id).building_name %>
+  <%else%>
+   	無
+  <%end%>     
+</p>    
+
+<p>
+  <b>房間號碼:</b>
+  <%= @ip_map.room %>
+</p>
+
+<p>
+  <b>分機:</b>
+  <%= @ip_map.extend %>
+</p>

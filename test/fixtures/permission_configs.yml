@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  adm_user_id: 1
+  account: 1
+  ip: 1
+  event: 1
+  building: 1
+  job: 1
+
+two:
+  adm_user_id: 1
+  account: 1
+  ip: 1
+  event: 1
+  building: 1
+  job: 1

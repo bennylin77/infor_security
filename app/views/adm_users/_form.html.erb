@@ -1,0 +1,56 @@
+<%= form_for(@adm_user) do |f| %>
+  <% if @adm_user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@adm_user.errors.count, "error") %> prohibited this adm_user from being saved:</h2>
+      <ul>
+      <% @adm_user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<%if !@adm_user.verified%>
+  <div class="field">
+    <%= f.label '帳號' %><br />
+    <%= f.text_field :username %>
+  </div>
+<%else%>
+   <%= f.label '帳號' %><br />
+   <h2><%=@adm_user.username%></h2>
+<%end%>  
+  <div class="field">
+    <%=f.label '密碼'%><br />
+    <%=f.password_field :pw,:size=>40 %>
+  </div>  
+  <div class="field">
+    <%=f.label '密碼確認'%><br />
+    <%=f.password_field :pw_confirmation,:size=>40 %>
+  </div>  
+  <div class="field">
+    <%= f.label '姓名' %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%=f.label '單位/系所'%><br />
+    <%=f.text_field :department%>
+  </div>  
+  <div class="field">
+    <%=f.label '單位系所位置'%><br />
+    <%= f.select :campus_buildings_list_id, options_for_select(areaBuildingsOptions, @adm_user.campus_buildings_list_id), {:include_blank => '請選擇..'} %>
+  </div>
+  <div class="field">
+    <%= f.label '分機' %><br />
+    <%= f.text_field :extend %>
+  </div>
+  <div class="field">
+    <%= f.label '聯絡電話' %><br />
+    <%= f.text_field :phone %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </div>
+  <div class="actions">
+    <%= f.submit "送出" %>
+  </div>
+<% end %>

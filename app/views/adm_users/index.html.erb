@@ -1,0 +1,55 @@
+<div class="menu_border_blue">	
+	<span id="my_button"><%=link_to '編輯我的帳號',{:controller=>:adm_users, :action=>:show, :id=>session[:adm_user_id]}%></span> 
+	<%if permissionCreate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.account)%>
+	<span id="my_button"><%=link_to '新增帳號 ',{:controller=>:main, :action=>:createUser}%></span>
+	<%end%> 	
+</div>	
+
+<%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.account)%>
+<table border="1" id="adm_users_table">
+  <tr>
+    <th>姓名</th>
+    <th>帳號</th>
+    <th>單位/系所</th>
+    <th>單位系所位置</th>
+    <th>分機</th>
+    <th>聯絡電話</th>
+    <th>Email</th>
+	<th>功能</th>
+  </tr>
+
+<% @adm_users.each do |adm_user| %>
+  <tr>
+    <td><%= adm_user.name %></td>
+    <%if adm_user.verified %>	
+    <td><%= adm_user.username %></td>
+    <td><%= adm_user.department %></td>
+    <td>
+    	<%if !adm_user.campus_buildings_list_id.blank?%>   	
+    	<%= CampusBuildingsList.find(adm_user.campus_buildings_list_id).campus_name+"-"+CampusBuildingsList.find(adm_user.campus_buildings_list_id).building_name %>
+	  	<%else%>
+    	無
+    	<%end%>
+    </td>    
+    <td><%= adm_user.extend %></td>
+    <td><%= adm_user.phone %></td>
+    <%else%>
+    <td align="center" colspan="5" style="color: red;">未認証</td>
+    <%end%>
+    
+    <td><%= adm_user.email %></td>
+    <td>
+    <%if permissionDelete(AdmUser.find_by_id(session[:adm_user_id]).permission_config.account)%>	
+    	<%= link_to '刪除', adm_user, method: :delete, data: { confirm: '你確定要刪除 姓名:'+adm_user.name+'?' } %><br>
+    <%end%>	
+	<%if permissionUpdate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.account)%>    	
+    	<%= link_to '信件設定', {:controller=>:main, :action=>:mailConfig, :id=>adm_user.id } %><br>
+    	<%= link_to '權限設定', {:controller=>:main, :action=>:permissionConfig, :id=>adm_user.id } %><br>
+    	<%= link_to '追蹤設定', {:controller=>:main, :action=>:traceConfig, :id=>adm_user.id } %><br>
+    	<%= link_to '密碼重設', {:controller=>:main, :action=>:pwReset, :id=>adm_user.id }, data: { confirm: '你確定重設此帳號密碼 姓名:'+adm_user.name+'?' } %><br>        	    	 
+    <%end%>		
+    </td>
+  </tr>
+<% end %>
+</table>
+<%end%> 

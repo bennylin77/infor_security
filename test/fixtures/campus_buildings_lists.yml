@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  campus_name: MyString
+  building_name: MyString
+
+two:
+  campus_name: MyString
+  building_name: MyString

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  thread_id: MyText
+  description: MyText
+  chinese_thread_id: MyText
+  chinese_description: MyText
+  suggestion: MyText
+
+two:
+  thread_id: MyText
+  description: MyText
+  chinese_thread_id: MyText
+  chinese_description: MyText
+  suggestion: MyText

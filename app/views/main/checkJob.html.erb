@@ -1,0 +1,11 @@
+<h2>Stage4(工程師完成確認)</h2>
+<br>
+<%if @job.handling_adm_user_id==session[:adm_user_id] %>
+	<%if @job.stage4=="processing" or @job.stage4=="returned" %>	
+		<div class="menu_border_blue">	
+		<span id="my_button"><%=link_to "送出最高管理員結案通知信", :controller=>:main , :action=>:checkJobMail, :id=>@job %></span> 
+		<span id="my_button"><%=link_to "退回工作",{:controller=>:main, :action=>:returnJob, :id=>@job, :returned_stage=>'stage3' }%></span>
+		</div>
+	<%end%>
+<%end%>
+<%= render :partial => "job_detail_form", :locals => { :job_detail => @job.job_detail } %>

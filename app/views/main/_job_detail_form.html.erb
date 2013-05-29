@@ -1,0 +1,157 @@
+<div id="printdiv">
+<table border="1" id='job_detail_table'>
+	<tr>
+		<th>項目</th>
+		<th style="min-width: 1130px;">內容</th>
+	</tr>
+	<tr>
+		<td>資安事件ID</td>
+		<td><%= job_detail.job_id %></td>
+	</tr>
+	<tr>
+		<td>通報日期</td>
+		<td><%if !job_detail.job.s_inform.informed_at.blank?%><%= job_detail.job.s_inform.informed_at.strftime("%Y-%m-%d %H:%M:%S")%><%else%>--<%end%></td>
+	</tr>
+	<tr>
+		<td>事件發生時間</td>
+		<td><%= job_detail.log_date %></td>
+	</tr>
+	<tr>
+		<td>事件ID</td>
+		<td>
+		<%= simple_format( threatIdShowing(job_detail.job), {}, :sanitize => false) %>
+		</td>		
+	</tr>
+	<tr>
+		<td>事件名稱(英/中)</td>
+		<td>
+		<%= simple_format( eventMapNameShowing(job_detail.job), {}, :sanitize => false) %>
+		<%if !job_detail.job.s_inform.name_alternation.blank?%>
+		<br><br>備註:<span style="font-weight: 900"><%= job_detail.job.s_inform.name_alternation %></span>
+		<%end%>
+		</td>		
+	</tr>	
+	<tr>
+		<td>事件描述(英/中)</td>
+		<td>
+		<%= simple_format( eventMapDescriptionShowing(job_detail.job), {}, :sanitize => false) %>					
+		<%if !job_detail.job.s_inform.description_alternation.blank?%>
+		<br><br>備註:<span style="font-weight: 900"><%= job_detail.job.s_inform.description_alternation %></span>
+		<%end%>
+		</td>
+	</tr>	
+	<tr>
+		<td>事件動作 </td>
+		<td><%if job_detail.alert %>alert<%else%>非alert<%end%></td>
+	</tr>			
+	<tr>
+		<td>事件等級 (註1)</td>
+		<td><%= simple_format(serverityShowing(job_detail.job), {}, :sanitize => false) %></td>
+	</tr>	
+	<tr>
+		<td>事件來源端IP Address</td>
+		<td><%= job_detail.src_ip %></td>
+	</tr>
+	<tr>
+		<td>
+			事件目的端IP Address
+		<%if !job_detail.job.ip_map.nil?%>		
+			<%if job_detail.job.ip_map.always_visible%>	
+					(特殊處理)
+				</td>
+				<td><%= simple_format(victimIpShowing(job_detail.job_id, job_detail.job.ip_map.always_visible), {}, :sanitize => false) %></td>		
+			<%else%>
+				</td>
+				<td><%= simple_format(victimIpShowing(job_detail.job_id, job_detail.job.ip_map.always_visible), {}, :sanitize => false) %></td>				
+			<%end%>
+		<%else%>
+		</td>
+		<td><%= simple_format(victimIpShowing(job_detail.job_id), {}, :sanitize => false) %></td>			
+		<%end%>
+	</tr>
+	<tr>
+		<td>事件被記錄次數</td>
+		<td><%= job_detail.log_count %></td>
+	</tr>
+	<tr>
+		<td>Log判讀等級 (註2)</td>
+		<td><%= job_detail.job.s_inform.log_level or "--"%></td>
+	</tr>
+	<tr>
+		<td>建議處理事項</td>
+		<td>
+		<%= simple_format( eventMapSuggestionShowing(job_detail.job), {}, :sanitize => false) %>						
+		<%if !job_detail.job.s_inform.suggestion_alternation.blank?%>
+		<br><br>備註:<span style="font-weight: 900"><%= job_detail.job.s_inform.suggestion_alternation %></span>
+		<%end%>
+		</td>			
+	</tr>	
+	<tr>
+		<td>資安中心聯絡人</td>
+		<td>
+		<%if job_detail.job.handling_adm_user_id%>
+		姓名: <%=AdmUser.find(job_detail.job.handling_adm_user_id).name%> 
+		校內分機: <%=AdmUser.find(job_detail.job.handling_adm_user_id).extend%>
+		<%else%>
+		--
+		<%end%>
+		</td>
+	</tr>						
+	<tr>
+		<td>被通報網管</td>
+		<td>
+		<%if !job_detail.job.ip_map.blank? and !job_detail.job.ip_map.adm_user.blank?%>	
+			姓名: <%=job_detail.job.ip_map.adm_user.name%>
+			校內分機: <%=job_detail.job.ip_map.adm_user.extend%> 
+		<%else%>
+		--
+		<%end%>
+		</td>
+	</tr>	
+	<tr>
+		<td>IP使用人</td>
+		<td>
+		<%if !job_detail.job.ip_map.blank?%>	
+			姓名: <%=job_detail.job.ip_map.user%>
+			校內分機: <%=job_detail.job.ip_map.extend%> 
+		<%else%>
+			--
+		<%end%>
+		</td>
+	</tr>	
+	<tr>
+		<td>IP使用人處理記錄</td>
+		<td><%= job_detail.job.s_handle.handling_description or "--" %></td>
+	</tr>		
+</table> 
+<p>註1: 事件等級分成: Critical(危險)，High(高)，Medium(中)，Low(低)與Alert(警告)</p>
+<p>註2: 判讀等級是由本中心資安小組依各項流量資料內容判讀分成: 高，中，低。判讀等級為高者將於發出本通知後封鎖</p>
+</div>
+
+<span id="green_button"><a href="" onclick="PrintElem('#printdiv')">列印此單</a></span>
+<br><br>
+
+<script type="text/javascript">
+    function PrintElem(elem)
+    {
+        Popup($(elem).html());
+    }
+
+    function Popup(data) 
+    {
+        var mywindow = window.open('', '資安事件工作單', 'height=1500, width=1300');
+        mywindow.document.write('<html><head><title>資安事件工作單</title>');
+        /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(data);
+        mywindow.document.write('</body></html>');
+		
+		mywindow.document.close();  //prevent IE error
+		mywindow.focus();  //prevent IE error
+        
+        mywindow.print();
+        mywindow.close();
+
+        return true;
+    }
+</script>

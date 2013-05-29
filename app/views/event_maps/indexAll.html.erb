@@ -1,0 +1,49 @@
+<h1>事件對照表</h1>
+<br>
+<%if permissionCreate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.event)%>
+<div class="menu_border_blue">
+<span id="my_button"><%= link_to '新增事件', new_event_map_path %></span>
+</div>
+<%end%>
+<%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.event)%>
+<%= form_tag :action=>:search do %>
+	<%= text_field  :search, :term, :size=>35 %><br>
+	<span>可搜尋事件ID,事件名稱,事件名稱(中文)</span><br>
+	<%= submit_tag "搜尋" %>
+<% end %>
+<%end%>
+<table border="1" id="event_maps_table">
+  <tr>
+    <th>事件ID</th>
+    <th>事件名稱</th>    
+    <th>事件名稱<br>(中文)</th>
+    <th>事件描述</th>
+    <th>事件描述<br>(中文)</th>
+    <th>建議處理</th>
+	<th>功能</th>    
+  </tr>
+
+<% @event_maps.each do |event_map| %>
+  <tr>
+    <td><%= event_map.thread_id %></td>
+    <td><%= event_map.name %></td>      
+    <td><%= event_map.chinese_name %></td>   
+    <td><%= event_map.description %></td>
+    <td><%= event_map.chinese_description %></td>
+    <td><%= event_map.suggestion %></td>
+    <td>
+	<%if permissionUpdate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.event)%>    	    	
+    	<%= link_to '編輯', edit_event_map_path(event_map) %><br>
+    <%end%>	
+	<%if permissionDelete(AdmUser.find_by_id(session[:adm_user_id]).permission_config.event)%>    	    	
+    	<%= link_to '刪除', event_map, method: :delete, data: { confirm: '你確定要刪除?' } %>
+    <%end%>	
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+<%if !@event_maps.kind_of?(Array)%>
+<div class="apple_pagination"><%= will_paginate(@event_maps) %></div>
+<%end%>

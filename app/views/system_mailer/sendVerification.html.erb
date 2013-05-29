@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+  	<p>您好!</p>
+	<p>這裡是交大「資安通報系統」平台系統，會員邀請通知，請點選以下連結進行，會員認證和基本資料填寫。</p>
+  	<%=link_to domainName+"/adm_users/verifyCode?verify_code="+@verify_code+"&id="+@id.to_s, domainName+"/adm_users/verifyCode?verify_code="+@verify_code+"&id="+@id.to_s%>
+  </body>
+</html>

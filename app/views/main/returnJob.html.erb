@@ -1,0 +1,12 @@
+<h2>請輸入退回至<%=@stage%>的原因</h2>
+
+<%=form_tag do%>
+	<div>
+  		<%= text_area_tag :content, nil, :size=>"80x10"%>
+  		<%= hidden_field_tag 'id', @job.id%>	
+  		<%= hidden_field_tag 'returned_stage', @stage%>	
+	</div>
+	<div>		
+		 <%=submit_tag "送出"%>
+	</div>
+<%end%>

@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>工作編號:</b>
+  <%= @s_closed.job_id %>
+</p>
+
+<p>
+  <b>描述:</b>
+  <%= @s_closed.description %>
+</p>
+
+<%=link_to "到stage5",{:controller=>:main, :action=>:checkJob, :id=>@s_closed.job_id  }%>|
+<%= link_to '編輯', edit_s_closed_path(@s_closed) %> |
+<%= link_to '回工作列表', root_url%>

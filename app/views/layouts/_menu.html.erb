@@ -1,0 +1,36 @@
+<div id="menu">
+    <div id="detail">
+		<%if !session[:adm_user_id].blank?%>
+			<span class="detail_text"><%=AdmUser.find_by_id(session[:adm_user_id]).name%>您好!</span>
+			<%=link_to '登出',{:controller=>:main, :action=>:logout}%>
+		<%end%>
+    </div>
+    <div id="templatemo_menu" class="ddsmoothmenu">
+		<%if !session[:adm_user_id].blank?%>
+		<ul>	
+	    	<li><a href="#">資安事件工作列表</a>
+	        	<ul>
+	                <%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job)%>	        		
+	            	<li><%=link_to '未執行的工作',{:controller=>:main, :action=>:unShowing} %></li>
+	                <%end%>	            	
+	            	<li><%=link_to '處理中的工作',root_url%></li>
+	                <li><%=link_to '已完成的工作',{:controller=>:main, :action=>:finishShowing} %></li>
+	            </ul>
+	        </li>   		
+	        <li><%=link_to 'IP對照表' , ip_maps_path%></li>
+	        <li><%=link_to '帳號管理' ,{:controller=>:adm_users, :action=>:index}%></li>  
+	        <li><a href="#">其它</a>
+	        	<ul>
+					<%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.event)%>     	        
+	        		<li><%=link_to '事件對照表', event_maps_path%></li>
+	                <%end%>	 
+					<%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.building)%>
+	                <li><%=link_to '校區建築列表' , campus_buildings_lists_path %></li>
+	                <%end%>
+	            </ul>
+	        </li> 	    
+	        <li><%=link_to '意見回饋' , {:controller=>:main, :action=>:comment}%></li>          
+	    </ul>
+	    <%end%> 
+	</div>
+</div>

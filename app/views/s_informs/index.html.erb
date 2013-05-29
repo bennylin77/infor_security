@@ -1,0 +1,22 @@
+<h1>Listing s_informs</h1>
+
+<table>
+  <tr>
+    <th>Job</th>
+    <th>Description</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @s_informs.each do |s_inform| %>
+  <tr>
+    <td><%= s_inform.job_id %></td>
+    <td><%= s_inform.description %></td>
+    <td><%= link_to 'Show', s_inform %></td>
+    <td><%= link_to 'Edit', edit_s_inform_path(s_inform) %></td>
+    <td><%= link_to 'Destroy', s_inform, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+

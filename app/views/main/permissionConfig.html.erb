@@ -1,0 +1,82 @@
+<h1>權限設定</h1>
+<br>
+<div class="field">
+  	姓名:
+  	<%= @permission_config.adm_user.name %>
+</div>
+<%=form_tag do%>
+
+	<table border="1">
+	<tr>	
+		<td>帳號管理:</td>
+		<td>讀全部</td><td><%=check_box_tag :acc_read, Infor::Application.config.READ_PERMISSION , permissionRead(@permission_config.account)%></td>		
+	</tr>
+	<tr>	
+		<td></td><td>編輯全部</td><td><%=check_box_tag :acc_update, Infor::Application.config.UPDATE_PERMISSION, permissionUpdate(@permission_config.account)%></td>
+	<tr>	
+		<td></td><td>新增</td><td><%=check_box_tag :acc_create, Infor::Application.config.CREATE_PERMISSION, permissionCreate(@permission_config.account)%></td>	
+	</tr>
+	<tr>	
+		<td></td><td>刪除</td><td><%=check_box_tag :acc_delete, Infor::Application.config.DELETE_PERMISSION, permissionDelete(@permission_config.account)%></td>		
+	</tr>	
+	
+	<tr>	
+		<td>資安事件工作列表:</td>
+		<td>讀全部</td><td><%=check_box_tag :job_read, Infor::Application.config.READ_PERMISSION , permissionRead(@permission_config.job)%></td>		
+	</tr>
+	<tr>	
+		<td></td><td>stage1:指派</td><td><%=check_box_tag :job_assign, Infor::Application.config.ASSIGN_PERMISSION, permissionAssign(@permission_config.job)%></td>
+	</tr>
+	<tr>	
+		<td></td><td>stage2:處理事件</td><td><%=check_box_tag :job_handle, Infor::Application.config.HANDLE_PERMISSION, permissionHandle(@permission_config.job)%></td>
+	</tr>	
+	<tr>	
+		<td></td><td>stage5:結案</td><td><%=check_box_tag :job_close, Infor::Application.config.CLOSE_PERMISSION, permissionClose(@permission_config.job)%></td>
+	</tr>
+	<tr>	
+		<td></td><td>新增</td><td><%=check_box_tag :job_create, Infor::Application.config.CREATE_PERMISSION, permissionCreate(@permission_config.job)%></td>	
+	</tr>		
+	<tr>	
+		<td></td><td>刪除</td><td><%=check_box_tag :job_delete, Infor::Application.config.DELETE_PERMISSION, permissionDelete(@permission_config.job)%></td>	
+	</tr>	
+	<tr>	
+		<td>IP對照表:</td>
+		<td>讀全部</td><td><%=check_box_tag :ip_read, Infor::Application.config.READ_PERMISSION , permissionRead(@permission_config.ip)%></td>		
+	</tr>
+	<tr>	
+		<td></td><td>編輯全部</td><td><%=check_box_tag :ip_update, Infor::Application.config.UPDATE_PERMISSION, permissionUpdate(@permission_config.ip)%></td>
+	<tr>	
+		<td></td><td>新增</td><td><%=check_box_tag :ip_create, Infor::Application.config.CREATE_PERMISSION, permissionCreate(@permission_config.ip)%></td>	
+	</tr>			
+	<tr>	
+		<td>事件對照表:</td>
+		<td>讀全部</td><td><%=check_box_tag :event_read, Infor::Application.config.READ_PERMISSION , permissionRead(@permission_config.event)%></td>	
+	</tr>
+	<tr>	
+		<td></td><td>編輯全部</td><td><%=check_box_tag :event_update, Infor::Application.config.UPDATE_PERMISSION, permissionUpdate(@permission_config.event)%></td>
+	<tr>	
+		<td></td><td>新增</td><td><%=check_box_tag :event_create, Infor::Application.config.CREATE_PERMISSION, permissionCreate(@permission_config.event)%></td>	
+	</tr>
+	<tr>	
+		<td></td><td>刪除</td><td><%=check_box_tag :event_delete, Infor::Application.config.DELETE_PERMISSION, permissionDelete(@permission_config.event)%></td>	
+	</tr>		
+	
+	<tr>	
+		<td>校區建築列表:</td>
+		<td>讀全部</td><td><%=check_box_tag :building_read, Infor::Application.config.READ_PERMISSION , permissionRead(@permission_config.building)%></td>	
+	</tr>
+	<tr>	
+		<td></td><td>編輯全部</td><td><%=check_box_tag :building_update, Infor::Application.config.UPDATE_PERMISSION, permissionUpdate(@permission_config.building)%></td>
+	<tr>	
+		<td></td><td>新增</td><td><%=check_box_tag :building_create, Infor::Application.config.CREATE_PERMISSION, permissionCreate(@permission_config.building)%></td>
+	</tr>
+	<tr>	
+		<td></td><td>刪除</td><td><%=check_box_tag :building_delete, Infor::Application.config.DELETE_PERMISSION, permissionDelete(@permission_config.building)%></td>	
+	</tr>						
+	</table> 
+ 	
+  	<%= hidden_field  :permission_config, :id, :value=>@permission_config.id %>
+  	<div class="actions">	
+	<%=submit_tag "送出"%>
+	</div>
+<%end%>

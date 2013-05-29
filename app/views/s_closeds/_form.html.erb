@@ -1,0 +1,29 @@
+<%= form_for(@s_closed) do |f| %>
+  <% if @s_closed.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@s_closed.errors.count, "error") %> prohibited this s_closed from being saved:</h2>
+
+      <ul>
+      <% @s_closed.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+  	工作編號:
+  	<%= @s_closed.job_id %>
+  </div>
+  <div class="field">
+    <%= f.label :描述 %><br />
+    <%= f.text_area :description %>
+  </div>
+  <div class="field">
+  <%= f.check_box :status ,{},"finish", "processing" %>
+  <%= f.label :完成?%>
+  </div>
+  <div class="actions">
+    <%= f.submit "送出" %>
+  </div>
+<% end %>

@@ -1,0 +1,25 @@
+<h1>Listing s_checks</h1>
+
+<table>
+  <tr>
+    <th>Job</th>
+    <th>Description</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @s_checks.each do |s_check| %>
+  <tr>
+    <td><%= s_check.job_id %></td>
+    <td><%= s_check.description %></td>
+    <td><%= link_to 'Show', s_check %></td>
+    <td><%= link_to 'Edit', edit_s_check_path(s_check) %></td>
+    <td><%= link_to 'Destroy', s_check, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New S check', new_s_check_path %>

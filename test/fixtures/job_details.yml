@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  job_id: 1
+  src_ip: MyString
+  log_count: 1
+  serverity: MyString
+  region: MyString
+  action: MyString
+  threat_id: MyString
+  description: MyString
+  log_date: 2012-10-11
+
+two:
+  job_id: 1
+  src_ip: MyString
+  log_count: 1
+  serverity: MyString
+  region: MyString
+  action: MyString
+  threat_id: MyString
+  description: MyString
+  log_date: 2012-10-11

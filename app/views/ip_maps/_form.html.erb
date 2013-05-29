@@ -1,0 +1,186 @@
+<%= form_for(@ip_map) do |f| %>
+  <% if @ip_map.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ip_map.errors.count, "error") %> prohibited this ip_map from being saved:</h2>
+      <ul>
+      <% @ip_map.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    IP<br />
+  	<%if @ip_map.adm_user==AdmUser.find(session[:adm_user_id]) and !permissionUpdate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.ip)%>    
+    <%= f.text_field :IPv4_1, :size=>3, :maxlength=>3 ,:disabled => 'disabled'%>.<%= f.text_field :IPv4_2, :size=>3, :maxlength=>3, :disabled => 'disabled'%>.<%= f.text_field :IPv4_3, :size=>3, :maxlength=>3, :disabled => 'disabled'%>.<%= f.text_field :IPv4_4, :size=>3, :maxlength=>3,:disabled => 'disabled' %>
+  	<%else%>
+    <%= f.text_field :IPv4_1, :size=>3, :maxlength=>3 %>.<%= f.text_field :IPv4_2, :size=>3, :maxlength=>3%>.<%= f.text_field :IPv4_3, :size=>3, :maxlength=>3%>.<%= f.text_field :IPv4_4, :size=>3, :maxlength=>3 %>  	
+  	<%end%>
+  </div>
+  <div id="extraField">
+  </div>
+  <%if @ip_map.id.blank?%>
+  	<input type="button" onclick="addInput()" name="add" value="新增批次IP" />
+  	<input type="button" onclick="delInput()" name="del" value="刪除批次IP" />
+  <%end%>
+  <div class="field">
+    作業系統<br />
+    <%= f.select :OS,  options_for_select([ ["Windows", 'Windows' ], ["Redhat", 'Redhat'], ["MacOS", 'MacOS'], ["Ubuntu", 'Ubuntu'], ["CentOS", 'CentOS'], ["FreeBSD", 'FreeBSD'], ["其它(請說明)", '其它'] ], @ip_map.OS), {:include_blank => '請選擇..'} %>
+    <div id="OS_others" style="display: inline-block">
+    	<%if @ip_map.OS=='其它'%>
+    	    <%= f.text_field :OS_others, :size=>25 %>
+    	<%end%>
+ 	</div>
+  </div>
+  <div class="field">
+    版本<br />
+    <%= f.text_field :version, :size=>10 %>
+  </div>  
+  <div class="field">
+    類別<br />
+    <%= f.select :place, options_for_select([["辦公室", '辦公室' ], ["系所辦公室", '系所辦公室' ], ["會議室", '會議室'], ["教師休息室", '教師休息室'], ["電腦教室", '電腦教室'], ["視聽教室", '視聽教室'], ["實驗室", '實驗室'], ["研究中心", '研究中心'], ["其它(請說明)", '其它'] ], @ip_map.place), {:include_blank => '請選擇..'} %>
+    <div id="place_others" style="display: inline-block">
+    	<%if @ip_map.place=='其它'%>
+    	    <%= f.text_field :place_others, :size=>25 %>    	
+    	<%end%>    	
+ 	</div>
+  </div>  
+  <div class="field">
+    用途<br />  
+    <%= f.select :use, options_for_select([ ["一般電腦", '一般電腦' ], ["公用電腦", '公用電腦'], ["伺服器", '伺服器'], ["網頁及網站", '網頁及網站'], ["應用系統", '應用系統'], ["IP分享器", 'IP分享器'], ["監視器",'監視器'],["網路印表機", '網路印表機'], ["其它(請說明)", '其它'] ], @ip_map.use), {:include_blank => '請選擇..'} %>
+    <div id="use_others" style="display: inline-block"> 
+    	<%if @ip_map.use=='其它'%>
+    	    <%= f.text_field :use_others, :size=>25 %>     	
+    	<%end%>   		   
+ 	</div>  
+  </div>
+  <div class="field">
+    使用者<br />
+    <%= f.text_field :user %>
+  </div>
+  <div class="field">
+    網管人員<br />
+    <%if @ip_map.adm_user==AdmUser.find(session[:adm_user_id]) and !permissionUpdate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.ip)%>
+    	<%= f.text_field :adm_user, :value=>AdmUser.find(session[:adm_user_id]).name, :disabled => 'disabled' %>	
+    <%else%>
+    	<%=f.select :adm_user_id, options_from_collection_for_select(AdmUser.all, "id", "name", @ip_map.adm_user_id), {:include_blank => '請選擇..'} %>
+  	<%end%>
+  </div>
+  <div class="field">
+    校區建築<br />
+  	<%if @ip_map.adm_user==AdmUser.find(session[:adm_user_id]) and !permissionUpdate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.ip)%>
+   		<%= f.select :campus_buildings_list_id, options_for_select(areaBuildingsOptions, @ip_map.campus_buildings_list_id), {:include_blank => '請選擇..'}, :disabled => 'disabled'  %> 	
+    <%else%>
+    	<%= f.select :campus_buildings_list_id, options_for_select(areaBuildingsOptions, @ip_map.campus_buildings_list_id), {:include_blank => '請選擇..'} %>  	
+  	<%end%>
+  </div>  
+  <div class="field">
+    房間號碼<br />
+    <%= f.text_field :room %>
+  </div>
+  <div class="field">
+    分機<br />
+    <%= f.text_field :extend %>
+  </div>
+  <div class="actions">
+    <%= f.submit "送出" %>
+  </div>
+
+<% end %>
+
+
+<script type="text/javascript">
+	extra_ip = 1;
+	function addInput() 
+	{	
+    	$("#extraField").append("<div id='ip_block_"+
+    							extra_ip.toString()+
+    							"'>"+
+    							"<input type='text' id='extra_ip["+
+								extra_ip.toString()+
+								"][1]' name='extra_ip["+
+								extra_ip.toString()+ 
+								"][1]' value='"+
+								$('#ip_map_IPv4_1').val()+"' size='3'/>"+
+    							".<input type='text' id='extra_ip["+
+								extra_ip.toString()+
+								"][2]' name='extra_ip["+
+								extra_ip.toString()+ 
+								"][2]' value='"+
+								$('#ip_map_IPv4_2').val()+"' size='3'/>"+
+								".<input type='text' id='extra_ip["+
+								extra_ip.toString()+
+								"][3]' name='extra_ip["+
+								extra_ip.toString()+ 
+								"][3]' value='"+
+								$('#ip_map_IPv4_3').val()+"' size='3'/>"+	
+								".<input type='text' id='extra_ip["+
+								extra_ip.toString()+
+								"][4]' name='extra_ip["+
+								extra_ip.toString()+ 
+								"][4]' value='"+
+								"' size='3'/>"+
+								"</div>"			
+								);
+										   
+		extra_ip++;
+	}
+	function delInput()
+	{
+		if(extra_ip!=1)
+		{
+			extra_ip--;
+			$("#ip_block_"+extra_ip.toString()).remove();
+		}	
+	}
+	
+	$('#ip_map_OS').change(function() 
+	{
+	    var options = '';
+	    if($(this).val() == '其它') 
+	    {
+	        document.getElementById('OS_others').innerHTML="說明:<input id='ip_map_OS_others' name='ip_map[OS_others]' size='25' type='text' />";
+	        
+	    }
+	    else
+	    {
+	        document.getElementById('OS_others').innerHTML=null;
+	    }
+	});
+	
+	$('#ip_map_place').change(function() 
+	{
+	    var options = '';
+	    if($(this).val() == '其它') 
+	    {
+	        document.getElementById('place_others').innerHTML="說明:<input id='ip_map_place_others' name='ip_map[place_others]' size='25' type='text' />";
+	        
+	    }
+	    else
+	    {
+	        document.getElementById('place_others').innerHTML=null;
+	    }
+	});
+	
+	$('#ip_map_use').change(function() 
+	{
+	    var options = '';
+	    if($(this).val() == '其它') 
+	    {
+	        document.getElementById('use_others').innerHTML="說明:<input id='ip_map_use_others' name='ip_map[use_others]' size='25' type='text' />";
+	        
+	    }
+	    else
+	    {
+	        document.getElementById('use_others').innerHTML=null;
+	    }
+	});
+
+</script>
+
+
+
+
+
+
+

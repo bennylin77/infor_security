@@ -1,0 +1,16 @@
+<h2>Stage1(管理員指派工程師)</h2>
+<%=form_tag do%>
+	<%if @job.stage1!="finish" %>	
+		<label>指派工程師:</label>
+		<%if @job.handling_adm_user_id%>	
+	  		<%= select_tag :assigned_user ,  options_from_collection_for_select(@engineers, "id", "name", @job.handling_adm_user_id), {:include_blank => '請選擇'}%>
+	  	<%else%>
+	  		<%= select_tag :assigned_user ,  options_from_collection_for_select(@engineers, "id", "name"), {:include_blank => '請選擇'}%>
+	  	<%end%>	
+	  	<%= hidden_field_tag 'id', @job.id%>		
+		<%=submit_tag "送出"%>
+	<%end%>		
+<%end%>
+
+<%= render :partial => "job_detail_form", :locals => { :job_detail => @job.job_detail } %>
+

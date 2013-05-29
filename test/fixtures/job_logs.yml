@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  job_id: 1
+  log_time: 2012-10-11
+  victim_ip: MyString
+
+two:
+  job_id: 1
+  log_time: 2012-10-11
+  victim_ip: MyString

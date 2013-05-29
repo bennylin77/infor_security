@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  stage0: MyString
+  stage1: MyString
+  stage2: MyString
+  stage3: MyString
+  stage4: MyString
+  stage5: MyString
+  stage6: MyString
+
+two:
+  stage0: MyString
+  stage1: MyString
+  stage2: MyString
+  stage3: MyString
+  stage4: MyString
+  stage5: MyString
+  stage6: MyString

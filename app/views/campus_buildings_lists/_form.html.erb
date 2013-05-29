@@ -1,0 +1,25 @@
+<%= form_for(@campus_buildings_list) do |f| %>
+  <% if @campus_buildings_list.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@campus_buildings_list.errors.count, "error") %> prohibited this campus_buildings_list from being saved:</h2>
+
+      <ul>
+      <% @campus_buildings_list.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :校區名稱 %><br />
+    <%= f.text_field :campus_name %>
+  </div>
+  <div class="field">
+    <%= f.label :建築名稱 %><br />
+    <%= f.text_field :building_name %>
+  </div>
+  <div class="actions">
+    <%= f.submit "送出"%>
+  </div>
+<% end %>

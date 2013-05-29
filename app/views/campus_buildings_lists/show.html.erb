@@ -1,0 +1,16 @@
+<div class="menu_border_blue">
+<span id="my_button"><%= link_to '編輯', edit_campus_buildings_list_path(@campus_buildings_list) %></span> 
+<span id="my_button"><%= link_to '回上一頁', campus_buildings_lists_path %></span> 
+</div>
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>校區名稱:</b>
+  <%= @campus_buildings_list.campus_name %>
+</p>
+
+<p>
+  <b>建築名稱:</b>
+  <%= @campus_buildings_list.building_name %>
+</p>

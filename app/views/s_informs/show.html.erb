@@ -1,0 +1,17 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>工作編號:</b>
+  <%= @s_inform.job_id %>
+</p>
+
+<p>
+  <b>描述:</b>
+  <%= @s_inform.description %>
+</p>
+
+
+<%=link_to "到stage1",{:controller=>:main, :action=>:assignJob, :id=>@s_inform.job_id  }%>|
+<%= link_to '編輯', edit_s_inform_path(@s_inform) %> |
+<%= link_to '回工作列表', root_url%>|
+<%=link_to "到stage3",{:controller=>:main, :action=>:handleJob, :id=>@s_inform.job_id  }%>

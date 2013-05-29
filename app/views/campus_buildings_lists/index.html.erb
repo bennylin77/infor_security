@@ -1,0 +1,33 @@
+<h1>校區建築列表</h1>
+<br>
+<%if permissionCreate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.building)%>
+<div class="menu_border_blue">
+<span id="my_button"><%= link_to '新增校區建築', new_campus_buildings_list_path %></span>
+</div>
+<%end%>
+
+<table border="1">
+  <tr>
+    <th>校區名稱</th>
+    <th>建築名稱</th>  
+ 	<th>功能</th>    
+  </tr>
+
+<% @campus_buildings_lists.each do |campus_buildings_list| %>
+  <tr>
+    <td><%= campus_buildings_list.campus_name %></td>
+    <td><%= campus_buildings_list.building_name %></td>
+    <td>
+	<%if permissionUpdate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.building)%>    	
+	    <%= link_to '編輯', edit_campus_buildings_list_path(campus_buildings_list) %><br>
+	<%end%>
+	<%if permissionDelete(AdmUser.find_by_id(session[:adm_user_id]).permission_config.building)%>    		    
+	    <%= link_to '刪除', campus_buildings_list, method: :delete, data: { confirm: '你確定要刪除?' } %>
+	<%end%>	    
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+

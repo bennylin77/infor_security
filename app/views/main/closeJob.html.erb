@@ -1,0 +1,9 @@
+<h2>Stage5(結案)</h2>
+<br>
+<%if @job.stage5=="processing" %>	
+<div class="menu_border_blue">
+		<span id="my_button"><%=link_to "結案", :controller=>:main , :action=>:closeJobMail, :id=>@job %></span> 
+		<span id="my_button"><%=link_to "退回工作",{:controller=>:main, :action=>:returnJob, :id=>@job, :returned_stage=>'stage4' }%></span> 		
+</div>	
+<%end%>
+<%= render :partial => "job_detail_form", :locals => { :job_detail => @job.job_detail } %>

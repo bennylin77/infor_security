@@ -1,0 +1,25 @@
+<h1>Listing s_closeds</h1>
+
+<table>
+  <tr>
+    <th>Job</th>
+    <th>Description</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @s_closeds.each do |s_closed| %>
+  <tr>
+    <td><%= s_closed.job_id %></td>
+    <td><%= s_closed.description %></td>
+    <td><%= link_to 'Show', s_closed %></td>
+    <td><%= link_to 'Edit', edit_s_closed_path(s_closed) %></td>
+    <td><%= link_to 'Destroy', s_closed, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New S closed', new_s_closed_path %>

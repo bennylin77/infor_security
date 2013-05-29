@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+	<p><%=@receiver.name%> 您好!</p>
+	<p>這是 <%=@comment.adm_user.department%> <%=@comment.adm_user.name%>的意見回饋</p>
+	
+	<p>意見人email:</p>
+		<p><b><%=@comment.adm_user.email%></b></p>
+	<p>主旨:</p>
+		<p><b><%=@comment.subject%></b></p>
+	<p>內容:</p>
+		<p><b><%=@comment.content%></b></p>
+	<p>資安事件通報系統網址：<%=link_to domainName , domainName%></p>
+  </body>
+</html>

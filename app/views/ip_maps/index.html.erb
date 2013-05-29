@@ -1,0 +1,86 @@
+<h1>IP使用單位對照表</h1>
+<br>
+
+<%if permissionCreate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.ip)%>
+	<div class="menu_border_blue">
+	<span id="my_button"><%= link_to '新增IP', new_ip_map_path %></span>
+	</div>
+<%end%>
+
+<%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.ip)%>
+	<%= form_tag '/ip_maps/search', :method =>:get do %>
+		<%= text_field  :search, :term, :size=>35 %><br>
+		<span>可搜尋使用者,房間號碼,分機,IP格式為 xxx.xxx.xxx.xxx 或 xxx.xxx.xxx</span><br>
+		<%= submit_tag "搜尋" %>
+	<% end %>
+	<%= form_tag '/ip_maps/filter', :method =>:get do %>
+		依校區建築分類:
+		<%= select_tag :campus_area_select, options_for_select(areaBuildingsOptions), {:prompt => "請選擇.."} %>	
+		<%= submit_tag "送出" %>
+	<% end %>
+<%end%>
+
+<p>特殊處理: 此IP產生的資安事件表格中的"事件目的端IP Address"將會全部顯示</p>
+<table border="1" id="ip_maps_table">
+  <tr>
+  	<th>IP</th>
+  	<th>作業系統</th>
+    <th>版本</th>
+    <th>類別</th>
+    <th>用途</th>
+    <th>使用者/管理者</th>
+    <th>網管人員</th>
+    <th>校區建築</th>
+    <th>房間號碼</th>
+    <th>分機</th>
+	<th>功能</th>    
+  </tr>
+
+<% @ip_maps.each do |ip_map| %>
+  <tr>
+  	<td><%= ip_map.IPv4_1 %>.<%= ip_map.IPv4_2 %>.<%= ip_map.IPv4_3 %>.<%= ip_map.IPv4_4 %></td> 	
+    <td><%= ip_map.OS %><%if ip_map.OS=="其它"%><%="-"+ip_map.OS_others%><%end%></td>
+    <td><%= ip_map.version%></td>
+    <td><%= ip_map.place %><%if ip_map.place=="其它"%><%="-"+ip_map.place_others%><%end%></td>
+    <td><%= ip_map.use %><%if ip_map.use=="其它"%><%="-"+ip_map.use_others%><%end%></td>
+    <td><%= ip_map.user %></td>
+    <td><%if !ip_map.adm_user_id.blank?%>
+    	<%= AdmUser.find(ip_map.adm_user_id).name %>
+    	<%else%>
+    	無
+    	<%end%>
+    </td>
+    <td>
+   		<%if !ip_map.campus_buildings_list_id.blank?%>   	
+    		<%= CampusBuildingsList.find(ip_map.campus_buildings_list_id).campus_name+"-"+CampusBuildingsList.find(ip_map.campus_buildings_list_id).building_name %>
+	  	<%else%>
+    	無
+    	<%end%>     	
+    </td>  
+    <td><%= ip_map.room %></td>
+    <td><%= ip_map.extend %></td>
+    <td> 	    	
+    	<%= link_to '編輯', edit_ip_map_path(ip_map) %><br>
+	<%if permissionUpdate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.ip)%>     	
+    	<%if !ip_map.block%>
+	    <%= link_to '封鎖',{:controller=>:ip_maps, :action=>:block, :id=>ip_map.id, :block=> true}, data: { confirm: '你確定要封鎖 ip:'+ip_map.ip+'?' } %>
+	    <%else%>
+	    <%= link_to '解除封鎖',{:controller=>:ip_maps, :action=>:block, :id=>ip_map.id, :block=> false}, data: { confirm: '你確定要解除封鎖 ip:'+ip_map.ip+'?' } %>	    
+	    <%end%>
+	    <br>
+    	<%if !ip_map.always_visible%>
+	    <%= link_to '特殊處理',{:controller=>:ip_maps, :action=>:alwaysVisible, :id=>ip_map.id, :always_visible=> true}, data: { confirm: '你確定 ip:'+ip_map.ip+' 要特殊處理?' } %>
+	    <%else%>
+	    <%= link_to '非特殊處理',{:controller=>:ip_maps, :action=>:alwaysVisible, :id=>ip_map.id, :always_visible=> false}, data: { confirm: '你確定 ip:'+ip_map.ip+' 要非特殊處理?' } %>	    
+	    <%end%>	    
+	    
+	<%end%>    
+    </td>  
+  </tr>
+<% end %>
+</table>
+
+<br />
+<%if  !@ip_maps.kind_of?(Array)%>
+<div class="apple_pagination"><%= will_paginate(@ip_maps) %></div>
+<%end%>

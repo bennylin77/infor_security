@@ -1,0 +1,80 @@
+<h1>新增資安事件</h1>
+*必填
+<%=form_tag do%>
+			*事件發生時間:<%=text_field_tag :log_date, Time.now.strftime("%m/%d/%Y") ,{:readonly => true}%><br>
+			*事件來源端IP Address:<%=text_field_tag :src_ip%><br>
+	  		*事件動作:<%= select_tag :alert ,options_for_select([['alert',true],['非alert',false]])%><br>		
+			*事件被記錄次數:<%=text_field_tag :log_count%><br>
+			*事件region<%= select_tag :region ,options_for_select([['gov-untrust', 'gov-untrust'],['gov-trust','gov-trust'],['edu-untrust','edu-untrust'],['edu-trust','edu-trust'],
+																  ['cloud-untrust','cloud-untrust'],['cloud-trust','cloud-trust'] ])%><br>	
+			
+		  	<input type="button" onclick="addThreatId()" name="add" value="新增事件Log" />
+		  	<input type="button" onclick="delThreatId()" name="del" value="刪除事件Log" />			
+			<br>			
+			<div id='threatField'>			
+		    </div>	
+	<%=submit_tag "送出"%>	
+<%end%>
+
+<script>
+	$(function() {$( "#log_date" ).datepicker(
+		{
+			showOn: "button",
+			buttonImage: "<%=image_path("calendar.png")%>",
+			buttonImageOnly: true
+		}
+	);});
+
+	var serverity_string = "informational,low,high,critical";
+	var data = serverity_string.split(',');
+	var threat_index=new Number(0);
+
+	function addThreatId()
+	{			
+		var newThreatDiv = $(document.createElement('div')).attr({ id: 'threat_'+threat_index, class: 'border_dotted_blue'});
+		newThreatDiv.appendTo("#threatField");
+		
+		newThreatDiv.append("事件Log thread ID:<br>");
+		var newThreatId = $(document.createElement('input')).attr({ id: 'threat_'+threat_index+'_id', name: 'threat['+threat_index+'][id]', type: 'text'});			
+		newThreatId.appendTo('#threat_'+threat_index);	
+			
+		newThreatDiv.append("<br>事件Log 目的端IP Address:<br>");		
+		var newThreatVicIp = $(document.createElement('input')).attr({ id: 'threat_'+threat_index+'_victim_ip', name: 'threat['+threat_index+'][victim_ip]', type: 'text'});			
+		newThreatVicIp.appendTo('#threat_'+threat_index);		
+
+		newThreatDiv.append("<br>事件Log 發生時間:<br>");		
+		var newThreatVicIp = $(document.createElement('input')).attr({ id: 'threat_'+threat_index+'_log_time', name: 'threat['+threat_index+'][log_time]', type: 'text', readonly: 'true'});			
+		newThreatVicIp.appendTo('#threat_'+threat_index);				
+			
+		$( '#'+'threat_'+threat_index+'_log_time' ).datetimepicker({
+			hourGrid: 3,
+			minuteGrid: 10,
+			showOn: "button",
+			buttonImage: "<%=image_path("calendar.png")%>",
+			buttonImageOnly: true
+		}); 
+		
+		newThreatDiv.append("<br>事件Log 等級:<br>");	
+		var newThreatServerity= $("<select id='threat_"+threat_index+"_serverity' name='threat["+threat_index+"][serverity]' />");
+		for(var val in data) {
+		    $("<option />", {value: data[val], text: data[val]}).appendTo(newThreatServerity);
+		}
+		newThreatServerity.appendTo('#threat_'+threat_index);
+		
+		
+		newThreatDiv.appendTo("#threatField");
+		threat_index++;
+	}
+	
+	function delThreatId() 
+	{	
+		if(threat_index!=0)
+		{
+			threat_index--;
+			$('#threat_'+threat_index).remove();
+		}	
+	} 	
+		
+
+	
+</script>

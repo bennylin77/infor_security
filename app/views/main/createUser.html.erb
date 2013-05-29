@@ -1,0 +1,44 @@
+<h1>新增帳號</h1>
+<%if @adm_user%>
+	<% if @adm_user.errors.any? %>
+	</br>
+    <div id="error_explanation">
+      <h2><%= pluralize(@adm_user.errors.count, "error") %></h2>
+      <ul>
+      <% @adm_user.errors.each do |key, value| %>
+        <li><%= value %></li>
+      <% end %>
+      </ul>
+    </div>
+	<% end %>
+<% end %>
+
+<%=form_tag do%>
+	<div class="field">
+    <label>姓名</label><br />
+	<%=text_field_tag :name, params[:name]%>
+  	</div>
+	<div class="field">
+	<label>單位/系所</label><br />
+	<%=text_field_tag :department, params[:department]%>
+	</div>  
+    <div class="field">
+    <label>單位系所位置</label><br />
+    <%= select_tag :campus_buildings_list_id, options_for_select(areaBuildingsOptions), {:include_blank => '請選擇..'} %>
+    </div>
+    <div class="field">
+    <label>分機</label><br />
+    <%=text_field_tag :extend, params[:extend]%>
+    </div>
+    <div class="field">
+    <label>聯絡電話</label><br />
+    <%=text_field_tag :phone, params[:phone]%>
+    </div>
+    <div class="field">
+    <label>email</label><br />
+	<%=text_field_tag :email, params[:email]%>
+    </div>
+  	<div class="actions">	
+	<%=submit_tag "送出"%>
+	</div>
+<%end%>

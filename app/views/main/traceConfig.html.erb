@@ -1,0 +1,29 @@
+<h1>追蹤設定</h1>
+<br>
+<div class="field">
+  	姓名:
+  	<%= @trace_config.adm_user.name %>
+</div>
+<%=form_tag do%>
+	<div class="field">
+	<label>登入:</label>
+	<%=check_box_tag :login,'true', @trace_config.login%>	
+	</div>
+	<div class="field">
+	<label>事件對照表(新增&編輯):</label>
+	<%=check_box_tag :event_log,'true', @trace_config.event_log%>	
+	</div>		
+	<div class="field">
+    <label>資安事件工作列表(stage1:指派):</label>
+	<%=check_box_tag :assign,'true', @trace_config.assign%>
+  	</div>
+	<div class="field">  	
+    <label>資安事件工作列表(stage5:結案):</label>
+	<%=check_box_tag :closed,'true', @trace_config.closed%>
+  	</div>  	
+  	
+  	<%= hidden_field  :trace_config, :id, :value=>@trace_config.id %>
+  	<div class="actions">	
+	<%=submit_tag "送出"%>
+	</div>
+<%end%>

@@ -1,0 +1,12 @@
+<h2>Stage2(工程師通知網管)</h2>
+<br>
+<%if @job.handling_adm_user_id==session[:adm_user_id] %> 
+	<%if @job.stage2=="processing" or @job.stage2=="returned"  %>
+		<div class="menu_border_blue">
+		<span id="my_button"><%=link_to "修改事件名稱, 描述, 建議處理事項, Log判讀等級", :controller=>:s_informs, :action=>:edit, :id=>@job.s_inform.id%></span>
+		<span id="my_button"><%=link_to "送出網管通知信", :controller=>:main , :action=>:informUserMail, :id=>@job %></span> 
+		<span id="my_button"><%=link_to "退回工作",{:controller=>:main, :action=>:returnJob, :id=>@job, :returned_stage=>'stage1' }%></span>
+		</div>
+	<%end%>
+<%end%>	
+<%= render :partial => "job_detail_form", :locals => { :job_detail => @job.job_detail } %>

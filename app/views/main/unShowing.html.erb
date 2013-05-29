@@ -1,0 +1,8 @@
+<h1>未執行的工作</h1>
+<%if permissionCreate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job)%><br>
+	<div class="menu_border_blue">
+	<!--<span id="my_button"><%= link_to '新增資安事件工作', {:controller=>:main, :action=>:createJob} %></span>-->
+	</div>
+<%end%>
+<%= render :partial => "job_list_form" %>
+<div class="apple_pagination"><%= will_paginate(@jobs) %></div>

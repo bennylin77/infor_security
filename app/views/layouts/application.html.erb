@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>交大資訊中心</title>
+  <%= favicon_link_tag 'NCTU.jpeg' %>
+  <%= stylesheet_link_tag    "application"%>
+  <%= javascript_include_tag "application"%>
+  <%= csrf_meta_tags %>
+  <script type="text/javascript">
+	ddsmoothmenu.init({
+		mainmenuid: "templatemo_menu", //menu DIV id
+		orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
+		classname: 'ddsmoothmenu', //class added to menu's outer DIV
+		//customtheme: ["#1c5a80", "#18374a"],
+		contentsource: "markup" //"markup" or ["container_id", "path_to_menu_file"]
+	})
+  </script>
+</head>
+<body>
+	
+<div id="templatemo_container">  
+	<%=render "layouts/header" %>
+	<%=render "layouts/menu" %>
+
+	<div id="templatemo_content">     
+		<p id="notice"><%= @notice %></p><br>
+		<%= yield %>    
+    </div> 
+	<%=render "layouts/footer" %>        
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

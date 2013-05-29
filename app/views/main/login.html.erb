@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+<%=form_tag do%>
+	<legend>請登入</legend>
+	<div>
+		<label>帳號:</label>
+		<%=text_field_tag :username, params[:username]%>
+	</div>
+	<div>
+		<label>密碼:</label>
+		<%=password_field_tag :password, params[:password]%>
+	</div>
+	<div>		
+		 <%=submit_tag "登入"%>
+	</div>
+<%end%>

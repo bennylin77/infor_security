@@ -1,0 +1,91 @@
+<div>
+	<span style="font-weight: 600;">工作狀態: </span>	
+	<%=image_tag("green.png", :size => "20x20")%>:執行完成
+	<%=image_tag("yellow.png", :size => "20x20")%>:執行中 
+	<%=image_tag("red.png", :size => "20x20")%>:尚未執行
+	<%=image_tag("blueimportantsign.png", :size => "20x20")%>:被退回
+	<span style="font-weight: 600;">事件疊加:</span>
+	<%=image_tag("green_d.png", :size => "15x15")%>: 3天以上 
+	<%=image_tag("yellow_d.png", :size => "15x15")%>: 2天 
+	<%=image_tag("red_d.png", :size => "15x15")%>: 1天 
+</div>
+
+<table border="1" id="event_lists_table" >
+  <tr>
+  	<th>工作ID</th>
+  	<th style="	min-width: 425px;">事件描述</th>
+    <th>Stage1<br>管理員指派工程師</th>
+    <th>Stage2<br>工程師通知網管</th>
+    <th>Stage3<br>網管處理事件</th>
+    <th>Stage4<br>工程師完成確認</th>
+    <th>Stage5<br>結案</th>
+  </tr>
+  
+  <%@jobs.each do |j| %>
+  <tr>
+  	<td><span style="font-size: 25px; font-weight: 600;"><%=link_to j.id,{:controller=>:main, :action=>:jobDetailShowing, :id=>j.id }%></span></td>
+  	<td>
+  		<span style="font-size: 15px; font-weight: 800;">
+  		<%=j.job_detail.src_ip%>
+  		<%if !j.ip_map.blank?%>  		
+  			<%if !j.ip_map.adm_user.blank?%> 		
+  			-<%=j.ip_map.adm_user.department%>
+  			<%end%>
+  		<%end%>	  			
+  		</span>
+  		<%if permissionAssign(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job) or 
+  			 permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job) or  
+  			 permissionHandle(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job) %> 
+  		(<%=j.job_detail.region%>)
+		<%=updateDays(j)%>
+  		<%end%>
+  		  		
+  		<%= simple_format( eventMapNameShowing(j), {}, :sanitize => false) %>
+  	</td>
+    <td>
+    	<%=link_to image_tag(setConditionColor(j.stage1), :size => "25x25"),{:controller=>:main, :action=>:assignJob, :id=>j.id }%>
+    	<%if j.handling_adm_user_id%> <%=AdmUser.find(j.handling_adm_user_id).name%><%end%>
+    	<%if !j.s_assign.blank?%>
+	     	<%if !j.s_assign.done_at.blank?%>   	
+	    	<br><%=time_ago_in_words j.s_assign.done_at%>之前
+	    	<%end%>
+    	<%end%>
+    </td>
+    <td>
+    	<%=link_to image_tag(setConditionColor(j.stage2), :size => "25x25"),{:controller=>:main, :action=>:informUser, :id=>j.id }%>
+    	<%if !j.s_inform.blank?%>
+    		<%if !j.s_inform.done_at.blank?%>   	
+	    	<br><%=time_ago_in_words j.s_inform.done_at%>之前
+	    	<%end%>
+    	<%end%>
+    </td>
+    <td>
+    	<%=link_to image_tag(setConditionColor(j.stage3), :size => "25x25"),{:controller=>:main, :action=>:handleJob, :id=>j.id }%>
+    	<%if !j.s_handle.blank?%>
+	     	<%if !j.s_handle.done_at.blank?%>   	
+	    	<br><%=time_ago_in_words j.s_handle.done_at%>之前
+	    	<%end%>    	
+    	<%end%>
+    </td>
+    <td>
+    	<%=link_to image_tag(setConditionColor(j.stage4), :size => "25x25"),{:controller=>:main, :action=>:checkJob, :id=>j.id }%>
+    	<%if !j.s_check.blank?%>
+	     	<%if !j.s_check.done_at.blank?%>   	
+	    	<br><%=time_ago_in_words j.s_check.done_at%>之前
+	    	<%end%>
+    	<%end%>
+    </td>
+    <td>
+    	<%=link_to image_tag(setConditionColor(j.stage5), :size => "25x25"),{:controller=>:main, :action=>:closeJob, :id=>j.id }%>
+    	<%if !j.s_closed.blank?%>
+	     	<%if !j.s_closed.done_at.blank?%>   	
+	    	<br><%=time_ago_in_words j.s_closed.done_at%>之前
+	    	<%end%>
+    	<%end%>
+    </td>
+	<%if permissionDelete(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job)%>    
+    <td><%= link_to '刪除',"/main/deleteJob?id="+j.id.to_s, data: { confirm: "你確定要刪除 工作ID:"+j.id.to_s+" ?" } %></td>
+  	<%end%>
+  </tr>
+  <%end%>
+</table>
