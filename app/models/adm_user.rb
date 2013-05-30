@@ -3,7 +3,6 @@ require 'digest/sha1'
 class AdmUser < ActiveRecord::Base
   attr_accessible :email, :extend, :name, :phone, :pw, :username, :pw_confirmation, :verify_code, :department, :verified, :campus_buildings_list_id
   has_many :jobs
-  has_many :jobs, :as=>:handling_adm_user
   
   has_many :event_adm_logs  
   has_many :admin_login_logs   

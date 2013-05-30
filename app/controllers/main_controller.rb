@@ -22,7 +22,7 @@ class MainController < ApplicationController
     if adm_user.permission_config.job & Infor::Application.config.READ_PERMISSION != 0 
       @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => [" stage1 = 'finish' and stage5 <> 'finish' and deleted = ? ", false]).order('id DESC')   
     else   
-      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["(handling_adm_user_id = ? or adm_user_id = ? ) and ( stage1 = 'finish' and stage5 <> 'finish' and deleted = ? )", session[:adm_user_id], session[:adm_user_id], false ], :joins => :ip_map).order('id DESC')         
+      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["(handling_adm_user_id = ? or adm_user_id = ? ) and ( stage1 = 'finish' and stage5 <> 'finish' and deleted = ? )", session[:adm_user_id], session[:adm_user_id], false ], :joins => "left outer join ip_maps on ip_maps.id = jobs.ip_map_id").order('id DESC')         
     end   
   end
   
@@ -42,7 +42,7 @@ class MainController < ApplicationController
     if adm_user.permission_config.job & Infor::Application.config.READ_PERMISSION != 0 
       @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["stage5 = 'finish' and deleted = ?", false]).order('id DESC')
     else
-      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["(handling_adm_user_id = ? or adm_user_id = ?) and stage5 = 'finish' and deleted = ?", session[:adm_user_id], session[:adm_user_id], false], :joins => :ip_map).order('id DESC')
+      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["(handling_adm_user_id = ? or adm_user_id = ?) and stage5 = 'finish' and deleted = ?", session[:adm_user_id], session[:adm_user_id], false], :joins => "left outer join ip_maps on ip_maps.id = jobs.ip_map_id").order('id DESC')
     end     
   end
 #================================================================================================================================for comment  

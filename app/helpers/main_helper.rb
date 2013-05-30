@@ -114,11 +114,11 @@ module MainHelper
   def updateDays(job)
 	time = (job.job_detail.updated_at - job.job_detail.created_at)/60/60/24
 	if time >3.0
-		time = image_tag("green_d.png", :size => "10x10")
+		time = image_tag("red_d.png", :size => "10x10")
 	elsif time >2.0
 		time = image_tag("yellow_d.png", :size => "10x10")
 	elsif time >1.0
-		time = image_tag("red_d.png", :size => "10x10")
+		time = image_tag("green_d.png", :size => "10x10")
 	else
 		time = ''
 	end
