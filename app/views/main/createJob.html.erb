@@ -1,11 +1,11 @@
 <h1>新增資安事件</h1>
 *必填
 <%=form_tag do%>
-			*事件發生時間:<%=text_field_tag :log_date, Time.now.strftime("%m/%d/%Y") ,{:readonly => true}%><br>
-			*事件來源端IP Address:<%=text_field_tag :src_ip%><br>
-	  		*事件動作:<%= select_tag :alert ,options_for_select([['alert',true],['非alert',false]])%><br>		
-			*事件被記錄次數:<%=text_field_tag :log_count%><br>
-			*事件region<%= select_tag :region ,options_for_select([['gov-untrust', 'gov-untrust'],['gov-trust','gov-trust'],['edu-untrust','edu-untrust'],['edu-trust','edu-trust'],
+			*事件發生時間:<br><%=text_field_tag :log_date, Time.now.strftime("%m/%d/%Y") ,{:readonly => true}%><br>
+			*事件來源端IP Address:<br><%=text_field_tag :src_ip%><br>
+	  		*事件動作:<br><%= select_tag :alert ,options_for_select([['alert',true],['非alert',false]])%><br>		
+			*事件被記錄次數:<br><%=text_field_tag :log_count%><br>
+			*事件region:<br><%= select_tag :region ,options_for_select([['gov-untrust', 'gov-untrust'],['gov-trust','gov-trust'],['edu-untrust','edu-untrust'],['edu-trust','edu-trust'],
 																  ['cloud-untrust','cloud-untrust'],['cloud-trust','cloud-trust'] ])%><br>	
 			
 		  	<input type="button" onclick="addThreatId()" name="add" value="新增事件Log" />
@@ -25,17 +25,19 @@
 		}
 	);});
 
-	var serverity_string = "informational,low,high,critical";
+	var serverity_string = "informational,low,medium,high,critical";
 	var data = serverity_string.split(',');
 	var threat_index=new Number(0);
 
 	function addThreatId()
 	{			
+		var today= new Date();
+		
 		var newThreatDiv = $(document.createElement('div')).attr({ id: 'threat_'+threat_index, class: 'border_dotted_blue'});
 		newThreatDiv.appendTo("#threatField");
 		
 		newThreatDiv.append("事件Log thread ID:<br>");
-		var newThreatId = $(document.createElement('input')).attr({ id: 'threat_'+threat_index+'_id', name: 'threat['+threat_index+'][id]', type: 'text'});			
+		var newThreatId = $(document.createElement('input')).attr({ id: 'threat_'+threat_index+'_id', name: 'threat['+threat_index+'][id]', type: 'text', value: 0});			
 		newThreatId.appendTo('#threat_'+threat_index);	
 			
 		newThreatDiv.append("<br>事件Log 目的端IP Address:<br>");		
@@ -43,7 +45,8 @@
 		newThreatVicIp.appendTo('#threat_'+threat_index);		
 
 		newThreatDiv.append("<br>事件Log 發生時間:<br>");		
-		var newThreatVicIp = $(document.createElement('input')).attr({ id: 'threat_'+threat_index+'_log_time', name: 'threat['+threat_index+'][log_time]', type: 'text', readonly: 'true'});			
+		var newThreatVicIp = $(document.createElement('input')).attr({ id: 'threat_'+threat_index+'_log_time', name: 'threat['+threat_index+'][log_time]', type: 'text', readonly: 'true',
+																	   value:  ("0" + (today.getMonth() + 1)).slice(-2)+ '/' + today.getDate() + '/' + today.getFullYear()+' '+today.getHours()+':'+today.getMinutes() });			
 		newThreatVicIp.appendTo('#threat_'+threat_index);				
 			
 		$( '#'+'threat_'+threat_index+'_log_time' ).datetimepicker({
@@ -74,7 +77,4 @@
 			$('#threat_'+threat_index).remove();
 		}	
 	} 	
-		
-
-	
 </script>

@@ -6,6 +6,7 @@ class MainController < ApplicationController
   before_filter(:only => [:mailConfig, :permissionConfig, :traceConfig, :pwReset]) { |c| c.checkPermission('acc', Infor::Application.config.UPDATE_PERMISSION)}   
 
   #before_filter(:only => [:permissionConfig]) { |c| c.checkingPermission('acc', Infor::Application.config.DELETE_PERMISSION)} 
+  before_filter(:only => [:createJob]) { |c| c.checkPermission('job', Infor::Application.config.CREATE_PERMISSION)}    
   before_filter(:only => [:deleteJob]) { |c| c.checkPermission('job', Infor::Application.config.DELETE_PERMISSION)}  
   before_filter(:only => [:closeJob, :closeJobMail]) { |c| c.checkPermission('job', Infor::Application.config.CLOSE_PERMISSION)} 
   before_filter(:only => [:assignJob]) { |c| c.checkPermission('job', Infor::Application.config.ASSIGN_PERMISSION)}  
@@ -30,7 +31,7 @@ class MainController < ApplicationController
     @notice=params[:notice]
     adm_user=AdmUser.find(session[:adm_user_id])
     if adm_user.permission_config.job & Infor::Application.config.READ_PERMISSION != 0 
-      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["(PA = ? and deleted = ?) or ( ( (stage1 = 'un' or stage1 = 'returned') and stage5 = 'un' and deleted = ?) and ( (log_count >= 5 and alert <> ?) or (log_count >= 1000 and alert <> ?) ) )",false ,false ,false, true, false], :joins => :job_detail).order('id DESC')
+      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["( ( (stage1 = 'un' or stage1 = 'returned') and stage5 = 'un' and deleted = ?) and ( (log_count >= 5 and alert <> ?) or (log_count >= 1000 and alert <> ?) or PA = ? ) )", false, true, false, false], :joins => :job_detail).order('id DESC')
     else
       redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'   
     end     
@@ -308,14 +309,11 @@ class MainController < ApplicationController
     if request.post?               
       job=Job.new(:stage1=>'un', :stage2=>'un', :stage3=>'un', :stage4=>'un', :stage5=>'un', :PA=>false)      
       ip_map=IpMap.find_by_ip(params[:src_ip])
-      job.ip_map=ip_map
-      
+      job.ip_map=ip_map     
       job_detail=JobDetail.new(:log_date=>DateTime.strptime(params[:log_date], "%m/%d/%Y").to_date, :src_ip=>params[:src_ip],
                                :alert=>params[:alert], :log_count=>params[:log_count], :region=>params[:region])
       job_detail.job=job
       job_detail.save!     
-
-
       if !params[:threat].blank?
         params[:threat].each do |key, value|
           threat=params[:threat][key]
@@ -337,9 +335,7 @@ class MainController < ApplicationController
           end         
         end
       end
-
-
-        redirect_to :controller=>'main', :action=>'index', :notice=>'成功新增資安事件' 
+      redirect_to :controller=>'main', :action=>'index', :notice=>'成功新增資安事件' 
     end 
     rescue ActiveRecord::RecordInvalid
       job_detail.valid? 
