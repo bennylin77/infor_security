@@ -11,7 +11,11 @@
   <% end %>
   <div class="field">
     IP<br />  
+    <%if @disable%>
     <%= f.text_field :IPv4_1, :size=>3, :maxlength=>3 ,:disabled => 'disabled'%>.<%= f.text_field :IPv4_2, :size=>3, :maxlength=>3, :disabled => 'disabled'%>.<%= f.text_field :IPv4_3, :size=>3, :maxlength=>3, :disabled => 'disabled'%>.<%= f.text_field :IPv4_4, :size=>3, :maxlength=>3,:disabled => 'disabled' %>
+    <%else%>
+    <%= f.text_field :IPv4_1, :size=>3, :maxlength=>3%>.<%= f.text_field :IPv4_2, :size=>3, :maxlength=>3%>.<%= f.text_field :IPv4_3, :size=>3, :maxlength=>3%>.<%= f.text_field :IPv4_4, :size=>3, :maxlength=>3%>   
+  	<%end%>
   </div>
   <div id="extraField">
   </div>

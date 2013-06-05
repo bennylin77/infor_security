@@ -24,6 +24,7 @@ class IpMapsController < ApplicationController
   end
 
   def edit
+    @disable = true
     @ip_map = IpMap.find(params[:id])
   end
 
