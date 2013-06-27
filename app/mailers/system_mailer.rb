@@ -70,6 +70,30 @@ class SystemMailer < ActionMailer::Base
       @comment=comment
       mail( to: receiver.email , subject:"資安通報系統 意見回饋通知", cc: "gavinhsu@nctu.edu.tw")
   end
+   
+  def Comment_assign(receiver, comment)
+	  @receiver=receiver
+      @comment=comment
+      mail( to: receiver.email , subject:"資安通報系統 意見回饋通知", cc: "gavinhsu@nctu.edu.tw")	
+  end
+  
+  def Comment_handle(receiver, comment)
+	  @receiver=receiver
+      @comment=comment
+      mail( to: receiver.email , subject:"資安通報系統 意見回饋通知", cc: "gavinhsu@nctu.edu.tw")	
+  end
+  
+  def Comment_close(receiver, comment)
+	  @receiver=receiver
+      @comment=comment
+      mail( to: receiver.email , subject:"資安通報系統 意見回饋通知", cc: "gavinhsu@nctu.edu.tw")	
+  end
+  
+  def Comment_return(receiver, comment)
+	  @receiver=receiver
+      @comment=comment
+      mail( to: receiver.email , subject:"資安通報系統 意見回饋通知", cc: "gavinhsu@nctu.edu.tw")	
+  end
 #================================================================================================================================for auto mail  
 
   def dailyAssignMailSending(receiver, job)

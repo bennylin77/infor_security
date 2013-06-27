@@ -47,6 +47,17 @@ Infor::Application.routes.draw do
   get   "event_maps/indexAll" 
   post  "event_maps/search"
   
+  #comment
+  get "comment_list/index"
+  get "comment_list/CommentDetailShow"
+  get "comment_list/handle_edit"
+  get "comment_list/closed_edit"
+  get "comment_list/return_edit"
+  post "comment_list/CommentDetailShow"
+  post "comment_list/handle_edit"
+  post "comment_list/closed_edit"
+  post "comment_list/return_edit"
+  
   resources :jobs
   resources :adm_users
   resources :campus_buildings_lists
