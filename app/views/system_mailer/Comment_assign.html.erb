@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+	<p><%=@receiver.name%> 您好! </p>
+	<p>此意見回饋須要您來處理，請至系統查看謝謝!!</p>
+	
+	<p>意見編號:</p>
+		<p><b><%=@comment.id%></b></p>
+	<p>主旨:</p>
+		<p><b><%=@comment.subject%></b></p>
+	<p>內容:</p>
+		<p><b><%=@comment.content%></b></p>
+	<p>資安事件通報系統網址：<%=link_to domainName , domainName%></p>
+  </body>
+</html>

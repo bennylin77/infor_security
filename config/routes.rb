@@ -53,11 +53,13 @@ Infor::Application.routes.draw do
   get "comment_list/handle_edit"
   get "comment_list/closed_edit"
   get "comment_list/return_edit"
+  get "comment_list/change_handle_edit"
   post "comment_list/CommentDetailShow"
   post "comment_list/handle_edit"
   post "comment_list/closed_edit"
   post "comment_list/return_edit"
-  
+  post "comment_list/change_handle_edit"  
+
   resources :jobs
   resources :adm_users
   resources :campus_buildings_lists

@@ -64,7 +64,21 @@ class MainController < ApplicationController
     end     
   end
   
+  def assignComment
     
+  end
+  
+  def handleComment
+    
+  end  
+  
+  def closeComment 
+    
+  end  
+  
+  
+  
+  
 #================================================================================================================================for stage  
   def jobDetailShowing
     @job=Job.find(params[:id])     

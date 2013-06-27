@@ -72,7 +72,14 @@
 	</tr>
 	<tr>	
 		<td></td><td>刪除</td><td><%=check_box_tag :building_delete, Infor::Application.config.DELETE_PERMISSION, permissionDelete(@permission_config.building)%></td>	
-	</tr>						
+	</tr>
+
+	<tr>	
+		<td>意見回饋:</td>
+		<td>指派</td><td><%=check_box_tag :comment_top, 1, permission_comment(@permission_config.comment_top)%></td>	
+	</tr>
+	<tr>	
+		<td></td><td>處理事件</td><td><%=check_box_tag :comment_web_worker, 1, permission_comment(@permission_config.comment)%></td>
 	</table> 
  	
   	<%= hidden_field  :permission_config, :id, :value=>@permission_config.id %>

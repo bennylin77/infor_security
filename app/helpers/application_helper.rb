@@ -69,5 +69,13 @@ module ApplicationHelper
     adm_user=AdmUser.find(session_adm_id)
     adm_user.authorization=="adm"
   end 
+  
+  def permission_comment(ha)
+	if ha==1
+		true
+	else
+		false
+	end
+  end
    
 end
