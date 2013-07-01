@@ -1,0 +1,12 @@
+<h1>意見回饋列表</h1>
+
+<div>
+	<span style="font-weight: 600;">工作狀態: </span>	
+	<%=image_tag("red.png", :size => "20x20")%>:尚未指派處理
+	<%=image_tag("yellow.png", :size => "20x20")%>:工程師處理中 
+	<%=image_tag("yellow_d.png", :size => "20x20")%>:管理員確認中 
+	<%=image_tag("green.png", :size => "20x20")%>:處理完成
+</div>
+
+<%= render :partial => "comment_list_form" %>
+<div class="apple_pagination"><%= will_paginate(@comment) %></div>

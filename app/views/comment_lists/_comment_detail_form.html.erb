@@ -1,0 +1,43 @@
+<div id="printdiv">
+<table border="1" id='comment_detail_table'>
+	<tr>
+		<th>項目</th>
+		<th style="min-width: 1130px;">內容</th>
+	</tr>
+	<tr>
+		<td>意見ID</td>
+		<td><%= comment.id %></td>
+	</tr>
+	<tr>
+		<td>意見名稱</td>
+		<td><%=comment.subject%></td>		
+	</tr>	
+	<tr>
+		<td>通報日期</td>
+		<td><%=comment.created_at.strftime("%Y-%m-%d %H:%M:%S")%></td>
+	</tr>	
+	<tr>
+		<td>事件描述</td>
+		<td><%=comment.content%></td>
+	</tr>
+	<%if comment.stage!="1"%>
+		<tr>
+			<td>負責工程師</td>
+			<td><%=comment.adm_user.name%></td>
+		</tr>
+	<%end%>
+	<%if comment.stage=="3" %>
+		<tr>
+			<td>工程師處理紀錄</td>
+			<td><%=comment.handle_note%></td>
+		</tr>
+	<%end%>
+	<%if comment.stage=="4" %>
+		<tr>
+			<td>結案結果</td>
+			<td><%=comment.report%></td>
+		</tr>
+	<%end%>
+</table> 
+</div>
+<br><br>

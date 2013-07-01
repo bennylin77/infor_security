@@ -1,0 +1,11 @@
+<%= form_tag do%>
+	<h1>請填寫退件理由</h1>
+	<br>
+	<div class="field">
+		<%= text_area_tag :content, :nil, :size=>'150x3' %>
+	</div>
+	<%= hidden_field_tag 'id', @comment.id%>
+	<%= hidden_field_tag 'adm_id', @comment.handling_adm_user_id%>
+    <%=submit_tag "送出"%>
+  </div>
+<% end %>

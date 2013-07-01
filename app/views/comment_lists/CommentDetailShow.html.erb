@@ -1,0 +1,40 @@
+<%if @comment.stage=="1" and Check_config(@adm_user) and @comment.handling_adm_user_id.nil? %>	
+	<%=form_tag do%>
+		<span style="font-size: 18px; font-weight: 600;"><label>指派工程師:</label></span>			
+	  		<%= select_tag :assigned_user , options_from_collection_for_select(@assign_user, "id", "name", ), {:include_blank => '請選擇'}%>
+	  	<%= hidden_field_tag 'id', @comment.id%>		
+		<%=submit_tag "送出"%>
+	<%end%>
+<%end%>			
+
+<%if @comment.stage=="2" and ( Check_config(@adm_user) or Check_handle_adm(@comment,@adm_user) )%>	
+	<div class="menu_border_blue">
+		<span id="green_button"><%= link_to '更換指派工程師', {:controller=>:comment_list, :action=>:change_handle_edit, :id=>@comment.id} %></span>
+	</div>	
+<%end%>
+<br>
+<%if @comment.stage=="2" and Check_handle_adm(@comment,@adm_user)%>
+	<div>
+		<span id="green_button"><%= link_to '處理事件', {:controller=>:comment_list, :action=>:handle_edit, :id=>@comment.id } %></span>
+	</div>	
+<%end%>
+<%if @comment.stage=="3" and Check_config(@adm_user)%>
+	<div class="menu_border_blue">
+		<span id="green_button"><%= link_to '事件處理審核', {:controller=>:comment_list, :action=>:closed_edit, :id=>@comment.id } %></span>
+	</div>	
+<%end%>
+<br>
+<%= render :partial => "comment_detail_form", :locals => { :comment => @comment } %>
+<br>
+<%if @comment.stage=="1" and Check_config(@adm_user)%>
+	<span style="font-size: 19px; font-weight: 600;"><label>直接結案事件</label></span>
+	<br><br>
+	<%= form_tag do%>
+		<h1>結案紀錄(Result)</h1>
+		<div class="field">
+			<%= text_area_tag :result %>
+		</div>
+		<%= hidden_field_tag 'id', @comment.id%>	
+		<%=submit_tag "結案"%><br><br>
+	<%end%>
+<%end%>

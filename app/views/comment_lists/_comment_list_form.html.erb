@@ -1,0 +1,21 @@
+<table border="1" id="comment_lists_table" >
+	<tr>
+		<th>意見編號</th>
+		<th>意見描述</th>  
+		<th>處理狀態</th>   	
+	</tr>
+<%@comment.each do |j| %>
+	<tr>
+		<td><span style="font-size: 19px; font-weight: 600;"><%=link_to j.id,{:controller=>:comment_list, :action=>:CommentDetailShow, :id=>j.id }%></span></td>
+		<td><span style="font-size: 16px; font-weight: 600;"><%= j.subject %></span></td>
+		<td>				
+			<%if j.report.nil? %>
+				<%=image_tag(setColor(j.stage), :size => "20x20")%>	
+			<%else%>
+				<%=image_tag(setColor(j.stage), :size => "20x20")%>	
+				<span style="font-size: 18px; font-weight: 600;"><%=j.report%></span>				
+			<%end%>
+		</td>
+	</tr>
+<%end%>	
+</table>
