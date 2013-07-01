@@ -54,7 +54,7 @@ class MainController < ApplicationController
       @comment.save!
      
       @adm_user = AdmUser.joins(:permission_config).where('comment_top = 1')
-	@adm_user.each do |j|	       
+	  @adm_user.each do |j|	       
 		SystemMailer.sendComment(j, @comment).deliver                   	  
 	  end
             
