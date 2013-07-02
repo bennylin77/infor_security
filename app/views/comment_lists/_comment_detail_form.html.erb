@@ -20,10 +20,14 @@
 		<td>事件描述</td>
 		<td><%=comment.content%></td>
 	</tr>
-	<%if comment.stage!="1"%>
+	<tr>
+		<td>通報人員</td>
+		<td><%=comment.adm_user.name%></td>
+	</tr>
+	<%if comment.stage!="1" %>
 		<tr>
 			<td>負責工程師</td>
-			<td><%=comment.adm_user.name%></td>
+			<td><%=AdmUser.find(comment.handling_adm_user_id).name%></td>
 		</tr>
 	<%end%>
 	<%if comment.stage=="3" %>

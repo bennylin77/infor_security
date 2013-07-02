@@ -7,7 +7,7 @@ class CommentListsController < ApplicationController
 	def CommentDetailShow
 		@comment = Comment.find(params[:id])
 	    @adm_user=AdmUser.find(session[:adm_user_id])
-		@assign_user=AdmUser.joins(:permission_config).where('comment = 1')             
+		@assign_user=AdmUser.joins(:permission_config).where('comment & 64 = 64')             
 		if request.post?
 			if params[:result].nil?
 				@comment.assigning_adm_user_id=session[:adm_user_id]
@@ -43,11 +43,11 @@ class CommentListsController < ApplicationController
 	end
 	def change_handle_edit
 		@comment = Comment.find(params[:id])
-		@assign_user=AdmUser.joins(:permission_config).where('comment = 1')
+		@assign_user=AdmUser.joins(:permission_config).where('comment & 64 = 64')
 		if request.post?
-			@comment.handle_note=params[:content]   # 寫入handle_note
-			@comment.stage = 2						# next stage
-			@comment.change_note = params[:result]
+			@comment.handling_adm_user_id = params[:assigned_user_change]  # 換人
+			@comment.change_note = params[:result]       # 換人原因
+			@comment.stage = 2									
 			@comment.save!
 			
 			adm_user=AdmUser.find(params[:assigned_user_change])

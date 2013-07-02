@@ -54,7 +54,7 @@ class MainController < ApplicationController
 	  @comment.stage=1
       @comment.save!
      
-      @adm_user = AdmUser.joins(:permission_config).where('comment_top = 1')
+      @adm_user = AdmUser.joins(:permission_config).where('comment & 16 = 16')
 	  @adm_user.each do |j|	       
 		SystemMailer.sendComment(j, @comment).deliver                   	  
 	  end
@@ -407,8 +407,7 @@ class MainController < ApplicationController
       @permission_config.building =  params[:building_read].to_i | params[:building_update].to_i | params[:building_create].to_i | params[:building_delete].to_i
       @permission_config.job =  params[:job_read].to_i | params[:job_handle].to_i | params[:job_assign].to_i | params[:job_close].to_i | params[:job_create].to_i | params[:job_delete].to_i            
 
-	@permission_config.comment = params[:comment_web_worker].to_i
-	@permission_config.comment_top = params[:comment_top].to_i
+      @permission_config.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i    #comment
 
       @permission_config.save!
       redirect_to adm_users_url          

@@ -76,10 +76,10 @@
 
 	<tr>	
 		<td>意見回饋:</td>
-		<td>指派</td><td><%=check_box_tag :comment_top, Infor::Application.config.READ_PERMISSION, permission_comment(@permission_config.comment_top)%></td>	
+		<td>指派</td><td><%=check_box_tag :comment_top, Infor::Application.config.ASSIGN_PERMISSION, permissionHandle(@permission_config.comment)%></td>	
 	</tr>
 	<tr>	
-		<td></td><td>處理事件</td><td><%=check_box_tag :comment_web_worker, Infor::Application.config.READ_PERMISSION, permission_comment(@permission_config.comment)%></td>
+		<td></td><td>處理事件</td><td><%=check_box_tag :comment_web_worker, Infor::Application.config.HANDLE_PERMISSION, permissionAssign(@permission_config.comment)%></td>
 	</table> 
  	
   	<%= hidden_field  :permission_config, :id, :value=>@permission_config.id %>

@@ -13,7 +13,7 @@ module CommentListsHelper
 		end    
 	end
 	def Check_config(adm_user)
-		if adm_user.name=="許郡泓" or adm_user.name=="葉仲軒" or adm_user.name=="林起" or adm_user.name=="羅濟韋"
+		if adm_user.permission_config.comment & 16 == 16
 			true
 		else
 			false
