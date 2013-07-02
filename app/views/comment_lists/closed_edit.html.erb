@@ -10,7 +10,7 @@
 	<%= hidden_field_tag 'id', @comment.id%>	
 	<%= hidden_field_tag 'adm_id', @comment.adm_user_id%>	
 	<%=submit_tag "結案"%><br><br>
-	<span id="green_button"><%=link_to '退回工程師',{:controller=>:comment_list, :action=>:return_edit, :id=>@comment.id} %></span>
+	<span id="green_button"><%=link_to '退回工程師',{:controller=>:comment_lists, :action=>:return_edit, :id=>@comment.id} %></span>
 <%end%>
 
 

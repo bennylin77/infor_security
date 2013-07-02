@@ -9,18 +9,18 @@
 
 <%if @comment.stage=="2" and ( Check_config(@adm_user) or Check_handle_adm(@comment,@adm_user) )%>	
 	<div class="menu_border_blue">
-		<span id="green_button"><%= link_to '更換指派工程師', {:controller=>:comment_list, :action=>:change_handle_edit, :id=>@comment.id} %></span>
+		<span id="green_button"><%= link_to '更換指派工程師', {:controller=>:comment_lists, :action=>:change_handle_edit, :id=>@comment.id} %></span>
 	</div>	
 <%end%>
 <br>
 <%if @comment.stage=="2" and Check_handle_adm(@comment,@adm_user)%>
 	<div>
-		<span id="green_button"><%= link_to '處理事件', {:controller=>:comment_list, :action=>:handle_edit, :id=>@comment.id } %></span>
+		<span id="green_button"><%= link_to '處理事件', {:controller=>:comment_lists, :action=>:handle_edit, :id=>@comment.id } %></span>
 	</div>	
 <%end%>
 <%if @comment.stage=="3" and Check_config(@adm_user)%>
 	<div class="menu_border_blue">
-		<span id="green_button"><%= link_to '事件處理審核', {:controller=>:comment_list, :action=>:closed_edit, :id=>@comment.id } %></span>
+		<span id="green_button"><%= link_to '事件處理審核', {:controller=>:comment_lists, :action=>:closed_edit, :id=>@comment.id } %></span>
 	</div>	
 <%end%>
 <br>

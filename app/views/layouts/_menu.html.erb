@@ -29,7 +29,12 @@
 	                <%end%>
 	            </ul>
 	        </li> 	    
-	        <li><%=link_to '意見回饋' , {:controller=>:main, :action=>:comment}%></li>          
+	        <li><a href="#">意見回饋</a>
+	        	<ul>
+					<li><%=link_to '意見回饋' , {:controller=>:main, :action=>:comment}%></li>     
+					<li><%=link_to '意見處理流程' , {:controller=>:comment_lists, :action=>:index}%></li>     
+	            </ul>
+	        </li> 	          
 	    </ul>
 	    <%end%> 
 	</div>

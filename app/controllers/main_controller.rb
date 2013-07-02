@@ -51,6 +51,7 @@ class MainController < ApplicationController
     if request.post?               
       @comment=Comment.new(params[:comment])
       @comment.adm_user=AdmUser.find(session[:adm_user_id])
+	  @comment.stage=1
       @comment.save!
      
       @adm_user = AdmUser.joins(:permission_config).where('comment_top = 1')
@@ -58,7 +59,7 @@ class MainController < ApplicationController
 		SystemMailer.sendComment(j, @comment).deliver                   	  
 	  end
             
-      redirect_to :controller=>'main', :action=>'index', :notice=>'已將您寶貴的意見送出'
+      redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'已將您寶貴的意見送出'
     else
       @comment=Comment.new
     end     

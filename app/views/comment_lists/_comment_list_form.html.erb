@@ -6,7 +6,7 @@
 	</tr>
 <%@comment.each do |j| %>
 	<tr>
-		<td><span style="font-size: 19px; font-weight: 600;"><%=link_to j.id,{:controller=>:comment_list, :action=>:CommentDetailShow, :id=>j.id }%></span></td>
+		<td><span style="font-size: 19px; font-weight: 600;"><%=link_to j.id,{:controller=>:comment_lists, :action=>:CommentDetailShow, :id=>j.id }%></span></td>
 		<td><span style="font-size: 16px; font-weight: 600;"><%= j.subject %></span></td>
 		<td>				
 			<%if j.report.nil? %>

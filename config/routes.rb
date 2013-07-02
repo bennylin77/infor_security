@@ -48,17 +48,17 @@ Infor::Application.routes.draw do
   post  "event_maps/search"
   
   #comment
-  get "comment_list/index"
-  get "comment_list/CommentDetailShow"
-  get "comment_list/handle_edit"
-  get "comment_list/closed_edit"
-  get "comment_list/return_edit"
-  get "comment_list/change_handle_edit"
-  post "comment_list/CommentDetailShow"
-  post "comment_list/handle_edit"
-  post "comment_list/closed_edit"
-  post "comment_list/return_edit"
-  post "comment_list/change_handle_edit"  
+  get "comment_lists/index"
+  get "comment_lists/CommentDetailShow"
+  get "comment_lists/handle_edit"
+  get "comment_lists/closed_edit"
+  get "comment_lists/return_edit"
+  get "comment_lists/change_handle_edit"
+  post "comment_lists/CommentDetailShow"
+  post "comment_lists/handle_edit"
+  post "comment_lists/closed_edit"
+  post "comment_lists/return_edit"
+  post "comment_lists/change_handle_edit"  
 
   resources :jobs
   resources :adm_users

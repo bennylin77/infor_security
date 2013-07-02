@@ -1,5 +1,5 @@
 #encoding: utf-8
-class CommentListController < ApplicationController
+class CommentListsController < ApplicationController
 	def index	
 		@notice=params[:notice]
 		@comment = Comment.paginate(:per_page => 30, :page => params[:page]).order('id DESC')
@@ -17,12 +17,12 @@ class CommentListController < ApplicationController
 				
 				adm_user=AdmUser.find(params[:assigned_user])
 				SystemMailer.Comment_assign(adm_user, @comment).deliver
-				redirect_to :controller=>'comment_list', :action=>'index', :notice=>'成功指派工作'
+				redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'成功指派工作'
 			else
 				@comment.report=params[:result]
 				@comment.stage=4
 				@comment.save!
-				redirect_to :controller=>'comment_list', :action=>'index', :notice=>'已結案'
+				redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'已結案'
 			end
 		end
 	end
@@ -38,7 +38,7 @@ class CommentListController < ApplicationController
 			adm_user=AdmUser.find(params[:adm_id])
 			SystemMailer.Comment_handle(adm_user, @comment).deliver
 			
-			redirect_to :controller=>'comment_list', :action=>'index', :notice=>'完成事件處理' 
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件處理' 
 		end
 	end
 	def change_handle_edit
@@ -53,7 +53,7 @@ class CommentListController < ApplicationController
 			adm_user=AdmUser.find(params[:assigned_user_change])
 			SystemMailer.Comment_handle_change(adm_user, @comment).deliver			
 				
-			redirect_to :controller=>'comment_list', :action=>'index', :notice=>'成功指派工作'
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'成功指派工作'
 		end
 	end
 	
@@ -69,7 +69,7 @@ class CommentListController < ApplicationController
 			adm_user=AdmUser.find(params[:adm_id])
 			SystemMailer.Comment_close(adm_user, @comment).deliver
 			
-			redirect_to :controller=>'comment_list', :action=>'index', :notice=>'完成事件處理' 
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件處理' 
 		end
 	end
 	def return_edit
@@ -84,7 +84,7 @@ class CommentListController < ApplicationController
 			adm_user=AdmUser.find(params[:adm_id])
 			SystemMailer.Comment_return(adm_user, @comment).deliver
 			
-			redirect_to :controller=>'comment_list', :action=>'index', :notice=>'完成事件退回' 
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件退回' 
 		end
 	end
 end

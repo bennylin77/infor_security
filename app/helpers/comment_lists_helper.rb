@@ -1,5 +1,5 @@
 # encoding: UTF-8
-module CommentListHelper
+module CommentListsHelper
 	def setColor(con)
 		if con=="4"
 		  "green.png"  
