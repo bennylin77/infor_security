@@ -7,6 +7,7 @@
 	<%=image_tag("yellow_d.png", :size => "20x20")%>:管理員確認中 
 	<%=image_tag("green.png", :size => "20x20")%>:處理完成
 </div>
-
-<%= render :partial => "comment_list_form" %>
+<%if AdmUser.find(session[:adm_user_id]).permission_config.comment & 1 == 1 %>
+	<%= render :partial => "comment_list_form" %>
+<%end%>
 <div class="apple_pagination"><%= will_paginate(@comment) %></div>

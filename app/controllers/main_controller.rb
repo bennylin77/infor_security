@@ -407,7 +407,7 @@ class MainController < ApplicationController
       @permission_config.building =  params[:building_read].to_i | params[:building_update].to_i | params[:building_create].to_i | params[:building_delete].to_i
       @permission_config.job =  params[:job_read].to_i | params[:job_handle].to_i | params[:job_assign].to_i | params[:job_close].to_i | params[:job_create].to_i | params[:job_delete].to_i            
 
-      @permission_config.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i    #comment
+      @permission_config.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i | params[:comment_read].to_i   #comment
 
       @permission_config.save!
       redirect_to adm_users_url          
