@@ -1,5 +1,12 @@
 #encoding: utf-8
 class CommentListsController < ApplicationController
+
+	before_filter(:only => [:index, :CommentDetailShow]) { |c| c.checkPermission('comment', Infor::Application.config.READ_PERMISSION)}    
+	before_filter(:only => [:handle_edit]) { |c| c.checkUser('comment_handle',nil,params[:id])}    
+	before_filter(:only => [:close_edit, :return_edit]) { |c| c.checkUser('comment_close',nil,params[:id])}    
+	before_filter(:only => [:change_handle_edit]) { |c| c.checkUser('comment_change_handle',nil,params[:id])}    
+
+
 	def index	
 		@notice=params[:notice]
 		@comment = Comment.paginate(:per_page => 30, :page => params[:page]).order('id DESC')

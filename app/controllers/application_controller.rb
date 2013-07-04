@@ -33,8 +33,13 @@ class ApplicationController < ActionController::Base
     elsif type=='job'        
       unless (adm_user.permission_config.job & permission) != 0
         redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'      
-      end            
-    end       
+      end
+	elsif type=='comment'        
+      unless (adm_user.permission_config.comment & permission) != 0
+        redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'      
+      end 	
+    end  
+	
   end  
   
   def checkUser(type=nil, permission=nil, id=nil)
@@ -62,8 +67,24 @@ class ApplicationController < ActionController::Base
       if  job.handling_adm_user_id!=adm_user.id      
           redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'
       end               
-    end 
+	elsif type=='comment_handle'     
+      comment = Comment.find(id)      
+      if  comment.handling_adm_user_id!=adm_user.id      
+          redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'
+      end  
+	elsif type=='comment_change_handle'     
+      comment = Comment.find(id)      
+      if  comment.assigning_adm_user_id!=adm_user.id and comment.handling_adm_user_id!=adm_user.id     
+          redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'
+      end  	  
+    elsif type=='comment_close'     
+      comment = Comment.find(id)      
+      if  comment.assigning_adm_user_id!=adm_user.id      
+          redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'
+      end  	
+    end 	
   end   
+  
   
 protected
   def authorize
