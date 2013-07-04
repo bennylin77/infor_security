@@ -1,9 +1,0 @@
-<%=form_tag do%>	
-	<span style="font-size: 18px; font-weight: 600;"><label>更換指派工程師:</label></span>			
-	  	<%= select_tag :assigned_user_change , options_from_collection_for_select(@assign_user, "id", "name", ), {:include_blank => '請選擇'}%>
-	<div class="field">
-		<%= text_area_tag :result %>
-	</div>	
-	<%= hidden_field_tag 'id', @comment.id%>	
-	<%=submit_tag "送出"%>				
-<%end%>

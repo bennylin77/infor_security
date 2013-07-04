@@ -49,16 +49,16 @@ Infor::Application.routes.draw do
   
   #comment
   get "comment_lists/index"
-  get "comment_lists/CommentDetailShow"
-  get "comment_lists/handle_edit"
-  get "comment_lists/closed_edit"
-  get "comment_lists/return_edit"
-  get "comment_lists/change_handle_edit"
-  post "comment_lists/CommentDetailShow"
-  post "comment_lists/handle_edit"
-  post "comment_lists/closed_edit"
-  post "comment_lists/return_edit"
-  post "comment_lists/change_handle_edit"  
+  get "comment_lists/commentDetailShow"
+  get "comment_lists/handleEdit"
+  get "comment_lists/closedEdit"
+  get "comment_lists/returnEdit"
+  get "comment_lists/changeHandleEdit"
+  post "comment_lists/commentDetailShow"
+  post "comment_lists/handleEdit"
+  post "comment_lists/closedEdit"
+  post "comment_lists/returnEdit"
+  post "comment_lists/changeHandleEdit"  
 
   resources :jobs
   resources :adm_users

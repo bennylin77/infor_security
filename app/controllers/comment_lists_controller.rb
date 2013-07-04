@@ -1,19 +1,19 @@
 #encoding: utf-8
 class CommentListsController < ApplicationController
 
-	before_filter(:only => [:index, :CommentDetailShow]) { |c| c.checkPermission('comment', Infor::Application.config.READ_PERMISSION)}    
-	before_filter(:only => [:handle_edit]) { |c| c.checkUser('comment_handle',nil,params[:id])}    
-	before_filter(:only => [:close_edit, :return_edit]) { |c| c.checkUser('comment_close',nil,params[:id])}    
-	before_filter(:only => [:change_handle_edit]) { |c| c.checkUser('comment_change_handle',nil,params[:id])}    
+	before_filter(:only => [:index, :commentDetailShow]) { |c| c.checkPermission('comment', Infor::Application.config.READ_PERMISSION)}    
+	before_filter(:only => [:handleEdit]) { |c| c.checkUser('comment_handle',nil,params[:id])}    
+	before_filter(:only => [:closeEdit, :returnEdit]) { |c| c.checkUser('comment_close',nil,params[:id])}    
+	before_filter(:only => [:changeHandleEdit]) { |c| c.checkUser('comment_change_handle',nil,params[:id])}    
 
 
 	def index	
 		@notice=params[:notice]
 		@comment = Comment.paginate(:per_page => 30, :page => params[:page]).order('id DESC')
 	end
-	def CommentDetailShow
+	def commentDetailShow
 		@comment = Comment.find(params[:id])
-	    @adm_user=AdmUser.find(session[:adm_user_id])
+	  @adm_user=AdmUser.find(session[:adm_user_id])
 		@assign_user=AdmUser.joins(:permission_config).where('comment & 64 = 64')             
 		if request.post?
 			if params[:result].nil?
@@ -23,7 +23,7 @@ class CommentListsController < ApplicationController
 				@comment.save!
 				
 				adm_user=AdmUser.find(params[:assigned_user])
-				SystemMailer.Comment_assign(adm_user, @comment).deliver
+				SystemMailer.commentAssign(adm_user, @comment).deliver
 				redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'成功指派工作'
 			else
 				@comment.report=params[:result]
@@ -33,7 +33,7 @@ class CommentListsController < ApplicationController
 			end
 		end
 	end
-	def handle_edit
+	def handleEdit
 		@comment = Comment.find(params[:id])
 		@adm_user=AdmUser.find(session[:adm_user_id])
 		
@@ -43,12 +43,12 @@ class CommentListsController < ApplicationController
 			@comment.save!			
 			
 			adm_user=AdmUser.find(params[:adm_id])
-			SystemMailer.Comment_handle(adm_user, @comment).deliver
+			SystemMailer.commentHandle(adm_user, @comment).deliver
 			
 			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件處理' 
 		end
 	end
-	def change_handle_edit
+	def changeHandleEdit
 		@comment = Comment.find(params[:id])
 		@assign_user=AdmUser.joins(:permission_config).where('comment & 64 = 64')
 		if request.post?
@@ -58,13 +58,13 @@ class CommentListsController < ApplicationController
 			@comment.save!
 			
 			adm_user=AdmUser.find(params[:assigned_user_change])
-			SystemMailer.Comment_handle_change(adm_user, @comment).deliver			
+			SystemMailer.commentHandleChange(adm_user, @comment).deliver			
 				
 			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'成功指派工作'
 		end
 	end
 	
-	def closed_edit 
+	def closedEdit 
 		@comment = Comment.find(params[:id])
 		@adm_user=AdmUser.find(session[:adm_user_id])
 		
@@ -74,12 +74,12 @@ class CommentListsController < ApplicationController
 			@comment.save!
 			
 			adm_user=AdmUser.find(params[:adm_id])
-			SystemMailer.Comment_close(adm_user, @comment).deliver
+			SystemMailer.commentClose(adm_user, @comment).deliver
 			
 			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件處理' 
 		end
 	end
-	def return_edit
+	def returnEdit
 		@comment = Comment.find(params[:id])
 		@adm_user=AdmUser.find(session[:adm_user_id])
 		
@@ -89,7 +89,7 @@ class CommentListsController < ApplicationController
 			@comment.save!
 			
 			adm_user=AdmUser.find(params[:adm_id])
-			SystemMailer.Comment_return(adm_user, @comment).deliver
+			SystemMailer.commentReturn(adm_user, @comment).deliver
 			
 			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件退回' 
 		end
