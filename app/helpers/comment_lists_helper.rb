@@ -9,7 +9,8 @@ module CommentListsHelper
 		  "yellow.png"     
 		elsif con=="1"
 		  "red.png"
-
+		else
+		  "red.png"
 		end    
 	end
 	def Check_config(adm_user)

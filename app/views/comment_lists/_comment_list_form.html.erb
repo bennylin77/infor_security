@@ -10,9 +10,9 @@
 		<td><span style="font-size: 16px; font-weight: 600;"><%= j.subject %></span></td>
 		<td>				
 			<%if j.report.nil? %>
-				<%=image_tag(setColor(j.stage), :size => "20x20")%>	
+				<%=image_tag(setColor(j.stage),:size => "20x20")%>	
 			<%else%>
-				<%=image_tag(setColor(j.stage), :size => "20x20")%>	
+				<%=image_tag(setColor(j.stage),:size => "20x20")%>	
 				<span style="font-size: 18px; font-weight: 600;"><%=j.report%></span>				
 			<%end%>
 		</td>
