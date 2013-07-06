@@ -1,0 +1,24 @@
+﻿<h1>新增公告</h1>
+
+<%= form_for @announcement do |form| -%>
+
+  <p>
+    <%= form.label :標題 %><br>
+    <%= form.text_field :subject %>
+  </p>
+  
+  <p>
+  內容
+  <%= form.cktext_area :content, :class => "announcement", :ckeditor => {} %>
+  </p>
+  
+  <%= form.hidden_field :adm_user_id, :value => session[:adm_user_id] %>
+  
+  <p>
+    <%= form.submit %>
+  </p>
+  
+<% end -%>
+
+<%= link_to 'Back', announcements_path %>
+

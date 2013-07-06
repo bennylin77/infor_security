@@ -1,6 +1,8 @@
 Infor::Application.routes.draw do
   
 
+  mount Ckeditor::Engine => '/ckeditor'
+
   #account
   get   "main/login"
   get   "main/createUser"
@@ -72,7 +74,7 @@ Infor::Application.routes.draw do
   resources :job_details
   resources :job_logs
   resources :ip_maps
-  
+  resources :announcements
   
   root :to => 'main#index'
   # The priority is based upon order of creation:

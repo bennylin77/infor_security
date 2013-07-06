@@ -1,0 +1,18 @@
+﻿<h1>公告</h1>
+<%= link_to "新增公告", new_announcement_path %>
+
+<table border="1" id="announcement_lists_table" >
+  <tr>
+  	<th>公告者姓名</th>
+  	<th style="	min-width: 425px;">標題</th>
+    <th>日期</th>
+  </tr>
+  <% @announcements.each do |announcement| %>
+  <tr>
+  <td><%= AdmUser.find_by_id(announcement.adm_user_id).name %></td>
+  
+  <td><%= link_to announcement.subject , announcement %></td>
+  <td><%= announcement.created_at %></td>
+  </tr>
+  <% end %>
+</table>
