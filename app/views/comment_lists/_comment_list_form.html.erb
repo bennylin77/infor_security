@@ -7,13 +7,13 @@
 <%@comment.each do |j| %>
 	<tr>
 		<td><span style="font-size: 19px; font-weight: 600;"><%=link_to j.id,{:controller=>:comment_lists, :action=>:commentDetailShow, :id=>j.id }%></span></td>
-		<td><span style="font-size: 16px; font-weight: 600;"><%= j.subject %></span></td>
+		<td><span style="font-size: 16px; font-weight: 600;"><%= truncate(j.subject , length: 10)%></span></td>
 		<td>				
 			<%if j.report.nil? %>
 				<%=image_tag(setColor(j.stage),:size => "20x20")%>	
 			<%else%>
 				<%=image_tag(setColor(j.stage),:size => "20x20")%>	
-				<span style="font-size: 18px; font-weight: 600;"><%=j.report%></span>				
+				<span style="font-size: 18px; font-weight: 600;"><%=truncate(j.report , length: 10)%></span>				
 			<%end%>
 		</td>
 	</tr>
