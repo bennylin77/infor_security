@@ -51,7 +51,7 @@ class MainController < ApplicationController
     if request.post?               
       @comment=Comment.new(params[:comment])
       @comment.adm_user=AdmUser.find(session[:adm_user_id])
-	    @comment.stage=1
+	  @comment.stage=1
       @comment.save!
      
       @adm_user = AdmUser.joins(:permission_config).where('comment & 16 = 16')

@@ -28,4 +28,12 @@ module CommentListsHelper
 			false
 		end	
 	end
+	
+	def check_owner(comment,user)
+		if(comment.adm_user_id == user )
+			true
+		else
+			false
+		end	
+	end
 end 

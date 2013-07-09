@@ -56,12 +56,14 @@ Infor::Application.routes.draw do
   get "comment_lists/closedEdit"
   get "comment_lists/returnEdit"
   get "comment_lists/changeHandleEdit"
+  get "comment_lists/preEdit"
   post "comment_lists/commentDetailShow"
   post "comment_lists/handleEdit"
   post "comment_lists/closedEdit"
   post "comment_lists/returnEdit"
   post "comment_lists/changeHandleEdit"  
-
+  post "comment_lists/preEdit"
+  
   resources :jobs
   resources :adm_users
   resources :campus_buildings_lists

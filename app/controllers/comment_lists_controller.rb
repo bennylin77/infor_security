@@ -6,7 +6,8 @@ class CommentListsController < ApplicationController
 	before_filter(:only => [:closeEdit, :returnEdit]) { |c| c.checkUser('comment_close',nil,params[:id])}    
 	before_filter(:only => [:changeHandleEdit]) { |c| c.checkUser('comment_change_handle',nil,params[:id])}    
 
-
+	before_filter(:only => [:preEdit]) { |c| c.checkUser('comment_pre_edit',nil,params[:id])}   
+	
 	def index	
 		@notice=params[:notice]
 		@comment = Comment.paginate(:per_page => 30, :page => params[:page]).order('id DESC')
@@ -92,6 +93,20 @@ class CommentListsController < ApplicationController
 			SystemMailer.commentReturn(adm_user, @comment).deliver
 			
 			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件退回' 
+		end
+	end
+	
+	def preEdit
+		@comment = Comment.find(params[:id])
+		@adm_user=AdmUser.find(session[:adm_user_id])
+		
+		if request.post?
+			@comment.subject=params[:title] 	
+			@comment.content=params[:content] 
+			@comment.updated_at=Time.now	
+			@comment.save!
+			
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件修改' 
 		end
 	end
 end

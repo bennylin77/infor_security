@@ -70,17 +70,22 @@ class ApplicationController < ActionController::Base
 	elsif type=='comment_handle'     
       comment = Comment.find(id)      
       if  comment.handling_adm_user_id!=adm_user.id      
-          redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'
+          redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'您沒有權限'
       end  
 	elsif type=='comment_change_handle'     
       comment = Comment.find(id)      
       if  comment.assigning_adm_user_id!=adm_user.id and comment.handling_adm_user_id!=adm_user.id     
-          redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'
+          redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'您沒有權限'
       end  	  
     elsif type=='comment_close'     
       comment = Comment.find(id)      
       if  comment.assigning_adm_user_id!=adm_user.id      
-          redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'
+          redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'您沒有權限'
+      end  		
+	elsif type=='comment_pre_edit'     
+      comment = Comment.find(id)      
+      if  comment.assigning_adm_user_id!=adm_user.id and comment.stage=="1"   
+          redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'您沒有權限'
       end  	
     end 	
   end   

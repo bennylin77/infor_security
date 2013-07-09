@@ -1,6 +1,7 @@
 <%=form_tag do%>	
-	<span style="font-size: 18px; font-weight: 600;"><label>更換指派工程師:</label></span>			
+	<span style="font-size: 18px; font-weight: 600;"><h1>更換指派工程師:</h1></span>			
 	  	<%= select_tag :assigned_user_change , options_from_collection_for_select(@assign_user, "id", "name", ), {:include_blank => '請選擇'}%>
+	<h1>更換理由</h1>	
 	<div class="field">
 		<%= text_area_tag :result %>
 	</div>	

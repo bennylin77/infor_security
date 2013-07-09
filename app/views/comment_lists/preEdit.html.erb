@@ -1,0 +1,21 @@
+<h1>事件修改</h1>
+<br>
+<%= render :partial => "comment_detail_form", :locals => { :comment => @comment } %>
+
+<%= form_tag do%>
+	<h1>意見名稱</h1>
+	<div class="field">
+		<%= text_area_tag :title %>
+	</div>
+	<h1>意見內容</h1>
+	<div class="field">
+		<%= text_area_tag :content %>
+	</div>
+	<%= hidden_field_tag 'id', @comment.id%>	
+	<%=submit_tag "確定"%><br><br>
+<%end%>
+
+
+
+
+
