@@ -14,7 +14,7 @@ class CommentListsController < ApplicationController
 	end
 	def commentDetailShow
 		@comment = Comment.find(params[:id])
-	  @adm_user=AdmUser.find(session[:adm_user_id])
+	    @adm_user=AdmUser.find(session[:adm_user_id])
 		@assign_user=AdmUser.joins(:permission_config).where('comment & 64 = 64')             
 		if request.post?
 			if params[:result].nil?
@@ -26,8 +26,12 @@ class CommentListsController < ApplicationController
 				adm_user=AdmUser.find(params[:assigned_user])
 				SystemMailer.commentAssign(adm_user, @comment).deliver
 				redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'成功指派工作'
-			else
-				@comment.report=params[:result]
+			else	
+				if params[:result].nil?
+					@comment.report=params[:selection]
+				else						
+					@comment.report=params[:selection]+" "+params[:result] 	# 寫入report
+				end
 				@comment.stage=4
 				@comment.save!
 				redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'已結案'
@@ -70,7 +74,11 @@ class CommentListsController < ApplicationController
 		@adm_user=AdmUser.find(session[:adm_user_id])
 		
 		if request.post?
-			@comment.report=params[:result] 	# 寫入report
+			if params[:result].nil?
+				@comment.report=params[:selection]
+			else						
+				@comment.report=params[:selection]+" "+params[:result] 	# 寫入report
+			end
 			@comment.stage = 4					# next stage
 			@comment.save!
 			

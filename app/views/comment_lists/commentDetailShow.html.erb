@@ -1,7 +1,7 @@
 <%if @comment.stage=="1" and Check_config(@adm_user) and @comment.handling_adm_user_id.nil? %>	
 	<%=form_tag do%>
 		<span style="font-size: 18px; font-weight: 600;"><label>指派工程師:</label></span>			
-	  		<%= select_tag :assigned_user , options_from_collection_for_select(@assign_user, "id", "name", ), {:include_blank => '請選擇'}%>
+	  		<%= select_tag :assigned_user , options_from_collection_for_select(@assign_user, "id", "name", ),{:prompt => "請選擇"}%>
 	  	<%= hidden_field_tag 'id', @comment.id%>		
 		<%=submit_tag "送出"%>
 	<%end%>
@@ -31,6 +31,11 @@
 	<br><br>
 	<%= form_tag do%>
 		<h1>結案紀錄(Result)</h1>
+		<select name="selection">
+		  <option value="已完成">已完成</option>
+		  <option value="部分已處理">部分已處理</option>
+		  <option value="不處理">不處理</option>
+		</select>
 		<div class="field">
 			<%= text_area_tag :result %>
 		</div>
