@@ -2,7 +2,7 @@
 class SystemMailer < ActionMailer::Base
   default :from=>"資安通報系統 <inforsec@nctu.edu.tw>"
   helper ApplicationHelper
-  
+  helper MainHelper 
 #================================================================================================================================for account  
   
   def sendVerification(email, id, verify_code)

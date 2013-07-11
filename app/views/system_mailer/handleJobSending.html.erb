@@ -4,9 +4,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-	<p><%= @receiver.name%> 您好!</p>
-	<p>資安事件ID: <b><%=@job.id%></b></p>		
+	<p><%= @receiver.name%> 您好!</p>		
 	<p>網管人員已處理完成，請至「資安通報系統」平台查看。</p>
 	<p>網址：<%=link_to domainName , domainName%></p>
+	<%= render :partial => "job_detail_form", :locals => { :job_detail => @job.job_detail } %>	
   </body>
 </html>
