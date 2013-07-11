@@ -21,8 +21,8 @@
 	        <li><%=link_to '帳號管理' ,{:controller=>:adm_users, :action=>:index}%></li>  
 	        <li><a href="#">其它</a>
 	        	<ul>
-					<li><%= link_to "新增公告", new_announcement_path %></li>
-					<li><%= link_to "編輯公告", announcements_edit_show_path %></li>
+					<!---<li><%= link_to "公告列表", announcements_path %></li>--->
+					
 					<%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.event)%>     	        
 	        		<li><%=link_to '事件對照表', event_maps_path%></li>
 	                <%end%>	 
