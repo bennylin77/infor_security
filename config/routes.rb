@@ -64,6 +64,8 @@ Infor::Application.routes.draw do
   post "comment_lists/changeHandleEdit"  
   post "comment_lists/preEdit"
   
+  get "announcements/edit_show" => 'announcements#edit_show'
+  
   resources :jobs
   resources :adm_users
   resources :campus_buildings_lists

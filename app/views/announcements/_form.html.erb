@@ -1,0 +1,28 @@
+﻿<%= form_for @announcement do |form| -%>
+
+  <p>
+    <%= form.label :標題 %><br>
+    <%= form.text_field :subject %>
+  </p>
+  
+  <p>
+  內容
+  <%= form.cktext_area :content, :class => "announcement", :ckeditor => {} %>
+  </p>
+  
+  <%= form.hidden_field :adm_user_id, :value => session[:adm_user_id] %>
+  
+  <div class="field">
+    <%= form.label :公告開始日 %><br />
+    <%= form.date_select :start_show %>
+  </div>
+  <div class="field">
+    <%= form.label :公告結束日 %><br />
+    <%= form.date_select :end_show %>
+  </div>
+  
+  <p>
+    <%= form.submit %>
+  </p>
+  
+<% end -%>
