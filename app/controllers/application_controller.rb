@@ -84,7 +84,7 @@ class ApplicationController < ActionController::Base
       end  		
 	elsif type=='comment_pre_edit'     
       comment = Comment.find(id)      
-      if  comment.assigning_adm_user_id!=adm_user.id and comment.stage=="1"   
+      if  comment.assigning_adm_user_id!=adm_user.id or comment.stage!="1"   
           redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'您沒有權限'
       end  	
     end 	
