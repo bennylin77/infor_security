@@ -12,6 +12,7 @@ class CommentListsController < ApplicationController
 		@notice=params[:notice]
 		@comment = Comment.paginate(:per_page => 30, :page => params[:page]).order('id DESC')
 	end
+	
 	def commentDetailShow
 		@comment = Comment.find(params[:id])
 	    @adm_user=AdmUser.find(session[:adm_user_id])
@@ -117,4 +118,9 @@ class CommentListsController < ApplicationController
 			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件修改' 
 		end
 	end
+	
+	def search         
+    @comment=Comment.paginate(:per_page => 30, :page => params[:page],  :conditions => ['id LIKE ? or subject LIKE ? or content LIKE ? ', "%#{params[:search][:term]}%", "%#{params[:search][:term]}%", "%#{params[:search][:term]}%"], :order=>['id DESC'] )    
+    render "index" 
+  end
 end
