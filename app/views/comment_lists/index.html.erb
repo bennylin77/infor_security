@@ -1,6 +1,13 @@
 <%= form_tag :action=>:search do %>
 	<%= text_field  :search, :term, :size=>35 %><%= submit_tag "搜尋" %><br>
-	<span>可搜尋意見ID,意見名稱,意見內容</span>
+	<select name="selection">
+		  <option value="0">All</option>
+		  <option value="1">尚未指派</option>
+		  <option value="2">處理中</option>
+		  <option value="3">確認中</option>
+		  <option value="4">處理完成</option>
+	</select>
+	<span>可搜尋意見ID,意見名稱,意見內容,處理狀態</span>
 	
 <% end %>
 <br>
