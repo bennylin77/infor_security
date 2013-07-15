@@ -122,7 +122,11 @@ class CommentListsController < ApplicationController
 	end
 	
 	def search         
-    @comment=Comment.paginate(:per_page => 30, :page => params[:page],  :conditions => ['id LIKE ? or subject LIKE ? or content LIKE ? ', "%#{params[:search][:term]}%", "%#{params[:search][:term]}%", "%#{params[:search][:term]}%"], :order=>['id DESC'] )    
+	if params[:selection]=="0"
+		@comment=Comment.paginate(:per_page => 30, :page => params[:page],  :conditions => ['id LIKE ? or subject LIKE ? or content LIKE ? ', "%#{params[:search][:term]}%", "%#{params[:search][:term]}%", "%#{params[:search][:term]}%"], :order=>['id DESC'] )    
+	else
+		@comment=Comment.paginate(:per_page => 30, :page => params[:page],  :conditions => ['(id LIKE ? or subject LIKE ? or content LIKE ? )and stage = ? ', "%#{params[:search][:term]}%", "%#{params[:search][:term]}%", "%#{params[:search][:term]}%", params[:selection] ], :order=>['id DESC'] )    
+	end
     render "index" 
   end
 end
