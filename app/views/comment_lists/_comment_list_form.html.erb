@@ -4,20 +4,44 @@
 		<th>意見描述</th>  
 		<th>處理狀態</th>   	
 	</tr>
-<%@comment.each do |j| %>
-	<tr>
-		<td><span style="font-size: 19px; font-weight: 600;"><%=link_to j.id,{:controller=>:comment_lists, :action=>:commentDetailShow, :id=>j.id }%></span></td>
-		<td><span style="font-size: 16px; font-weight: 600;"><%= truncate(j.subject , length: 10)%></span></td>
-		<td>	
-			<%=image_tag(setColor(j.stage),:size => "20x20")%>
-			<span style="font-size: 18px; font-weight: 600;">
-				<%if j.stage=="1" and check_owner(j,session[:adm_user_id]) %>	
-					<%=link_to "編輯",{:controller=>:comment_lists, :action=>:preEdit, :id=>j.id }%>
-				<%elsif j.stage=="4"%>
-					<%=truncate(j.report , length: 10)%>								
-				<%end%>
-			</span>
-		</td>
-	</tr>
-<%end%>	
-</table>
+	
+<%if @res %>
+	<%@res.each do |j| %>
+		<tr>
+			<td><span style="font-size: 19px; font-weight: 600;"><%=link_to j.id,{:controller=>:comment_lists, :action=>:commentDetailShow, :id=>j.id }%></span></td>
+			<td><span style="font-size: 16px; font-weight: 600;"><%= truncate(j.subject , length: 10)%></span></td>
+			<td>	
+				<%=image_tag(setColor(j.stage),:size => "20x20")%>
+				<span style="font-size: 18px; font-weight: 600;">
+					<%if j.stage=="1" and check_owner(j,session[:adm_user_id]) %>	
+						<%=link_to "編輯",{:controller=>:comment_lists, :action=>:preEdit, :id=>j.id }%>
+					<%elsif j.stage=="4"%>
+						<%=truncate(j.report , length: 10)%>								
+					<%end%>
+				</span>
+			</td>
+		</tr>
+	<%end%>	
+	</table></br>
+	<%if !@res.kind_of?(Array)%>
+		<div class="apple_pagination"><%= will_paginate(@res) %></div>
+	<%end%>
+<%else%>	
+	<%@comment.each do |j| %>
+		<tr>
+			<td><span style="font-size: 19px; font-weight: 600;"><%=link_to j.id,{:controller=>:comment_lists, :action=>:commentDetailShow, :id=>j.id }%></span></td>
+			<td><span style="font-size: 16px; font-weight: 600;"><%= truncate(j.subject , length: 10)%></span></td>
+			<td>	
+				<%=image_tag(setColor(j.stage),:size => "20x20")%>
+				<span style="font-size: 18px; font-weight: 600;">
+					<%if j.stage=="1" and check_owner(j,session[:adm_user_id]) %>	
+						<%=link_to "編輯",{:controller=>:comment_lists, :action=>:preEdit, :id=>j.id }%>
+					<%elsif j.stage=="4"%>
+						<%=truncate(j.report , length: 10)%>								
+					<%end%>
+				</span>
+			</td>
+		</tr>
+	<%end%>	
+	</table>
+<%end%>
