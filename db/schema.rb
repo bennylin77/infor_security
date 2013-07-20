@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130711074250) do
+ActiveRecord::Schema.define(:version => 20130720124417) do
 
   create_table "adm_users", :force => true do |t|
     t.string   "name"
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(:version => 20130711074250) do
     t.datetime "updated_at",                                  :null => false
     t.boolean  "block",                    :default => false, :null => false
     t.boolean  "always_visible",           :default => false, :null => false
+    t.boolean  "always_handle",            :default => true,  :null => false
   end
 
   create_table "job_details", :force => true do |t|
@@ -186,6 +187,7 @@ ActiveRecord::Schema.define(:version => 20130711074250) do
     t.boolean  "PA",                    :default => true,  :null => false
     t.integer  "closing_adm_user_id"
     t.boolean  "always_visible",        :default => false, :null => false
+    t.boolean  "always_handle",         :default => true,  :null => false
   end
 
   create_table "mail_configs", :force => true do |t|

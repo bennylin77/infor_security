@@ -31,7 +31,7 @@ class MainController < ApplicationController
     @notice=params[:notice]
     adm_user=AdmUser.find(session[:adm_user_id])
     if adm_user.permission_config.job & Infor::Application.config.READ_PERMISSION != 0 
-      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["( ( (stage1 = 'un' or stage1 = 'returned') and stage5 = 'un' and deleted = ?) and ( (log_count >= 5 and alert <> ?) or (log_count >= 1000 and alert <> ?) or PA = ? ) )", false, true, false, false], :joins => :job_detail).order('id DESC')
+      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["( ( (stage1 = 'un' or stage1 = 'returned') and stage5 = 'un' and deleted = ? and always_handle = ?) and ( (log_count >= 5 and alert <> ?) or (log_count >= 1000 and alert <> ?) or PA = ? ) )", false, true, true, false, false], :joins => :job_detail).order('id DESC')
     else
       redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'   
     end     
