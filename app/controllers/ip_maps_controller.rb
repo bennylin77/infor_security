@@ -114,14 +114,28 @@ class IpMapsController < ApplicationController
       ip_map=IpMap.find(params[:id])
       ip_map.always_visible=true
       ip_map.save!
-      redirect_to ip_map, notice: 'IP特殊處理已生效'      
+      redirect_to ip_map, notice: '顯示每筆攻擊已生效'      
     else
       ip_map=IpMap.find(params[:id])
       ip_map.always_visible=false
       ip_map.save!      
-      redirect_to ip_map, notice: 'IP非殊處理已生效'        
+      redirect_to ip_map, notice: '不顯示每筆攻擊已生效'        
     end 
   end  
+  
+  def alwaysHandle
+    if params[:always_handle]=='true'
+      ip_map=IpMap.find(params[:id])
+      ip_map.always_handle=true
+      ip_map.save!
+      redirect_to ip_map, notice: '處理此IP已生效'      
+    else
+      ip_map=IpMap.find(params[:id])
+      ip_map.always_handle=false
+      ip_map.save!      
+      redirect_to ip_map, notice: '不處理此IP已生效'        
+    end 
+  end    
 
 
 end

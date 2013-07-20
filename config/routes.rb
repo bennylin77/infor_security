@@ -45,6 +45,7 @@ Infor::Application.routes.draw do
   get  "ip_maps/filter"
   get  "ip_maps/block"   
   get  "ip_maps/alwaysVisible" 
+  get  "ip_maps/alwaysHandle"
   
   get   "event_maps/indexAll" 
   post  "event_maps/search"

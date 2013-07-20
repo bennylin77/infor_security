@@ -57,7 +57,7 @@
 			事件目的端IP Address
 		<%if !job_detail.job.ip_map.nil?%>		
 			<%if job_detail.job.ip_map.always_visible%>	
-					(特殊處理)
+					(顯示每筆攻擊)
 				</td>
 				<td bgColor="#98F5FF"><%= simple_format(victimIpShowing(job_detail.job_id, job_detail.job.ip_map.always_visible), {}, :sanitize => false) %></td>		
 			<%else%>
@@ -145,7 +145,7 @@
         mywindow.document.write('</head><body >');
         mywindow.document.write(data);
         mywindow.document.write('</body></html>');
-		
+
 		mywindow.document.close();  //prevent IE error
 		mywindow.focus();  //prevent IE error
         

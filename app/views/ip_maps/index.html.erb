@@ -69,10 +69,16 @@
 	    <%end%>
 	    <br>
     	<%if !ip_map.always_visible%>
-	    <%= link_to '特殊處理',{:controller=>:ip_maps, :action=>:alwaysVisible, :id=>ip_map.id, :always_visible=> true}, data: { confirm: '你確定 ip:'+ip_map.ip+' 要特殊處理?' } %>
+	    <%= link_to '顯示每筆攻擊',{:controller=>:ip_maps, :action=>:alwaysVisible, :id=>ip_map.id, :always_visible=> true}, data: { confirm: '你確定 ip:'+ip_map.ip+' 要顯示每筆攻擊?' } %>
 	    <%else%>
-	    <%= link_to '非特殊處理',{:controller=>:ip_maps, :action=>:alwaysVisible, :id=>ip_map.id, :always_visible=> false}, data: { confirm: '你確定 ip:'+ip_map.ip+' 要非特殊處理?' } %>	    
+	    <%= link_to '不顯示每筆攻擊',{:controller=>:ip_maps, :action=>:alwaysVisible, :id=>ip_map.id, :always_visible=> false}, data: { confirm: '你確定 ip:'+ip_map.ip+' 不顯示每筆攻擊?' } %>	    
 	    <%end%>	    
+	    <br>
+    	<%if ip_map.always_handle%>
+	    <%= link_to '不處理此IP',{:controller=>:ip_maps, :action=>:alwaysHandle, :id=>ip_map.id, :always_handle=> false}, data: { confirm: '你確定 ip:'+ip_map.ip+' 要不處理?' } %>
+	    <%else%>
+	    <%= link_to '處理此IP',{:controller=>:ip_maps, :action=>:alwaysHandle, :id=>ip_map.id, :always_handle=> true}, data: { confirm: '你確定 ip:'+ip_map.ip+' 要處理?' } %>	    
+	    <%end%>	  	    
 	    
 	<%end%>    
     </td>  

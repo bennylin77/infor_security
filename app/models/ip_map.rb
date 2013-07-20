@@ -1,7 +1,7 @@
 # encoding: UTF-8
 class IpMap < ActiveRecord::Base
   attr_accessible  :ip, :user, :OS, :version, :place, :use, :room, :extend, :OS_others, :place_others, :use_others, :adm_user_id,
-                   :campus_buildings_list_id, :IPv4_1, :IPv4_2, :IPv4_3, :IPv4_4, :block, :always_visible
+                   :campus_buildings_list_id, :IPv4_1, :IPv4_2, :IPv4_3, :IPv4_4, :block, :always_visible, :always_handle
   belongs_to :adm_user
   belongs_to :campus_buildings_list
   has_many   :jobs 
