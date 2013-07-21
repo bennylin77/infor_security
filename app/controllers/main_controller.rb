@@ -400,15 +400,24 @@ class MainController < ApplicationController
   
   def permissionConfig
     if request.post?               
-      @permission_config = PermissionConfig.find(params[:permission_config][:id])              
-      @permission_config.account =  params[:acc_read].to_i | params[:acc_update].to_i | params[:acc_create].to_i | params[:acc_delete].to_i
-      @permission_config.ip =  params[:ip_read].to_i | params[:ip_update].to_i | params[:ip_create].to_i | params[:ip_delete].to_i      
-      @permission_config.event =  params[:event_read].to_i | params[:event_update].to_i | params[:event_create].to_i | params[:event_delete].to_i
-      @permission_config.building =  params[:building_read].to_i | params[:building_update].to_i | params[:building_create].to_i | params[:building_delete].to_i
-      @permission_config.job =  params[:job_read].to_i | params[:job_handle].to_i | params[:job_assign].to_i | params[:job_close].to_i | params[:job_create].to_i | params[:job_delete].to_i            
-
-      @permission_config.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i | params[:comment_read].to_i   #comment
-
+      @permission_config = PermissionConfig.find(params[:permission_config][:id]) 
+      @permission_config.adm_user_group_id=params[:adm_user_group]   
+      if params[:adm_user_group].blank?
+        @permission_config.account =  params[:acc_read].to_i | params[:acc_update].to_i | params[:acc_create].to_i | params[:acc_delete].to_i
+        @permission_config.ip =  params[:ip_read].to_i | params[:ip_update].to_i | params[:ip_create].to_i | params[:ip_delete].to_i      
+        @permission_config.event =  params[:event_read].to_i | params[:event_update].to_i | params[:event_create].to_i | params[:event_delete].to_i
+        @permission_config.building =  params[:building_read].to_i | params[:building_update].to_i | params[:building_create].to_i | params[:building_delete].to_i
+        @permission_config.job =  params[:job_read].to_i | params[:job_handle].to_i | params[:job_assign].to_i | params[:job_close].to_i | params[:job_create].to_i | params[:job_delete].to_i            
+        @permission_config.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i | params[:comment_read].to_i   #comment
+      else
+        adm_user_group=AdmUserGroup.find(params[:adm_user_group])
+        @permission_config.account =  adm_user_group.account
+        @permission_config.ip =  adm_user_group.ip      
+        @permission_config.event =  adm_user_group.event
+        @permission_config.building =  adm_user_group.building
+        @permission_config.job =  adm_user_group.job            
+        @permission_config.comment =  adm_user_group.comment    
+      end  
       @permission_config.save!
       redirect_to adm_users_url          
     else

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130721065423) do
+ActiveRecord::Schema.define(:version => 20130721085510) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -212,14 +212,15 @@ ActiveRecord::Schema.define(:version => 20130721065423) do
 
   create_table "permission_configs", :force => true do |t|
     t.integer  "adm_user_id"
-    t.integer  "account",     :default => 0, :null => false
-    t.integer  "ip",          :default => 0, :null => false
-    t.integer  "event",       :default => 0, :null => false
-    t.integer  "building",    :default => 0, :null => false
-    t.integer  "job",         :default => 0, :null => false
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
-    t.integer  "comment",     :default => 0, :null => false
+    t.integer  "account",           :default => 0, :null => false
+    t.integer  "ip",                :default => 0, :null => false
+    t.integer  "event",             :default => 0, :null => false
+    t.integer  "building",          :default => 0, :null => false
+    t.integer  "job",               :default => 0, :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.integer  "comment",           :default => 0, :null => false
+    t.integer  "adm_user_group_id"
   end
 
   create_table "s_assigns", :force => true do |t|
