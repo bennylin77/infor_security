@@ -1,7 +1,10 @@
 <div class="menu_border_blue">	
 	<span id="my_button"><%=link_to '編輯我的帳號',{:controller=>:adm_users, :action=>:show, :id=>session[:adm_user_id]}%></span> 
 	<%if permissionCreate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.account)%>
-	<span id="my_button"><%=link_to '新增帳號 ',{:controller=>:main, :action=>:createUser}%></span>
+	<span id="my_button"><%=link_to '新增帳號',{:controller=>:main, :action=>:createUser}%></span>
+	<%end%> 
+	<%if permissionUpdate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.account)%>
+	<span id="my_button"><%=link_to '群組管理',{:controller=>:adm_users, :action=>:groupIndex}%></span>
 	<%end%> 	
 </div>	
 

@@ -12,12 +12,19 @@ Infor::Application.routes.draw do
   get   "main/permissionConfig"  
   get   "main/traceConfig"  
   get   "main/pwReset"    
-
   post  "main/createUser"
   post  "main/login"
   post  "main/mailConfig"
   post  "main/permissionConfig"  
   post  "main/traceConfig"  
+  
+  get "adm_users/groupIndex"
+  get "adm_users/groupCreate" 
+  get "adm_users/groupEdit"  
+  get "adm_users/groupDestroy"
+  post "adm_users/groupCreate"    
+  post "adm_users/groupEdit"
+  
   #stage
   get   "main/jobDetailShowing"
   get   "main/assignJob"

@@ -2,6 +2,7 @@
 class AdmUsersController < ApplicationController
   
   before_filter(:only => [:destory]) { |c| c.checkPermission('acc', Infor::Application.config.DELETE_PERMISSION)}
+  before_filter(:only => [:groupIndex, :groupCreate, :groupEdit, :groupDestroy]) { |c| c.checkPermission('acc', Infor::Application.config.UPDATE_PERMISSION)}  
   before_filter(:only=>[:edit, :update, :show]) { |c| c.checkUser('acc', Infor::Application.config.UPDATE_PERMISSION)}    
   # before_filter(:only => [:index]) { |c| c.checkPermission('acc', Infor::Application.config.READ_PERMISSION)}   
 
@@ -114,5 +115,49 @@ class AdmUsersController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def groupIndex
+    @adm_user_groups=AdmUserGroup.all
+  end
+  
+  def groupCreate
+    if request.post?               
+      @adm_user_group = AdmUserGroup.new(:name=>params[:name])              
+      @adm_user_group.account =  params[:acc_read].to_i | params[:acc_update].to_i | params[:acc_create].to_i | params[:acc_delete].to_i
+      @adm_user_group.ip =  params[:ip_read].to_i | params[:ip_update].to_i | params[:ip_create].to_i | params[:ip_delete].to_i      
+      @adm_user_group.event =  params[:event_read].to_i | params[:event_update].to_i | params[:event_create].to_i | params[:event_delete].to_i
+      @adm_user_group.building =  params[:building_read].to_i | params[:building_update].to_i | params[:building_create].to_i | params[:building_delete].to_i
+      @adm_user_group.job =  params[:job_read].to_i | params[:job_handle].to_i | params[:job_assign].to_i | params[:job_close].to_i | params[:job_create].to_i | params[:job_delete].to_i            
+      @adm_user_group.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i | params[:comment_read].to_i   #comment
+      @adm_user_group.save!
+      redirect_to :controller=>:adm_users, :action=>:groupIndex
+    else
+      @adm_user_group=AdmUserGroup.new        
+    end   
+  end 
+  
+  def groupEdit 
+    if request.post?               
+      @adm_user_group = AdmUserGroup.find(params[:adm_user_group][:id])
+      @adm_user_group.name =  params[:name]             
+      @adm_user_group.account =  params[:acc_read].to_i | params[:acc_update].to_i | params[:acc_create].to_i | params[:acc_delete].to_i
+      @adm_user_group.ip =  params[:ip_read].to_i | params[:ip_update].to_i | params[:ip_create].to_i | params[:ip_delete].to_i      
+      @adm_user_group.event =  params[:event_read].to_i | params[:event_update].to_i | params[:event_create].to_i | params[:event_delete].to_i
+      @adm_user_group.building =  params[:building_read].to_i | params[:building_update].to_i | params[:building_create].to_i | params[:building_delete].to_i
+      @adm_user_group.job =  params[:job_read].to_i | params[:job_handle].to_i | params[:job_assign].to_i | params[:job_close].to_i | params[:job_create].to_i | params[:job_delete].to_i            
+      @adm_user_group.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i | params[:comment_read].to_i   #comment
+      @adm_user_group.save!
+      redirect_to :controller=>:adm_users, :action=>:groupIndex          
+    else
+      @adm_user_group = AdmUserGroup.find(params[:id])  
+    end    
+  end
+  
+  def groupDestroy
+    
+  end
+  
+  
+  
        
 end

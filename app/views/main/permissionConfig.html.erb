@@ -12,7 +12,7 @@
 		<td>讀全部</td><td><%=check_box_tag :acc_read, Infor::Application.config.READ_PERMISSION , permissionRead(@permission_config.account)%></td>		
 	</tr>
 	<tr>	
-		<td></td><td>編輯全部</td><td><%=check_box_tag :acc_update, Infor::Application.config.UPDATE_PERMISSION, permissionUpdate(@permission_config.account)%></td>
+		<td></td><td>編輯全部,群組管理</td><td><%=check_box_tag :acc_update, Infor::Application.config.UPDATE_PERMISSION, permissionUpdate(@permission_config.account)%></td>
 	<tr>	
 		<td></td><td>新增</td><td><%=check_box_tag :acc_create, Infor::Application.config.CREATE_PERMISSION, permissionCreate(@permission_config.account)%></td>	
 	</tr>
