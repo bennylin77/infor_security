@@ -91,6 +91,24 @@
 		<tr>
 			<td></td><td>處理事件</td><td><%=check_box_tag :comment_web_worker, Infor::Application.config.HANDLE_PERMISSION, permissionAssign(@permission_config.comment)%></td>
 		</tr>
+		
+		<tr>	
+		<td>公告:</td>
+		<td>讀全部</td><td><%=check_box_tag :announcement_read, Infor::Application.config.READ_PERMISSION, permissionRead(@permission_config.announcement)%></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>新增</td><td><%=check_box_tag :announcement_create, Infor::Application.config.CREATE_PERMISSION, permissionCreate(@permission_config.announcement)%></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>編輯全部</td><td><%=check_box_tag :announcement_update, Infor::Application.config.UPDATE_PERMISSION, permissionUpdate(@permission_config.announcement)%></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>刪除</td><td><%=check_box_tag :announcement_delete, Infor::Application.config.DELETE_PERMISSION, permissionDelete(@permission_config.announcement)%></td>
+	</tr>
+		
 		</table>	
  	</div>	 
  	

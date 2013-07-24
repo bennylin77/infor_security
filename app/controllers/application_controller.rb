@@ -38,6 +38,10 @@ class ApplicationController < ActionController::Base
       unless (adm_user.permission_config.comment & permission) != 0
         redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'      
       end 	
+	elsif type=='announcement'
+	  unless (adm_user.permission_config.announcement & permission) != 0
+	    redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'      
+      end 	
     end  
 	
   end  

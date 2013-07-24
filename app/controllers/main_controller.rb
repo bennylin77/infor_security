@@ -14,7 +14,11 @@ class MainController < ApplicationController
   before_filter(:only => [:informUser, :informUserMail, :checkJob, :checkJobMail]) { |c| c.checkUser('job_handling_adm', nil, params[:id])}   
 
   before_filter(:only => [:index, :unShowing]) { |c| c.admLoginLog()}
-
+  before_filter(:only => [:createAnnouncement]) { |c| c.checkPermission('announcement', Infor::Application.config.CREATE_PERMISSION)}
+  before_filter(:only => [:updateAnnouncement]) { |c| c.checkPermission('announcement', Infor::Application.config.UPDATE_PERMISSION)}
+  before_filter(:only => [:deleteAnnouncement]) { |c| c.checkPermission('announcement', Infor::Application.config.DELETE_PERMISSION)}
+  
+  
 
 #================================================================================================================================for menu  
   def index
@@ -409,7 +413,9 @@ class MainController < ApplicationController
         @permission_config.building =  params[:building_read].to_i | params[:building_update].to_i | params[:building_create].to_i | params[:building_delete].to_i
         @permission_config.job =  params[:job_read].to_i | params[:job_handle].to_i | params[:job_assign].to_i | params[:job_close].to_i | params[:job_create].to_i | params[:job_delete].to_i            
         @permission_config.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i | params[:comment_read].to_i   #comment
-      else
+		
+		@permission_config.announcement = params[:announcement_read].to_i | params[:announcement_update].to_i | params[:announcement_create].to_i | params[:announcement_delete].to_i
+	  else
         adm_user_group=AdmUserGroup.find(params[:adm_user_group])
         @permission_config.account =  adm_user_group.account
         @permission_config.ip =  adm_user_group.ip      
