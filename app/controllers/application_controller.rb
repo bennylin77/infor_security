@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
       end 	
 	elsif type=='announcement'
 	  unless (adm_user.permission_config.announcement & permission) != 0
-	    redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'      
+	    redirect_to :controller=>'announcements', :action=>'index', :notice=>'您沒有權限'      
       end 	
     end  
 	
@@ -91,7 +91,14 @@ class ApplicationController < ActionController::Base
       if  comment.assigning_adm_user_id!=adm_user.id or comment.stage!="1"   
           redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'您沒有權限'
       end  	
-    end 	
+    elsif type=='announcement_update'
+      if  adm_user.permission_config.announcement & permission == 0	
+		announcement = Announcement.find(id)      
+		if  announcement.adm_user_id!=adm_user.id      
+          redirect_to :controller=>'announcements', :action=>'editShow', :notice=>'您沒有權限'
+		end 
+	  end
+	end
   end   
   
   
@@ -100,7 +107,7 @@ protected
     unless AdmUser.find_by_id(session[:adm_user_id])
       session[:original_uri]=request.url
       flash[:notice]="請先登入,謝謝!"
-      redirect_to :controller=>'main',:action=>'login'
+      redirect_to :controller=> :main, :action=> :login
     end
   end   
 end

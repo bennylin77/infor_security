@@ -75,8 +75,8 @@ Infor::Application.routes.draw do
   get  "comment_lists/search"
   post  "comment_lists/search"
   
-  get "announcements/edit_show" => 'announcements#edit_show'
-  
+  get "announcements/edit_show" => 'announcements#editShow'
+  get "announcements/adm_show" => 'announcements#admShow'
   resources :jobs
   resources :adm_users
   resources :campus_buildings_lists

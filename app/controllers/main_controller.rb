@@ -14,9 +14,7 @@ class MainController < ApplicationController
   before_filter(:only => [:informUser, :informUserMail, :checkJob, :checkJobMail]) { |c| c.checkUser('job_handling_adm', nil, params[:id])}   
 
   before_filter(:only => [:index, :unShowing]) { |c| c.admLoginLog()}
-  before_filter(:only => [:createAnnouncement]) { |c| c.checkPermission('announcement', Infor::Application.config.CREATE_PERMISSION)}
-  before_filter(:only => [:updateAnnouncement]) { |c| c.checkPermission('announcement', Infor::Application.config.UPDATE_PERMISSION)}
-  before_filter(:only => [:deleteAnnouncement]) { |c| c.checkPermission('announcement', Infor::Application.config.DELETE_PERMISSION)}
+  
   
   
 
@@ -371,7 +369,14 @@ class MainController < ApplicationController
   
   def login
      session[:adm_user_id]=nil
-     if request.post?
+	 
+	 @announcementsAll= Announcement.all
+		@announcements=Array.new
+		@announcementsAll.each do |a|
+		  @announcements.push(a) if (a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)
+		end
+
+	 if request.post?
       user=AdmUser.authenticate(params[:username],params[:password])
        if user
          session[:adm_user_id]=user.id

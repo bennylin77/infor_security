@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130724035724) do
+ActiveRecord::Schema.define(:version => 20130724035723) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(:version => 20130724035724) do
   end
 
   create_table "ckeditor_assets", :force => true do |t|
-    t.string   "data_file_name",                  :default => "", :null => false
+    t.string   "data_file_name",                  :null => false
     t.string   "data_content_type"
     t.integer  "data_file_size"
     t.integer  "assetable_id"
@@ -74,8 +74,8 @@ ActiveRecord::Schema.define(:version => 20130724035724) do
     t.string   "type",              :limit => 30
     t.integer  "width"
     t.integer  "height"
-    t.datetime "created_at",                                      :null => false
-    t.datetime "updated_at",                                      :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], :name => "idx_ckeditor_assetable"
@@ -176,11 +176,11 @@ ActiveRecord::Schema.define(:version => 20130724035724) do
   end
 
   create_table "job_threats", :force => true do |t|
-    t.integer  "job_id"
-    t.integer  "threat_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.string   "serverity"
+    t.integer "job_id",     :null => false
+    t.integer "threat_id",  :null => false
+    t.date    "created_at", :null => false
+    t.date    "updated_at", :null => false
+    t.string  "serverity",  :null => false
   end
 
   create_table "jobs", :force => true do |t|
@@ -220,8 +220,8 @@ ActiveRecord::Schema.define(:version => 20130724035724) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.integer  "comment",           :default => 0, :null => false
-    t.integer  "announcement",      :default => 0, :null => false
     t.integer  "adm_user_group_id"
+    t.integer  "announcement",      :default => 0, :null => false
   end
 
   create_table "s_assigns", :force => true do |t|

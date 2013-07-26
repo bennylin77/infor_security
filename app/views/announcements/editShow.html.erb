@@ -1,0 +1,21 @@
+﻿<h1>公告</h1>
+<%= link_to "新增公告", new_announcement_path %>
+
+<table border="1" id="announcement_lists_table" >
+  <tr>
+  	<th>公告者姓名</th>
+  	<th style="	min-width: 425px;">標題</th>
+    <th>日期</th>
+	<th colspan="2">動作</th>
+  </tr>
+  <% @announcements.each do |announcement| %>
+  <tr>
+  <td><%= AdmUser.find_by_id(announcement.adm_user_id).name %></td>
+  
+  <td><%= link_to announcement.subject , announcement %></td>
+  <td><%= announcement.created_at.strftime("%Y/%m/%d") %></td>
+  <td><%= link_to '編輯', edit_announcement_path(announcement) %></td>
+  <td><%= link_to '刪除', announcement, method: :delete, data: { confirm: '確定?' } %></td>
+  </tr>
+  <% end %>
+</table>
