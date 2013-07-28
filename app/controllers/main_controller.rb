@@ -53,7 +53,7 @@ def comment
 	if request.post?               
 		@comment=Comment.new(params[:comment])
 		if @comment.subject.blank? or @comment.content.blank? 
-			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'請填入資料'
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'請填入完整資訊'
 		else		
 			@comment.adm_user=AdmUser.find(session[:adm_user_id])
 			@comment.stage=1
