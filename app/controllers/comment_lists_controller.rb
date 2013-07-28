@@ -50,6 +50,10 @@ class CommentListsController < ApplicationController
 				@comment.assigning_adm_user_id= session[:adm_user_id]
 				@comment.handling_adm_user_id= session[:adm_user_id]
 				@comment.save!
+				
+				adm_user=AdmUser.find(params[:adm_id])
+				SystemMailer.commentClose(adm_user, @comment).deliver
+				
 				redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'已結案'
 			end
 		end

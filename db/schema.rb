@@ -176,11 +176,11 @@ ActiveRecord::Schema.define(:version => 20130724035723) do
   end
 
   create_table "job_threats", :force => true do |t|
-    t.integer "job_id",     :null => false
-    t.integer "threat_id",  :null => false
-    t.date    "created_at", :null => false
-    t.date    "updated_at", :null => false
-    t.string  "serverity",  :null => false
+    t.integer  "job_id"
+    t.integer  "threat_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "serverity"
   end
 
   create_table "jobs", :force => true do |t|

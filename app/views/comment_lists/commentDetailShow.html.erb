@@ -40,6 +40,7 @@
 			<%= text_area_tag :result %>
 		</div>
 		<%= hidden_field_tag 'id', @comment.id%>	
+		<%= hidden_field_tag 'adm_id', @comment.adm_user_id%>
 		<%=submit_tag "結案"%><br><br>
 	<%end%>
 <%end%>
