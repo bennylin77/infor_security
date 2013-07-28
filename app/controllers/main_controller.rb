@@ -49,24 +49,27 @@ class MainController < ApplicationController
     end     
   end
 #================================================================================================================================for comment  
-  def comment 
-    if request.post?               
-      @comment=Comment.new(params[:comment])
-      @comment.adm_user=AdmUser.find(session[:adm_user_id])
-	  @comment.stage=1
-      @comment.save!
-     
-      @adm_user = AdmUser.joins(:permission_config).where('comment & 16 = 16')
-	    @adm_user.each do |j|	       
-		  SystemMailer.sendComment(j, @comment).deliver                   	  
-	  end
-            
-      redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'已將您寶貴的意見送出'
-    else
-      @comment=Comment.new
-    end     
-  end
-  
+def comment 
+	if request.post?               
+		@comment=Comment.new(params[:comment])
+		if @comment.subject.blank? or @comment.content.blank? 
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'請填入資料'
+		else		
+			@comment.adm_user=AdmUser.find(session[:adm_user_id])
+			@comment.stage=1
+			@comment.save!
+			 
+			@adm_user = AdmUser.joins(:permission_config).where('comment & 16 = 16')
+			@adm_user.each do |j|	       
+				SystemMailer.sendComment(j, @comment).deliver                   	  
+			end				
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'已將您寶貴的意見送出'	
+		end		
+	else
+		@comment=Comment.new
+		#redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'請填入資料'
+	end     
+end
     
 #================================================================================================================================for stage  
   def jobDetailShowing
