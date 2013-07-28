@@ -29,9 +29,22 @@ class CommentListsController < ApplicationController
 				redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'成功指派工作'
 			else	
 				if params[:result].nil?
-					@comment.report=params[:selection]
-				else						
-					@comment.report=params[:selection]+" "+params[:result] 	# 寫入report
+					if params[:selection]=="1"
+						@comment.report='已完成'
+					elsif params[:selection]=="2"	
+						@comment.report='部分已完成'
+					else
+						@comment.report='不處理'	
+					end	
+				else		
+					if params[:selection]=="1"
+						@comment.report='已完成 '+params[:result] 	# 寫入report
+					elsif params[:selection]=="2"	
+						@comment.report='部分已完成 '+params[:result] 	# 寫入report
+					else
+						@comment.report='不處理 '+params[:result] 	# 寫入report
+					end
+					#@comment.report=params[:selection]+" "+params[:result] 	# 寫入report
 				end
 				@comment.stage=4
 				@comment.assigning_adm_user_id= session[:adm_user_id]
@@ -78,10 +91,23 @@ class CommentListsController < ApplicationController
 		
 		if request.post?
 			if params[:result].nil?
-				@comment.report=params[:selection]
-			else						
-				@comment.report=params[:selection]+" "+params[:result] 	# 寫入report
-			end
+					if params[:selection]=="1"
+						@comment.report='已完成'
+					elsif params[:selection]=="2"	
+						@comment.report='部分已完成'
+					else
+						@comment.report='不處理'	
+					end	
+				else		
+					if params[:selection]=="1"
+						@comment.report='已完成 '+params[:result] 	# 寫入report
+					elsif params[:selection]=="2"	
+						@comment.report='部分已完成 '+params[:result] 	# 寫入report
+					else
+						@comment.report='不處理 '+params[:result] 	# 寫入report
+					end
+					#@comment.report=params[:selection]+" "+params[:result] 	# 寫入report
+				end
 			@comment.stage = 4					# next stage
 			@comment.save!
 			
