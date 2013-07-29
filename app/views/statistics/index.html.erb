@@ -1,28 +1,23 @@
-<%= form_tag :action=>:search do %>
-	<%= text_field  :search, :term, :size=>35 %><%= submit_tag "搜尋" %><br>
-	<select name="selection">
-		  <option value="0">All</option>
-		  <option value="1">尚未指派</option>
-		  <option value="2">處理中</option>
-		  <option value="3">確認中</option>
-		  <option value="4">處理完成</option>
-	</select>
-	<span>可搜尋意見ID,意見名稱,意見內容,處理狀態</span>
-	
-<% end %>
+<%=javascript_include_tag :all  %>
+<h1>---統計---</h1><br>
+<%= form_tag do%>
+	<!---  radio_button(一組name(array name) ,array index , index value)  --->
+ <h1>Output form : </h1>
+1.<br> List By 狀態<%= radio_button("chbox", "category", "c1")%>  
+ By 系所<%=radio_button("chbox", "category", "c2")%><br>
 <br>
-<h1>意見回饋列表</h1>
+2.<br> <%= radio_button("chtime", "category", "c1")%>指定時段 :  
+<input type="text" id="dp1" name="d1">
+ to 
+<input type="text" id="dp2" name="d2">
+  <br> <%= radio_button("chtime", "category", "c2")%>不指定
 
-<%if AdmUser.find(session[:adm_user_id]).permission_config.comment & 1 == 1 %>
-	<div>
-		<span style="font-weight: 600;">工作狀態: </span>	
-		<%=image_tag("red.png", :size => "20x20")%>:尚未指派處理
-		<%=image_tag("yellow.png", :size => "20x20")%>:工程師處理中 
-		<%=image_tag("yellow_d.png", :size => "20x20")%>:管理員確認中 
-		<%=image_tag("green.png", :size => "20x20")%>:處理完成
-	</div>
-	<%= render :partial => "comment_list_form" %>
-		
-	<div class="apple_pagination"><%= will_paginate(@comment) %></div>
+<br><br><%=submit_tag "查詢" %><br><br>
 <%end%>
 
+<script type="text/javascript">
+  $('#dp1').datetimepicker({	
+  });
+   $('#dp2').datetimepicker({
+  });
+</script>

@@ -5,6 +5,8 @@ gem 'mysql2'
 gem 'ckeditor'
 gem "paperclip"
 
+gem 'bootstrap-datetimepicker-rails'
+
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
