@@ -13,6 +13,12 @@
 		<td bgColor="#98F5FF"><%if !job_detail.job.s_inform.informed_at.blank?%><%= job_detail.job.s_inform.informed_at.strftime("%Y-%m-%d %H:%M:%S")%><%else%>--<%end%></td>
 	</tr>
 	<tr>
+		<td bgColor="#00FA9A">通報來源</td>
+		<td bgColor="#98F5FF">
+		<%= simple_format( fromShowing(job_detail.job), {}, :sanitize => false) %>			
+		</td>
+	</tr>	
+	<tr>
 		<td bgColor="#00FA9A">事件發生時間</td>
 		<td bgColor="#98F5FF"><%= job_detail.log_date %></td>
 	</tr>

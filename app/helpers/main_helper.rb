@@ -1,16 +1,24 @@
 module MainHelper
   
+  def fromShowing(job)
+    if job.PA
+      'PA'
+    else
+      job.from  
+    end
+  end
+  
   def eventMapNameShowing(job)
     message=String.new
     job.job_threats.each do |t|      
       event=EventMap.find_by_thread_id(t.threat_id)
       if !event.nil?   
-        if !event.name.nil? 
+        if !event.name.blank? 
           message=message+'('+t.threat_id.to_s+')'+event.name  
         else
           message=message+'('+t.threat_id.to_s+')'+'--'    
         end 
-        if !event.chinese_name.nil? 
+        if !event.chinese_name.blank? 
           message=message+'/'+event.chinese_name  
         else
           message=message+'/'+'--'         
@@ -28,12 +36,12 @@ module MainHelper
     job.job_threats.each do |t|          
       event=EventMap.find_by_thread_id(t.threat_id)
       if !event.nil?   
-        if !event.description.nil? 
+        if !event.description.blank? 
           message=message+'('+t.threat_id.to_s+')'+event.description
         else
           message=message+'('+t.threat_id.to_s+')'+'--'    
         end 
-        if !event.chinese_description.nil? 
+        if !event.chinese_description.blank? 
           message=message+'/'+event.chinese_description
         else
           message=message+'/'+'--'         
@@ -51,7 +59,7 @@ module MainHelper
     job.job_threats.each do |t|       
       event=EventMap.find_by_thread_id(t.threat_id)
       if !event.nil?   
-        if !event.suggestion.nil? 
+        if !event.suggestion.blank? 
           message=message+'('+t.threat_id.to_s+')'+event.suggestion
         else
           message=message+'('+t.threat_id.to_s+')'+'--'    

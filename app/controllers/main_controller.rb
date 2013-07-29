@@ -128,27 +128,50 @@ end
      @job.save!
     end
     
-    if request.post?               
-      if !params[:assigned_user].blank?
-        @job.s_assign.save!
-        @assigned_user=AdmUser.find(params[:assigned_user])  
-        @job.stage1="finish"
-        @job.stage2="processing"        
-        @job.handling_adm_user_id=@assigned_user.id
-        @job.assigning_adm_user_id=session[:adm_user_id] 
-        @job.s_assign.done_at=Time.now  
-        @job.s_assign.save!
-        @job.save!
-        SystemMailer.assignJobSending(@assigned_user, @job).deliver 
-        redirect_to :controller=>'main', :action=>'index', :notice=>'成功指派工作' 
-      else 
-        @job.stage1="un"
-        @job.stage2="un"  
-        @job.handling_adm_user_id=nil
-        @job.assigning_adm_user_id=nil
-        @job.save!  
-        redirect_to :controller=>'main', :action=>'index'        
-      end
+    if request.post?  
+      @job.job_threats.each do |t|      
+        event=EventMap.find_by_thread_id(t.threat_id)
+        if !event.nil?   
+          if event.name.blank? and event.chinese_name.blank? 
+            @notice='請先填入 事件名稱'        
+          end
+        else
+          @notice='請先填入 事件對照表'    
+        end     
+      end     
+      @job.job_threats.each do |t|          
+        event=EventMap.find_by_thread_id(t.threat_id)
+        if !event.nil?   
+          if event.description.blank? and event.chinese_description.blank?  
+            @notice='請先填入 事件描述'   
+          end 
+        else
+          @notice='請先填入 事件對照表'         
+        end     
+      end    
+      if @notice.nil?               
+        if !params[:assigned_user].blank?
+          @job.s_assign.save!
+          @assigned_user=AdmUser.find(params[:assigned_user])  
+          @job.stage1="finish"
+          @job.stage2="processing"        
+          @job.handling_adm_user_id=@assigned_user.id
+          @job.assigning_adm_user_id=session[:adm_user_id] 
+          @job.s_assign.done_at=Time.now  
+          @job.s_assign.save!
+          @job.save!
+          SystemMailer.assignJobSending(@assigned_user, @job).deliver 
+          @notice='成功指派工作'
+        else 
+          @job.stage1="un"
+          @job.stage2="un"  
+          @job.handling_adm_user_id=nil
+          @job.assigning_adm_user_id=nil
+          @job.save!  
+          @notice='請選擇 指派人員'        
+        end
+      end  
+      render "assignJob"
     end  
   end
   
@@ -299,7 +322,7 @@ end
     end
     
     if request.post?               
-      job=Job.new(:stage1=>'un', :stage2=>'un', :stage3=>'un', :stage4=>'un', :stage5=>'un', :PA=>false)      
+      job=Job.new(:stage1=>'un', :stage2=>'un', :stage3=>'un', :stage4=>'un', :stage5=>'un', :PA=>false, :from=>params[:from])      
       ip_map=IpMap.find_by_ip(params[:src_ip])
       job.ip_map=ip_map     
       job_detail=JobDetail.new(:log_date=>DateTime.strptime(params[:log_date], "%m/%d/%Y").to_date, :src_ip=>params[:src_ip],
