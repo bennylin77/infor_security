@@ -1,0 +1,12 @@
+<%if @job.s_closed.close_directly_reason.blank?%>
+	<%= form_tag do%>
+		<h2>直接結案原因:</h2>
+		<div class="field">
+			<%= text_area_tag :reason %>
+		</div>
+		<%= hidden_field_tag 'id', @job.id%>	
+		<%=submit_tag "確定"%><br><br>
+	<%end%>
+<%end%>	
+<%= render :partial => "job_detail_form", :locals => { :job_detail => @job.job_detail } %>
+

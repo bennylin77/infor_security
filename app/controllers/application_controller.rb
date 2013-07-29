@@ -63,8 +63,12 @@ class ApplicationController < ActionController::Base
       end
     elsif type=='job_ip_map_adm'
       job = Job.find(id)  
-      if  job.ip_map.adm_user!=adm_user        
+      if !job.ip_map.nil?
+        if  job.ip_map.adm_user!=adm_user        
           redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'
+        end
+      else
+        redirect_to :controller=>'main', :action=>'index', :notice=>'尚未登入 IP對照表'        
       end
     elsif type=='job_handling_adm'     
       job = Job.find(id)      

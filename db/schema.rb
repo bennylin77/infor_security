@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130729033637) do
+ActiveRecord::Schema.define(:version => 20130729054309) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -241,9 +241,10 @@ ActiveRecord::Schema.define(:version => 20130729033637) do
 
   create_table "s_closeds", :force => true do |t|
     t.integer  "job_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
     t.datetime "done_at"
+    t.text     "close_directly_reason"
   end
 
   create_table "s_handles", :force => true do |t|

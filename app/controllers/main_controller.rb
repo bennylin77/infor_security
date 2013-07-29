@@ -8,7 +8,7 @@ class MainController < ApplicationController
   #before_filter(:only => [:permissionConfig]) { |c| c.checkingPermission('acc', Infor::Application.config.DELETE_PERMISSION)} 
   before_filter(:only => [:createJob]) { |c| c.checkPermission('job', Infor::Application.config.CREATE_PERMISSION)}    
   before_filter(:only => [:deleteJob]) { |c| c.checkPermission('job', Infor::Application.config.DELETE_PERMISSION)}  
-  before_filter(:only => [:closeJob, :closeJobMail]) { |c| c.checkPermission('job', Infor::Application.config.CLOSE_PERMISSION)} 
+  before_filter(:only => [:closeJob, :closeJobMail, :closeJobDirectly]) { |c| c.checkPermission('job', Infor::Application.config.CLOSE_PERMISSION)} 
   before_filter(:only => [:assignJob]) { |c| c.checkPermission('job', Infor::Application.config.ASSIGN_PERMISSION)}  
   before_filter(:only => [:handleJob, :handleJobMail]) { |c| c.checkUser('job_ip_map_adm', nil, params[:id])} 
   before_filter(:only => [:informUser, :informUserMail, :checkJob, :checkJobMail]) { |c| c.checkUser('job_handling_adm', nil, params[:id])}   
@@ -272,7 +272,28 @@ end
     @job.save!
     @notice='成功送出通知信'
     render "closeJob" 
-  end  
+  end 
+  
+  def closeJobDirectly
+    @job=Job.find(params[:id])
+    if request.post?       
+      if !params[:reason].blank? 
+        @job.s_closed.close_directly_reason=params[:reason]        
+        @job.stage1="finish"                         
+        @job.stage2="finish"                        
+        @job.stage3="finish"        
+        @job.stage4="finish"
+        @job.s_closed.done_at=Time.now 
+        @job.s_closed.save!          
+        @job.stage5="finish"                    
+        @job.save!
+        @notice='成功直接結案'
+      else
+        @notice='請填寫 直接結案原因'      
+      end  
+      render "closeJobDirectly"  
+    end  
+  end 
   
   def returnJob
     @job=Job.find(params[:id]) 

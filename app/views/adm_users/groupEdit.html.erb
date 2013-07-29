@@ -35,7 +35,7 @@
 		<td></td><td>stage2:處理事件</td><td><%=check_box_tag :job_handle, Infor::Application.config.HANDLE_PERMISSION, permissionHandle(@adm_user_group.job)%></td>
 	</tr>	
 	<tr>	
-		<td></td><td>stage5:結案</td><td><%=check_box_tag :job_close, Infor::Application.config.CLOSE_PERMISSION, permissionClose(@adm_user_group.job)%></td>
+		<td></td><td>stage5:結案,直接結案</td><td><%=check_box_tag :job_close, Infor::Application.config.CLOSE_PERMISSION, permissionClose(@adm_user_group.job)%></td>
 	</tr>
 	<tr>	
 		<td></td><td>新增</td><td><%=check_box_tag :job_create, Infor::Application.config.CREATE_PERMISSION, permissionCreate(@adm_user_group.job)%></td>	

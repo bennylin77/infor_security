@@ -36,12 +36,14 @@ Infor::Application.routes.draw do
   get   "main/checkJobMail"
   get   "main/closeJob"
   get   "main/closeJobMail"
+  get   "main/closeJobDirectly"
   get   "main/returnJob"
   get   "main/createJob"
   post  "main/createJob"      
   post  "main/assignJob"
   post  "main/returnJob" 
-   
+  post  "main/closeJobDirectly"
+     
   get   "main/finishShowing"
   get   "main/unShowing"
   get   "main/deleteJob"

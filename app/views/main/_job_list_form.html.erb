@@ -19,6 +19,9 @@
     <th>Stage3<br>網管處理事件</th>
     <th>Stage4<br>工程師完成確認</th>
     <th>Stage5<br>結案</th>
+	<%if permissionDelete(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job) or permissionClose(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job) %>      
+    <th>功能</th>
+    <%end%>
   </tr>
   
   <%@jobs.each do |j| %>
@@ -83,9 +86,16 @@
 	    	<%end%>
     	<%end%>
     </td>
+    <td>
+    <%if j.stage5!='finish'%>	
+		<%if permissionClose(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job)%>    
+	    <%= link_to '直接結案',"/main/closeJobDirectly?id="+j.id.to_s %><br>
+	  	<%end%>
+  	<%end%>    	
 	<%if permissionDelete(AdmUser.find_by_id(session[:adm_user_id]).permission_config.job)%>    
-    <td><%= link_to '刪除',"/main/deleteJob?id="+j.id.to_s, data: { confirm: "你確定要刪除 工作ID:"+j.id.to_s+" ?" } %></td>
+    <%= link_to '刪除',"/main/deleteJob?id="+j.id.to_s, data: { confirm: "你確定要刪除 工作ID:"+j.id.to_s+" ?" } %>
   	<%end%>
+  	</td>
   </tr>
   <%end%>
 </table>
