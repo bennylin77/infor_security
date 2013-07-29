@@ -21,6 +21,6 @@
     <%= f.text_area :content, :size=>'150x3' %>
   </div>
   <div class="actions">
-    <%= f.submit "送出" %>
+    <%= f.submit "送出" , data: { confirm: "請確認資料正確性" }%>
   </div>
 <% end %>
