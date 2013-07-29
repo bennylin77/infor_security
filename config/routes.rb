@@ -77,6 +77,9 @@ Infor::Application.routes.draw do
   get  "comment_lists/search"
   post  "comment_lists/search"
   
+  #statistics
+  get "statistics/showRes" => 'statistics#showRes'
+  
   get "announcements/edit_show" => 'announcements#editShow'
   get "announcements/adm_show" => 'announcements#admShow'
   resources :jobs
@@ -92,6 +95,7 @@ Infor::Application.routes.draw do
   resources :job_logs
   resources :ip_maps
   resources :announcements
+  resources :statistics
   
   root :to => 'main#index'
   # The priority is based upon order of creation:
