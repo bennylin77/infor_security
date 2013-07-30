@@ -1,0 +1,19 @@
+<div class="menu_border_blue">  
+  <span id="my_button"><%=link_to '新增群組',{:controller=>:adm_users, :action=>:groupCreate}%></span>   
+</div>  
+
+<table border="1" id="adm_users_table">
+  <tr>
+    <th>名稱</th>
+    <th>功能</th>
+  </tr>
+<% @adm_user_groups.each do |adm_user_group| %>
+  <tr>
+    <td><%= adm_user_group.name %></td>
+    <td>
+      <%= link_to '編輯', {:controller=>:adm_users, :action=>:groupEdit, :id=>adm_user_group.id} %><br>
+      <%= link_to '刪除', {:controller=>:adm_users, :action=>:groupDestroy, :id=>adm_user_group.id} %><br>               
+    </td>
+  </tr>
+<% end %>
+</table>

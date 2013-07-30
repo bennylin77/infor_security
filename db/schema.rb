@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130720124417) do
+ActiveRecord::Schema.define(:version => 20130729054309) do
+
+  create_table "adm_user_groups", :force => true do |t|
+    t.string   "name"
+    t.integer  "account",    :default => 0, :null => false
+    t.integer  "ip",         :default => 0, :null => false
+    t.integer  "event",      :default => 0, :null => false
+    t.integer  "building",   :default => 0, :null => false
+    t.integer  "job",        :default => 0, :null => false
+    t.integer  "comment",    :default => 0, :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
 
   create_table "adm_users", :force => true do |t|
     t.string   "name"
@@ -188,6 +200,7 @@ ActiveRecord::Schema.define(:version => 20130720124417) do
     t.integer  "closing_adm_user_id"
     t.boolean  "always_visible",        :default => false, :null => false
     t.boolean  "always_handle",         :default => true,  :null => false
+    t.string   "from"
   end
 
   create_table "mail_configs", :force => true do |t|
@@ -200,14 +213,16 @@ ActiveRecord::Schema.define(:version => 20130720124417) do
 
   create_table "permission_configs", :force => true do |t|
     t.integer  "adm_user_id"
-    t.integer  "account",     :default => 0, :null => false
-    t.integer  "ip",          :default => 0, :null => false
-    t.integer  "event",       :default => 0, :null => false
-    t.integer  "building",    :default => 0, :null => false
-    t.integer  "job",         :default => 0, :null => false
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
-    t.integer  "comment",     :default => 0, :null => false
+    t.integer  "account",           :default => 0, :null => false
+    t.integer  "ip",                :default => 0, :null => false
+    t.integer  "event",             :default => 0, :null => false
+    t.integer  "building",          :default => 0, :null => false
+    t.integer  "job",               :default => 0, :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.integer  "comment",           :default => 0, :null => false
+    t.integer  "adm_user_group_id"
+    t.integer  "announcement",      :default => 0, :null => false
   end
 
   create_table "s_assigns", :force => true do |t|
@@ -226,9 +241,10 @@ ActiveRecord::Schema.define(:version => 20130720124417) do
 
   create_table "s_closeds", :force => true do |t|
     t.integer  "job_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
     t.datetime "done_at"
+    t.text     "close_directly_reason"
   end
 
   create_table "s_handles", :force => true do |t|

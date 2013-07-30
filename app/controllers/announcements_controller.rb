@@ -1,6 +1,13 @@
 class AnnouncementsController < ApplicationController
+
+  before_filter(:only => [:new]) { |c| c.checkPermission('announcement', Infor::Application.config.CREATE_PERMISSION)}
+  before_filter(:only => [:update]) { |c| c.checkUser('announcement_update', Infor::Application.config.UPDATE_PERMISSION,params[:id])}
+  before_filter(:only => [:destory]) { |c| c.checkPermission('announcement', Infor::Application.config.DELETE_PERMISSION)}
+  
+  before_filter(:only => [:admShow]) { |c| c.checkPermission('announcement', Infor::Application.config.READ_PERMISSION)}
+  
 	def index
-		
+		@notice=params[:notice]
 		@announcementsAll= Announcement.all
 		@announcements=Array.new
 		@announcementsAll.each do |a|
@@ -48,8 +55,13 @@ class AnnouncementsController < ApplicationController
     end
     end
   
-	def edit_show
+	def editShow
 		@announcements= Announcement.find_all_by_adm_user_id(session[:adm_user_id])
 	end
+	
+	def admShow
+	  @announcements= Announcement.all
+	end
+	
 	
 end

@@ -1,0 +1,23 @@
+<%=javascript_include_tag :all  %>
+<h1>---統計---</h1><br>
+<%= form_tag do%>
+	<!---  radio_button(一組name(array name) ,array index , index value)  --->
+ <h1>Output form : </h1>
+1.<br> List By 狀態<%= radio_button("chbox", "category", "c1")%>  
+ By 系所<%=radio_button("chbox", "category", "c2")%><br>
+<br>
+2.<br> <%= radio_button("chtime", "category", "c1")%>指定時段 :  
+<input type="text" id="dp1" name="d1">
+ to 
+<input type="text" id="dp2" name="d2">
+  <br> <%= radio_button("chtime", "category", "c2")%>不指定
+
+<br><br><%=submit_tag "查詢" %><br><br>
+<%end%>
+
+<script type="text/javascript">
+  $('#dp1').datetimepicker({	
+  });
+   $('#dp2').datetimepicker({
+  });
+</script>

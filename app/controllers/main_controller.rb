@@ -8,13 +8,15 @@ class MainController < ApplicationController
   #before_filter(:only => [:permissionConfig]) { |c| c.checkingPermission('acc', Infor::Application.config.DELETE_PERMISSION)} 
   before_filter(:only => [:createJob]) { |c| c.checkPermission('job', Infor::Application.config.CREATE_PERMISSION)}    
   before_filter(:only => [:deleteJob]) { |c| c.checkPermission('job', Infor::Application.config.DELETE_PERMISSION)}  
-  before_filter(:only => [:closeJob, :closeJobMail]) { |c| c.checkPermission('job', Infor::Application.config.CLOSE_PERMISSION)} 
+  before_filter(:only => [:closeJob, :closeJobMail, :closeJobDirectly]) { |c| c.checkPermission('job', Infor::Application.config.CLOSE_PERMISSION)} 
   before_filter(:only => [:assignJob]) { |c| c.checkPermission('job', Infor::Application.config.ASSIGN_PERMISSION)}  
   before_filter(:only => [:handleJob, :handleJobMail]) { |c| c.checkUser('job_ip_map_adm', nil, params[:id])} 
   before_filter(:only => [:informUser, :informUserMail, :checkJob, :checkJobMail]) { |c| c.checkUser('job_handling_adm', nil, params[:id])}   
 
   before_filter(:only => [:index, :unShowing]) { |c| c.admLoginLog()}
-
+  
+  
+  
 
 #================================================================================================================================for menu  
   def index
@@ -47,24 +49,27 @@ class MainController < ApplicationController
     end     
   end
 #================================================================================================================================for comment  
-  def comment 
-    if request.post?               
-      @comment=Comment.new(params[:comment])
-      @comment.adm_user=AdmUser.find(session[:adm_user_id])
-	  @comment.stage=1
-      @comment.save!
-     
-      @adm_user = AdmUser.joins(:permission_config).where('comment & 16 = 16')
-	    @adm_user.each do |j|	       
-		  SystemMailer.sendComment(j, @comment).deliver                   	  
-	  end
-            
-      redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'已將您寶貴的意見送出'
-    else
-      @comment=Comment.new
-    end     
-  end
-  
+def comment 
+	if request.post?               
+		@comment=Comment.new(params[:comment])
+		if @comment.subject.blank? or @comment.content.blank? 
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'請填入完整資訊'
+		else		
+			@comment.adm_user=AdmUser.find(session[:adm_user_id])
+			@comment.stage=1
+			@comment.save!
+			 
+			@adm_user = AdmUser.joins(:permission_config).where('comment & 16 = 16')
+			@adm_user.each do |j|	       
+				SystemMailer.sendComment(j, @comment).deliver                   	  
+			end				
+			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'已將您寶貴的意見送出'	
+		end		
+	else
+		@comment=Comment.new
+		#redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'請填入資料'
+	end     
+end
     
 #================================================================================================================================for stage  
   def jobDetailShowing
@@ -123,27 +128,50 @@ class MainController < ApplicationController
      @job.save!
     end
     
-    if request.post?               
-      if !params[:assigned_user].blank?
-        @job.s_assign.save!
-        @assigned_user=AdmUser.find(params[:assigned_user])  
-        @job.stage1="finish"
-        @job.stage2="processing"        
-        @job.handling_adm_user_id=@assigned_user.id
-        @job.assigning_adm_user_id=session[:adm_user_id] 
-        @job.s_assign.done_at=Time.now  
-        @job.s_assign.save!
-        @job.save!
-        SystemMailer.assignJobSending(@assigned_user, @job).deliver 
-        redirect_to :controller=>'main', :action=>'index', :notice=>'成功指派工作' 
-      else 
-        @job.stage1="un"
-        @job.stage2="un"  
-        @job.handling_adm_user_id=nil
-        @job.assigning_adm_user_id=nil
-        @job.save!  
-        redirect_to :controller=>'main', :action=>'index'        
-      end
+    if request.post?  
+      @job.job_threats.each do |t|      
+        event=EventMap.find_by_thread_id(t.threat_id)
+        if !event.nil?   
+          if event.name.blank? and event.chinese_name.blank? 
+            @notice='請先填入 事件名稱'        
+          end
+        else
+          @notice='請先填入 事件對照表'    
+        end     
+      end     
+      @job.job_threats.each do |t|          
+        event=EventMap.find_by_thread_id(t.threat_id)
+        if !event.nil?   
+          if event.description.blank? and event.chinese_description.blank?  
+            @notice='請先填入 事件描述'   
+          end 
+        else
+          @notice='請先填入 事件對照表'         
+        end     
+      end    
+      if @notice.nil?               
+        if !params[:assigned_user].blank?
+          @job.s_assign.save!
+          @assigned_user=AdmUser.find(params[:assigned_user])  
+          @job.stage1="finish"
+          @job.stage2="processing"        
+          @job.handling_adm_user_id=@assigned_user.id
+          @job.assigning_adm_user_id=session[:adm_user_id] 
+          @job.s_assign.done_at=Time.now  
+          @job.s_assign.save!
+          @job.save!
+          SystemMailer.assignJobSending(@assigned_user, @job).deliver 
+          @notice='成功指派工作'
+        else 
+          @job.stage1="un"
+          @job.stage2="un"  
+          @job.handling_adm_user_id=nil
+          @job.assigning_adm_user_id=nil
+          @job.save!  
+          @notice='請選擇 指派人員'        
+        end
+      end  
+      render "assignJob"
     end  
   end
   
@@ -244,7 +272,28 @@ class MainController < ApplicationController
     @job.save!
     @notice='成功送出通知信'
     render "closeJob" 
-  end  
+  end 
+  
+  def closeJobDirectly
+    @job=Job.find(params[:id])
+    if request.post?       
+      if !params[:reason].blank? 
+        @job.s_closed.close_directly_reason=params[:reason]        
+        @job.stage1="finish"                         
+        @job.stage2="finish"                        
+        @job.stage3="finish"        
+        @job.stage4="finish"
+        @job.s_closed.done_at=Time.now 
+        @job.s_closed.save!          
+        @job.stage5="finish"                    
+        @job.save!
+        @notice='成功直接結案'
+      else
+        @notice='請填寫 直接結案原因'      
+      end  
+      render "closeJobDirectly"  
+    end  
+  end 
   
   def returnJob
     @job=Job.find(params[:id]) 
@@ -294,7 +343,7 @@ class MainController < ApplicationController
     end
     
     if request.post?               
-      job=Job.new(:stage1=>'un', :stage2=>'un', :stage3=>'un', :stage4=>'un', :stage5=>'un', :PA=>false)      
+      job=Job.new(:stage1=>'un', :stage2=>'un', :stage3=>'un', :stage4=>'un', :stage5=>'un', :PA=>false, :from=>params[:from])      
       ip_map=IpMap.find_by_ip(params[:src_ip])
       job.ip_map=ip_map     
       job_detail=JobDetail.new(:log_date=>DateTime.strptime(params[:log_date], "%m/%d/%Y").to_date, :src_ip=>params[:src_ip],
@@ -367,7 +416,14 @@ class MainController < ApplicationController
   
   def login
      session[:adm_user_id]=nil
-     if request.post?
+	 
+	 @announcementsAll= Announcement.all
+		@announcements=Array.new
+		@announcementsAll.each do |a|
+		  @announcements.push(a) if (a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)
+		end
+
+	 if request.post?
       user=AdmUser.authenticate(params[:username],params[:password])
        if user
          session[:adm_user_id]=user.id
@@ -400,15 +456,26 @@ class MainController < ApplicationController
   
   def permissionConfig
     if request.post?               
-      @permission_config = PermissionConfig.find(params[:permission_config][:id])              
-      @permission_config.account =  params[:acc_read].to_i | params[:acc_update].to_i | params[:acc_create].to_i | params[:acc_delete].to_i
-      @permission_config.ip =  params[:ip_read].to_i | params[:ip_update].to_i | params[:ip_create].to_i | params[:ip_delete].to_i      
-      @permission_config.event =  params[:event_read].to_i | params[:event_update].to_i | params[:event_create].to_i | params[:event_delete].to_i
-      @permission_config.building =  params[:building_read].to_i | params[:building_update].to_i | params[:building_create].to_i | params[:building_delete].to_i
-      @permission_config.job =  params[:job_read].to_i | params[:job_handle].to_i | params[:job_assign].to_i | params[:job_close].to_i | params[:job_create].to_i | params[:job_delete].to_i            
-
-      @permission_config.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i | params[:comment_read].to_i   #comment
-
+      @permission_config = PermissionConfig.find(params[:permission_config][:id]) 
+      @permission_config.adm_user_group_id=params[:adm_user_group]   
+      if params[:adm_user_group].blank?
+        @permission_config.account =  params[:acc_read].to_i | params[:acc_update].to_i | params[:acc_create].to_i | params[:acc_delete].to_i
+        @permission_config.ip =  params[:ip_read].to_i | params[:ip_update].to_i | params[:ip_create].to_i | params[:ip_delete].to_i      
+        @permission_config.event =  params[:event_read].to_i | params[:event_update].to_i | params[:event_create].to_i | params[:event_delete].to_i
+        @permission_config.building =  params[:building_read].to_i | params[:building_update].to_i | params[:building_create].to_i | params[:building_delete].to_i
+        @permission_config.job =  params[:job_read].to_i | params[:job_handle].to_i | params[:job_assign].to_i | params[:job_close].to_i | params[:job_create].to_i | params[:job_delete].to_i            
+        @permission_config.comment = params[:comment_web_worker].to_i | params[:comment_top].to_i | params[:comment_read].to_i   #comment
+		
+		@permission_config.announcement = params[:announcement_read].to_i | params[:announcement_update].to_i | params[:announcement_create].to_i | params[:announcement_delete].to_i
+	  else
+        adm_user_group=AdmUserGroup.find(params[:adm_user_group])
+        @permission_config.account =  adm_user_group.account
+        @permission_config.ip =  adm_user_group.ip      
+        @permission_config.event =  adm_user_group.event
+        @permission_config.building =  adm_user_group.building
+        @permission_config.job =  adm_user_group.job            
+        @permission_config.comment =  adm_user_group.comment    
+      end  
       @permission_config.save!
       redirect_to adm_users_url          
     else

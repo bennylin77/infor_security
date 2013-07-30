@@ -1,0 +1,15 @@
+<%if @job.s_closed.close_directly_reason.blank?%>
+	<%= form_tag do%>
+		<h2>直接結案原因:</h2>
+		<div class="field">
+			<%=select_tag :reason,  options_for_select([["網管反應不處理", '網管反應不處理'], 
+			                      						["網管反應無法處理",'網管反應無法處理'], 
+			                      						["事件無法追蹤",'事件無法追蹤'],
+			                      						["其它", '其它']]), {:include_blank => '請選擇..'} %><br>
+		</div>
+		<%= hidden_field_tag 'id', @job.id%>	
+		<%=submit_tag "確定"%><br><br>
+	<%end%>
+<%end%>	
+<%= render :partial => "job_detail_form", :locals => { :job_detail => @job.job_detail } %>
+

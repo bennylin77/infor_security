@@ -12,12 +12,19 @@ Infor::Application.routes.draw do
   get   "main/permissionConfig"  
   get   "main/traceConfig"  
   get   "main/pwReset"    
-
   post  "main/createUser"
   post  "main/login"
   post  "main/mailConfig"
   post  "main/permissionConfig"  
   post  "main/traceConfig"  
+  
+  get "adm_users/groupIndex"
+  get "adm_users/groupCreate" 
+  get "adm_users/groupEdit"  
+  get "adm_users/groupDestroy"
+  post "adm_users/groupCreate"    
+  post "adm_users/groupEdit"
+  
   #stage
   get   "main/jobDetailShowing"
   get   "main/assignJob"
@@ -29,12 +36,14 @@ Infor::Application.routes.draw do
   get   "main/checkJobMail"
   get   "main/closeJob"
   get   "main/closeJobMail"
+  get   "main/closeJobDirectly"
   get   "main/returnJob"
   get   "main/createJob"
   post  "main/createJob"      
   post  "main/assignJob"
   post  "main/returnJob" 
-   
+  post  "main/closeJobDirectly"
+     
   get   "main/finishShowing"
   get   "main/unShowing"
   get   "main/deleteJob"
@@ -68,8 +77,11 @@ Infor::Application.routes.draw do
   get  "comment_lists/search"
   post  "comment_lists/search"
   
-  get "announcements/edit_show" => 'announcements#edit_show'
+  #statistics
+  get "statistics/showRes" => 'statistics#showRes'
   
+  get "announcements/edit_show" => 'announcements#editShow'
+  get "announcements/adm_show" => 'announcements#admShow'
   resources :jobs
   resources :adm_users
   resources :campus_buildings_lists
@@ -83,6 +95,7 @@ Infor::Application.routes.draw do
   resources :job_logs
   resources :ip_maps
   resources :announcements
+  resources :statistics
   
   root :to => 'main#index'
   # The priority is based upon order of creation:

@@ -1,6 +1,7 @@
-<p id="notice"><%= notice %></p>
+<h1>公告</h1>
+<%= render :partial => "announcements/table" %>
 <%=form_tag do%>
-	<legend>請登入</legend>
+	<p id="notice">請先登入,謝謝!</p>
 	<div>
 		<label>帳號:</label>
 		<%=text_field_tag :username, params[:username]%>

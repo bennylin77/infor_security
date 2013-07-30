@@ -13,6 +13,12 @@
 		<td bgColor="#98F5FF"><%if !job_detail.job.s_inform.informed_at.blank?%><%= job_detail.job.s_inform.informed_at.strftime("%Y-%m-%d %H:%M:%S")%><%else%>--<%end%></td>
 	</tr>
 	<tr>
+		<td bgColor="#00FA9A">通報來源</td>
+		<td bgColor="#98F5FF">
+		<%= simple_format( fromShowing(job_detail.job), {}, :sanitize => false) %>			
+		</td>
+	</tr>		
+	<tr>
 		<td bgColor="#00FA9A">事件發生時間</td>
 		<td bgColor="#98F5FF"><%= job_detail.log_date %></td>
 	</tr>
@@ -122,7 +128,13 @@
 	<tr>
 		<td bgColor="#00FA9A">IP使用人處理記錄</td>
 		<td bgColor="#98F5FF"><%= job_detail.job.s_handle.handling_description or "--" %></td>
-	</tr>		
+	</tr>
+	<%if !job_detail.job.s_closed.close_directly_reason.blank? %>
+	<tr>
+		<td bgColor="#00FA9A">直接結案原因</td>
+		<td bgColor="#98F5FF"><%= job_detail.job.s_closed.close_directly_reason %></td>
+	</tr>	
+	<%end%>				
 </table> 
 <p>註1: 事件等級分成: Critical(危險)，High(高)，Medium(中)，Low(低)與Alert(警告)</p>
 <p>註2: 判讀等級是由本中心資安小組依各項流量資料內容判讀分成: 高，中，低。判讀等級為高者將於發出本通知後封鎖</p>
