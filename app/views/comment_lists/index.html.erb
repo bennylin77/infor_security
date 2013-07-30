@@ -1,3 +1,4 @@
+<h1>意見回饋列表</h1><br>
 <%= form_tag :action=>:search do %>
 	<%= text_field  :search, :term, :size=>35 %><%= submit_tag "搜尋" %><br>
 	<select name="selection">
@@ -10,8 +11,6 @@
 	<span>可搜尋意見ID,意見名稱,意見內容,處理狀態</span>
 	
 <% end %>
-<br>
-<h1>意見回饋列表</h1>
 
 <%if AdmUser.find(session[:adm_user_id]).permission_config.comment & 1 == 1 %>
 	<div>
