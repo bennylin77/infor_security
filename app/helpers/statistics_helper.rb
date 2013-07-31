@@ -1,8 +1,17 @@
 module StatisticsHelper
 
+def show_ip(jobs)
+	html='<table><tr><th>IP</th></tr>'
+	jobs.each do |j|
+		html+='<tr><td>'+j.src_ip+'</td></tr>'
+	end
+	
+	html+='</table>'
+	html.html_safe
+end
+
+
 def count_stage(jobs)
-	
-	
 	params[:st2]=0
 	t_st2=0
 	params[:st3]=0
@@ -37,6 +46,29 @@ def count_stage(jobs)
 			
 			params[:test]+=1
 	end		
+end
+
+def ip_trans
+	if params[:ip1]=='*' or params[:ip1].blank?
+		 params[:ip1]='.*'
+	end
+	if params[:ip2]=='*' or params[:ip2].blank?
+		 params[:ip2]='.*'
+	end
+	if params[:ip3]=='*' or params[:ip3].blank?
+		 params[:ip3]='.*'
+	end
+	if params[:ip4]=='*' or params[:ip4].blank?
+		 params[:ip4]='.*'
+	end
+	
+	if params[:chip][:category]=='0'
+		params[:ip1]=='.*'
+		params[:ip2]=='.*'
+		params[:ip3]=='.*'
+		params[:ip4]=='.*'
+	end
+	
 end
 
 end

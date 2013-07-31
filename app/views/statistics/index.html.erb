@@ -12,7 +12,11 @@
 <input type="text" id="dp2" name="d2">
   <br> <%= radio_button("chtime", "category", 0,checked:true)%>不指定
 <br><br>
-3.<br> <%= radio_button("chip", "category", 1)%>指定ip網段 :  <%= text_field_tag :ip, '0.0.0.0', :maxlength => 15, :size => 20, :class => "ip-input" %>
+3.<br> <%= radio_button("chip", "category", 1)%>指定ip網段 :  
+<%= text_field_tag :ip1, '*', :maxlength => 3, :size => 1%>.
+<%= text_field_tag :ip2, '*', :maxlength => 3, :size => 1%>.
+<%= text_field_tag :ip3, '*', :maxlength => 3, :size => 1%>.
+<%= text_field_tag :ip4, '*', :maxlength => 3, :size => 1%>  ( * 或 不填入 為不指定)
   <br> <%= radio_button("chip", "category", 0,checked:true)%>不指定
 <br><br>
 <%=submit_tag "查詢" %><br><br>
