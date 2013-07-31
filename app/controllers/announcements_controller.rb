@@ -16,6 +16,16 @@ class AnnouncementsController < ApplicationController
 		end
 		
 	end
+	def guest
+		@notice=params[:notice]
+		@announcementsAll= Announcement.all
+		@announcements=Array.new
+		@announcementsAll.each do |a|
+		  @announcements.push(a) if (a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)
+		 
+		end
+		
+	end
 	def show
 		@announcement= Announcement.find(params[:id])
 	end

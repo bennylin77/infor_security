@@ -1,0 +1,21 @@
+﻿<h1 align="center">公告</h1>
+<br>
+
+
+
+<table border="1" align="center" width="500px" style= "word-break:break-all; " rules="rows" bordercolor="#C0C0C0">
+  <% @announcements.each do |announcement| %>
+  <tr class="anntopic_start">
+  	<th>
+	<div class="anntopic"><%= announcement.subject%></div>
+	由<%= AdmUser.find_by_id(announcement.adm_user_id).name %>
+	發表於<%= announcement.start_show.strftime("%Y年 %m月 %d日 (%a.)") %>
+	</th>
+  </tr>
+  
+  <tr>
+  <td><%= announcement.content.html_safe %></td>
+  </tr>
+  <% end %>
+</table>
+

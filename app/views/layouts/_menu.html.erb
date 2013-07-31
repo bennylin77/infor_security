@@ -3,6 +3,8 @@
 		<%if !session[:adm_user_id].blank?%>
 			<span class="detail_text"><%=AdmUser.find_by_id(session[:adm_user_id]).name%>您好!</span>
 			<%=link_to '登出',{:controller=>:main, :action=>:logout}%>
+		<% else %>
+		<%=link_to '登入',{:controller=>:main, :action=>:login}%>
 		<%end%>
     </div>
     <div id="templatemo_menu" class="ddsmoothmenu">

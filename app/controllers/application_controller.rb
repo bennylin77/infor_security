@@ -1,7 +1,7 @@
 # encoding: UTF-8
 class ApplicationController < ActionController::Base
   protect_from_forgery :secret => 'c29b46d85562c4cc0f87acb482a2200d'
-  before_filter :authorize, :except=> [:login, :verifyCode, :update, :show ]
+  before_filter :authorize, :except=> [:login, :verifyCode, :update, :show, :guest ]
   
   
   def domainIp
@@ -112,6 +112,7 @@ protected
       session[:original_uri]=request.url
       flash[:notice]="請先登入,謝謝!"
       redirect_to :controller=> :main, :action=> :login
+	  #redirect_to :controller=> :announcements, :action=> :index
     end
   end   
 end
