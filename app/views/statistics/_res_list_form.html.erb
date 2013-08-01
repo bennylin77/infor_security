@@ -1,0 +1,40 @@
+<table style="filter:Alpha(Opacity=20, FinishOpacity=80, Style=1)" border=1 width=60% ;background-color: rgb(255, 255, 255)>
+<tbody>
+<tr><td colspan=3 bgcolor=#FFCC99>總件數 : <font color="ff0000"> <%=count_stage(@Res)%> </font></td></tr>
+		 <tr>
+		   <td bgcolor=#006633><font color=#fffff>流程</font></td>
+		   <td bgcolor=#006633><font color=#fffff>件數</font></td>
+		   <td bgcolor=#006633><font color=#fffff>平均停留處理時間(小時)</font></td>
+		 </tr>
+		 <tr>
+		   <td bgcolor=#CCFF00>Stage 1 (尚未指派)</td>
+		   <td><b><%=params[:un]%></b></td>
+		   <td><b>N/A</b></td>
+		 </tr>
+		 <tr>
+		   <td bgcolor=#CCFF00>stage 2 (網管通知)</td>
+		   <td><b><%=params[:st3]%></b></td>
+		   <td><b><%=params[:avg_st3]%></b></td>
+		 </tr>
+		 <tr>
+		   <td bgcolor=#CCFF00>Stage 3 (單位網管處理)</td>
+		   <td><b><%=params[:st4]%></b></td>
+		   <td><b><%=params[:avg_st4]%></b></td>
+		 </tr>
+		 <tr>
+		   <td bgcolor=#CCFF00>Stage 4 (被指派人確認)</td>
+		   <td><b><%=params[:st4]%></b></td>
+		   <td><b><%=params[:avg_st4]%></b></td>
+		 <tr>
+		   <td bgcolor=#CCFF00>Stage 5 (管理員結案)</td>
+		   <td><b><%=params[:st5]%></b></td>
+		   <td><b><%=params[:avg_st5]%></b></td>
+		 </tr>  
+		 </tr>
+		 <tr>
+		   <td bgcolor=#CCFF00>     已結案  </td>
+		   <td><b><%=params[:finish]%></b></td>
+		   <td><b>N/A</b></td>
+		 </tr>
+</tbody>
+</table>
