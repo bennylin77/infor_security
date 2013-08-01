@@ -1,9 +1,16 @@
 module StatisticsHelper
+require 'date'
 
 def show_ip(jobs)
-	html='<table><tr><th>IP</th></tr>'
+	html='<table><tr><th>ID</th><th>IP</th></tr>'
+	s_time=0
 	jobs.each do |j|
-		html+='<tr><td>'+j.src_ip+'</td></tr>'
+		html+='<tr><td>'+j.job_id.to_s+'</td><td>'+j.src_ip.to_s+'</td>'
+		difference=((DateTime.now - j.created_at.to_datetime)*24).to_i.to_s
+		html+='<td>'+DateTime.now.to_s+'</td>'
+		html+='<td>'+j.created_at.to_datetime.to_s+'</td>'
+		html+='<td>'+difference+'</td>'
+		html+='</tr>'
 	end
 	
 	html+='</table>'
