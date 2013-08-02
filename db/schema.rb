@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130729054309) do
+ActiveRecord::Schema.define(:version => 20130731160502) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -46,6 +46,13 @@ ActiveRecord::Schema.define(:version => 20130729054309) do
     t.datetime "login_at"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "announcemapsgroups", :force => true do |t|
+    t.integer  "announcement_id"
+    t.integer  "adm_group_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "announcements", :force => true do |t|

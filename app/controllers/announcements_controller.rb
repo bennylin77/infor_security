@@ -34,6 +34,7 @@ class AnnouncementsController < ApplicationController
 	end
 	def new
 		@announcement=Announcement.new
+		
 	end
 	def create
 		@announcement = Announcement.new(params[:announcement])
@@ -75,3 +76,4 @@ class AnnouncementsController < ApplicationController
 	
 	
 end
+
