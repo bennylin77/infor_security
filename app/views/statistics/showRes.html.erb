@@ -1,7 +1,7 @@
 <h1>Result</h1>
-
-<!---<%=show_ip(@Res)%> --->
-
-<%= render :partial => "res_list_form" %>
-
-<!--- <%=count_stage(@Res)%> <%=params[:test]%> --->
+<%if params[:chbox][:category]=='0'%>
+	<%= render :partial => "stage_list_form" %>
+<%end%>
+<%if params[:chbox][:category]=='1'%>
+	<%= render :partial => "dep_list_form" %>
+<%end%>

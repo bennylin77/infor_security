@@ -37,7 +37,7 @@ def count_stage(jobs)
 	params[:avg_st5]=0
 	
 	##
-	params[:test]=0
+	params[:total]=0
 	##
 	jobs.each do |j|
 			if j.job.stage5=='finish'
@@ -66,30 +66,34 @@ def count_stage(jobs)
 				params[:un]  +=1
 			else
 				params[:finish]=params[:finish]  # ?
-			end	
-			
-			if params[:st2]>0
-				t_st2/=params[:st2]
-				params[:avg_st2]=t_st2
-			end
-			if params[:st3]>0	 		
-				t_st3/=params[:st3]
-				params[:avg_st3]=t_st3
-			end
-			if params[:st4]>0	
-				t_st4/=params[:st4]
-				params[:avg_st4]=t_st4
-			end
-			if params[:st5]>0	
-				t_st5/=params[:st5]
-				params[:avg_st5]=t_st5
-			end
-					
-			params[:test]+=1
+			end						
+			params[:total]+=1   #total 
 	end		
 	
-	params[:test]
+	if params[:st2]>0
+			t_st2/=params[:st2]
+			params[:avg_st2]=t_st2
+		end
+		if params[:st3]>0	 		
+			t_st3/=params[:st3]
+			params[:avg_st3]=t_st3
+		end
+		if params[:st4]>0	
+			t_st4/=params[:st4]
+			params[:avg_st4]=t_st4
+		end
+		if params[:st5]>0	
+			t_st5/=params[:st5]
+			params[:avg_st5]=t_st5
+	end
 	
+	
+	params[:total]
+	
+end
+
+def count_dep(job)
+
 end
 
 def ip_trans
