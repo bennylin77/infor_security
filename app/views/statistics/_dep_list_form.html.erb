@@ -1,1 +1,21 @@
-<h1>by 系所</h1>
+<table style="filter:Alpha(Opacity=20, FinishOpacity=80, Style=1)" border=1 width=60% ;background-color: rgb(255, 255, 255)>
+<tbody>
+	<%if params[:chtime][:category]=='1'%>
+		<tr><td colspan=3 bgcolor=#FFCC99>時間 : <font color="ff0000"> <%=params[:d1]%>~<%=params[:d2]%> </font></td></tr>
+	<%end%>
+	
+	<%if params[:chip][:category]=='1'%>
+		<tr><td colspan=3 bgcolor=#FFCC99>指定ip : <font color="ff0000">  <%=params[:ip1]%>.<%=params[:ip2]%>.<%=params[:ip3]%>.<%=params[:ip4]%></font></td></tr>
+	<%end%>
+	
+	<tr><td colspan=3 bgcolor=#FFCC99>總件數 : <font color="ff0000"> <%=count_total(@Res)%> </font></td></tr>
+	
+	<tr>
+		<td bgcolor=#006633><font color=#fffff>建築物名稱</font></td>
+		<td bgcolor=#006633><font color=#fffff>件數</font></td>
+	</tr>
+	
+	<%=count_dep(@Res)%>
+	
+</tbody>
+</table>
