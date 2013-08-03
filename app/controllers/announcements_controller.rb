@@ -1,4 +1,4 @@
-class AnnouncementsController < ApplicationController
+﻿class AnnouncementsController < ApplicationController
 
   before_filter(:only => [:new]) { |c| c.checkPermission('announcement', Infor::Application.config.CREATE_PERMISSION)}
   before_filter(:only => [:update]) { |c| c.checkUser('announcement_update', Infor::Application.config.UPDATE_PERMISSION,params[:id])}
@@ -11,7 +11,12 @@ class AnnouncementsController < ApplicationController
 		@announcementsAll= Announcement.all
 		@announcements=Array.new
 		@announcementsAll.each do |a|
-		  @announcements.push(a) if (a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)
+		  if  (a.announcemapsgroup.find_by_adm_group_id(10000)!=nil || 
+		       a.announcemapsgroup.find_by_adm_group_id(AdmUser.find_by_id(session[:adm_user_id]).permission_config.adm_user_group_id)!=nil) &&
+		     ((a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || 
+		     (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)) then
+		  @announcements.push(a) 
+		  end
 		 
 		end
 		
@@ -21,8 +26,11 @@ class AnnouncementsController < ApplicationController
 		@announcementsAll= Announcement.all
 		@announcements=Array.new
 		@announcementsAll.each do |a|
-		  @announcements.push(a) if (a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)
-		 
+		  if  (a.announcemapsgroup.find_by_adm_group_id(10000)!=nil ||a.announcemapsgroup.find_by_adm_group_id(30000)!=nil)&&
+		     ((a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || 
+		     (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)) then
+		    @announcements.push(a) 
+		  end
 		end
 		
 	end
@@ -34,12 +42,22 @@ class AnnouncementsController < ApplicationController
 	end
 	def new
 		@announcement=Announcement.new
+		#@groups=Array.new 
 		
+		#@groups.push(alla)
+		@groups=AdmUserGroup.all.map{|aa| [aa.name,aa.id]}
+		@groups.push(["所有人" , 10000])
+		@groups.push(["所有使用者" , 20000])
+		@groups.push(["所有訪客" , 30000])
+		#@groups.push(kk)
 	end
 	def create
 		@announcement = Announcement.new(params[:announcement])
-		
 		@announcement.save 
+		params[:groupid].each do |gid|
+		  group = Announcemapsgroup.new( :announcement_id => @announcement.id , :adm_group_id => gid)
+		  group.save
+		end
 		redirect_to @announcement
 	end
 	def update

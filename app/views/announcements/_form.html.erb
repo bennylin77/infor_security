@@ -23,7 +23,8 @@
   
   <div>
   哪些群組看的見:<br>
-  <%= select_tag "payment", options_from_collection_for_select(AdmUserGroup.all, :id, :name), :multiple => true %>
+  
+  <%= select_tag "groupid", options_for_select(@groups), :multiple => true %>
   </div>
   <p>
     <%= form.submit %>
