@@ -31,6 +31,7 @@
 					<%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.building)%>
 	                <li><%=link_to '校區建築列表' , campus_buildings_lists_path %></li>
 	                <%end%>
+					 <li><%=link_to '統計' , statistics_path %></li>
 	            </ul>
 	        </li> 	    
 	        <li><a href="#">意見回饋</a>
@@ -41,7 +42,7 @@
 					<%end%>
 	            </ul>
 	        </li>
-			<!--- <li><%=link_to '統計' , statistics_path %></li>	--->
+			<!---	--->
 	    </ul>
 	    <%end%> 
 	</div>
