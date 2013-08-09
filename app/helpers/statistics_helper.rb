@@ -187,4 +187,49 @@ def ip_trans_back
 	end
 end
 
+def check_dep(j)
+	msg=''
+	if j.job.ip_map_id.blank?	
+		msg='Unknown Place(place check ip_map on the web)'	
+	else
+		if j.job.ip_map.campus_buildings_list_id.blank?
+			msg='Unknown Place(place check ip_map on the web)'	
+		else			
+			msg=j.job.ip_map.campus_buildings_list.building_name.to_s
+		end
+	end	
+	msg
+end
+
+def showAllThreatsName(jobs)
+	jobs.job.job_threats.each do |t|
+		event = EventMap.find_by_thread_id(t.threat_id)
+		if !event.nil?   
+			if !event.name.blank? 
+			  message=message+'('+t.threat_id.to_s+')'+event.name  
+			else
+			  message=message+'('+t.threat_id.to_s+')'+'--'    
+			end 
+			
+			if !event.chinese_name.blank? 
+			  message=message+'/'+event.chinese_name  
+			else
+			  message=message+'/'+'--'         
+			end
+		else
+			message=message+'('+t.threat_id.to_s+')'+'--/--'   
+		end     
+		  message=message+'<br>'
+	end
+	message
+end
+
+def check_finish(job)
+	if job.job.stage5=='finish'
+		job.job.s_closed.done_at.to_s
+	else
+		'Processing'
+	end
+end
+
 end
