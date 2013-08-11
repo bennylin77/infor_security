@@ -11,7 +11,7 @@
 		@announcementsAll= Announcement.all
 		@announcements=Array.new
 		@announcementsAll.each do |a|
-		  if  (a.announcemapsgroup.find_by_adm_group_id(10000)!=nil || 
+		  if  (a.announcemapsgroup.find_by_adm_group_id(20000)!=nil || 
 		       a.announcemapsgroup.find_by_adm_group_id(AdmUser.find_by_id(session[:adm_user_id]).permission_config.adm_user_group_id)!=nil) &&
 		     ((a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || 
 		     (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)) then
@@ -26,7 +26,7 @@
 		@announcementsAll= Announcement.all
 		@announcements=Array.new
 		@announcementsAll.each do |a|
-		  if  (a.announcemapsgroup.find_by_adm_group_id(10000)!=nil ||a.announcemapsgroup.find_by_adm_group_id(30000)!=nil)&&
+		  if  a.announcemapsgroup.find_by_adm_group_id(10000)!=nil&&
 		     ((a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || 
 		     (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)) then
 		    @announcements.push(a) 
@@ -39,6 +39,10 @@
 	end
 	def edit
 		@announcement= Announcement.find(params[:id])
+		@groups=AdmUserGroup.all.map{|aa| [aa.name,aa.id]}
+		@groups.push(["所有訪客" , 10000])
+		@groups.push(["所有使用者" , 20000])
+		@groupsforedit=@announcement.announcemapsgroup.all
 	end
 	def new
 		@announcement=Announcement.new
@@ -46,9 +50,9 @@
 		
 		#@groups.push(alla)
 		@groups=AdmUserGroup.all.map{|aa| [aa.name,aa.id]}
-		@groups.push(["所有人" , 10000])
+		@groups.push(["所有訪客" , 10000])
 		@groups.push(["所有使用者" , 20000])
-		@groups.push(["所有訪客" , 30000])
+		
 		#@groups.push(kk)
 	end
 	def create
@@ -62,9 +66,16 @@
 	end
 	def update
     @announcement = Announcement.find(params[:id])
-
+    
     respond_to do |format|
       if @announcement.update_attributes(params[:announcement])
+	     Announcemapsgroup.destroy_all(:announcement_id => params[:id])
+		 
+		 params[:groupid].each do |gid|
+		  group = Announcemapsgroup.new( :announcement_id => @announcement.id , :adm_group_id => gid)
+		  group.save
+		 end
+		
         format.html { redirect_to @announcement, notice: 'Person was successfully updated.' }
         format.json { head :no_content }
       else
