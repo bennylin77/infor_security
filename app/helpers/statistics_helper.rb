@@ -122,12 +122,8 @@ def count_dep(jobs)
 	jobs.each do |j|
 		if j.job.ip_map_id.blank?	
 			list.add('Unknown IP',1)
-		else
-			if j.job.ip_map.campus_buildings_list_id.blank?
-				list.add('Unknown IP',1)
-			else			
+		else			
 				list.add(j.job.ip_map.campus_buildings_list.building_name,1)
-			end
 		end	
 	end
 	
