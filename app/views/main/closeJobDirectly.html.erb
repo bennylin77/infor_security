@@ -5,11 +5,28 @@
 			<%=select_tag :reason,  options_for_select([["網管反應不處理", '網管反應不處理'], 
 			                      						["網管反應無法處理",'網管反應無法處理'], 
 			                      						["事件無法追蹤",'事件無法追蹤'],
-			                      						["其它", '其它']]), {:include_blank => '請選擇..'} %><br>
+			                      						["其它", '其它']]), {:include_blank => '請選擇..'} %>
+	    <div id="reason_others" style="display: inline-block">     		   
+	 	</div>  			                      						
 		</div>
 		<%= hidden_field_tag 'id', @job.id%>	
-		<%=submit_tag "確定"%><br><br>
+		<%=submit_tag "確定"%><br>
 	<%end%>
 <%end%>	
 <%= render :partial => "job_detail_form", :locals => { :job_detail => @job.job_detail } %>
+
+<script>
+$('#reason').change(function() 
+{
+    var options = '';
+    if($(this).val() == '其它') 
+    {
+        document.getElementById('reason_others').innerHTML="說明:<input id='reason_others' name='reason_others' size='25' type='text' />";        
+    }
+    else
+    {
+        document.getElementById('reason_others').innerHTML=null;
+    }
+});
+</script>
 

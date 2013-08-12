@@ -278,7 +278,11 @@ end
     @job=Job.find(params[:id])
     if request.post?       
       if !params[:reason].blank? 
-        @job.s_closed.close_directly_reason=params[:reason]        
+        if params[:reason]=="其它" 
+          @job.s_closed.close_directly_reason=params[:reason]+"-"+params[:reason_others]   
+        else
+          @job.s_closed.close_directly_reason=params[:reason]  
+        end         
         @job.stage1="finish"                         
         @job.stage2="finish"                        
         @job.stage3="finish"        
