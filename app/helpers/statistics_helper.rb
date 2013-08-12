@@ -198,7 +198,9 @@ def check_dep(j)
 end
 
 def showAllThreatsName(jobs)
+	message = ""
 	jobs.job.job_threats.each do |t|
+		
 		event = EventMap.find_by_thread_id(t.threat_id)
 		if !event.nil?   
 			if !event.name.blank? 
