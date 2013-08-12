@@ -3,6 +3,8 @@ Infor::Application.routes.draw do
 
   mount Ckeditor::Engine => '/ckeditor'
 
+  post "main/index"
+  get "main/index"
   #account
   get   "main/login"
   get   "main/createUser"
@@ -97,7 +99,8 @@ Infor::Application.routes.draw do
   resources :announcements
   resources :statistics
   
-  root :to => 'main#index'
+  #root :to => 'main#index'
+  root :to => 'announcements#guest'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

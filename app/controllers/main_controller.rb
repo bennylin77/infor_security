@@ -278,7 +278,11 @@ end
     @job=Job.find(params[:id])
     if request.post?       
       if !params[:reason].blank? 
-        @job.s_closed.close_directly_reason=params[:reason]        
+        if params[:reason]=="其它" 
+          @job.s_closed.close_directly_reason=params[:reason]+"-"+params[:reason_others]   
+        else
+          @job.s_closed.close_directly_reason=params[:reason]  
+        end         
         @job.stage1="finish"                         
         @job.stage2="finish"                        
         @job.stage3="finish"        
@@ -416,12 +420,6 @@ end
   
   def login
      session[:adm_user_id]=nil
-	 
-	 @announcementsAll= Announcement.all
-		@announcements=Array.new
-		@announcementsAll.each do |a|
-		  @announcements.push(a) if (a.start_show.compare_with_coercion(Time.zone.now.to_date)== 0 || a.end_show.compare_with_coercion(Time.zone.now.to_date)== 0) || (a.start_show.compare_with_coercion(Time.zone.now.to_date)== -1 && a.end_show.compare_with_coercion(Time.zone.now.to_date)== 1)
-		end
 
 	 if request.post?
       user=AdmUser.authenticate(params[:username],params[:password])
@@ -439,7 +437,8 @@ end
   def logout
     session[:adm_user_id]=nil
     flash[:notice]="已經登出"
-    redirect_to :controller=>"main" ,:action=>"index" 
+    #redirect_to :controller=>"main" ,:action=>"index"
+	redirect_to :controller=>"announcements" ,:action=>"guest"
   end
   
   def mailConfig

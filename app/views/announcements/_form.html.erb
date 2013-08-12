@@ -21,8 +21,14 @@
     <%= form.date_select :end_show %>
   </div>
   
+  <div>
+  哪些群組看的見(可複選):<br>
+  
+  <%= select_tag "groupid", options_for_select(@groups,@groupsforedit.map {|g| g.adm_group_id}), :multiple => true %>
+  </div>
   <p>
     <%= form.submit %>
   </p>
   
 <% end -%>
+

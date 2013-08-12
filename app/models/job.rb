@@ -1,6 +1,6 @@
 class Job < ActiveRecord::Base
   attr_accessible :assigning_adm_user_id, :handling_adm_user_id, :stage1, :stage2, :stage3, :stage4, :stage5, :deleted, 
-                  :ip_map_id, :PA, :closing_adm_user_id, :always_handle, :from
+                  :ip_map_id, :PA, :closing_adm_user_id, :always_handle , :always_visible , :from
                   
   belongs_to :ip_map 
    

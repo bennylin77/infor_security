@@ -1,18 +1,27 @@
-<%=javascript_include_tag :all  %>
+
 <h1>---統計---</h1><br>
 <%= form_tag do%>
 	<!---  radio_button(一組name(array name) ,array index , index value)  --->
  <h1>Output form : </h1>
-1.<br> List By 狀態<%= radio_button("chbox", "category", "c1")%>  
- By 系所<%=radio_button("chbox", "category", "c2")%><br>
-<br>
-2.<br> <%= radio_button("chtime", "category", "c1")%>指定時段 :  
+1.<br> List  By 狀態<%= radio_button("chbox", "category", 0,checked:true)%>  <br>
+       List  By 系所<%=radio_button("chbox", "category", 1)%>  <br>
+	   List  By 事件<%=radio_button("chbox", "category", 2)%>(未完成)
+<br><br>
+2.<br> <%= radio_button("chtime", "category", 1)%>指定時段 :  
 <input type="text" id="dp1" name="d1">
  to 
 <input type="text" id="dp2" name="d2">
-  <br> <%= radio_button("chtime", "category", "c2")%>不指定
+  <br> <%= radio_button("chtime", "category", 0,checked:true)%>不指定
+<br><br>
+3.<br> <%= radio_button("chip", "category", 1)%>指定ip網段 :  
+<%= text_field_tag :ip1, '*', :maxlength => 3, :size => 1%>.
+<%= text_field_tag :ip2, '*', :maxlength => 3, :size => 1%>.
+<%= text_field_tag :ip3, '*', :maxlength => 3, :size => 1%>.
+<%= text_field_tag :ip4, '*', :maxlength => 3, :size => 1%>  ( * 或 不填入 為不指定)
+  <br> <%= radio_button("chip", "category", 0,checked:true)%>不指定
+<br><br>
+<%=submit_tag "查詢" %><br><br>
 
-<br><br><%=submit_tag "查詢" %><br><br>
 <%end%>
 
 <script type="text/javascript">

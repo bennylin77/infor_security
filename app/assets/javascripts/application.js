@@ -19,5 +19,3 @@
 //= require ckeditor/init
 //= require layout
 //= require_self
-
-//= require bootstrap-datetimepicker

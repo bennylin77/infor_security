@@ -5,6 +5,13 @@
 		<div class="menu_border_blue">
 				<span id="my_button"><%=link_to "修改IP使用人處理記錄", :controller=>:s_handles, :action=>:edit, :id=>@job.s_handle.id%></span> 
 				<span id="my_button"><%=link_to '編輯IP使用人', edit_ip_map_path(@job.ip_map) %></span> 
+				<!--
+    			<%if !@job.ip_map.block%>
+	    		<span id="my_button"><%= link_to '封鎖IP',{:controller=>:ip_maps, :action=>:block, :id=>@job.ip_map.id, :block=> true}, data: { confirm: '你確定要封鎖 ip:'+@job.ip_map.ip+'?' } %></span> 
+	    		<%else%>
+	    		<span id="my_button"><%= link_to '解除封鎖IP',{:controller=>:ip_maps, :action=>:block, :id=>@job.ip_map.id, :block=> false}, data: { confirm: '你確定要解除封鎖 ip:'+@job.ip_map.ip+'?' } %>	</span>     
+	    		<%end%>				
+				-->						
 				<span id="my_button"><%=link_to "完成工作", :controller=>:main , :action=>:handleJobMail, :id=>@job %></span> 
 				<span id="my_button"><%=link_to "無法完成或退回工作",{:controller=>:main, :action=>:returnJob, :id=>@job, :returned_stage=>'stage2' }%></span>
 		</div>
