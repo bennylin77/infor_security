@@ -219,7 +219,7 @@ def showAllThreatsName(jobs)
 		end     
 		  message=message+'<br>'
 	end
-	message
+	message.html_safe
 end
 
 def check_finish(job)
