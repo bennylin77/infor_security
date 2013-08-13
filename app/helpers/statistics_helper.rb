@@ -122,12 +122,8 @@ def count_dep(jobs)
 	jobs.each do |j|
 		if j.job.ip_map_id.blank?	
 			list.add('Unknown IP',1)
-		else
-			if j.job.ip_map.campus_buildings_list_id.blank?
-				list.add('Unknown IP',1)
-			else			
+		else			
 				list.add(j.job.ip_map.campus_buildings_list.building_name,1)
-			end
 		end	
 	end
 	
@@ -202,7 +198,9 @@ def check_dep(j)
 end
 
 def showAllThreatsName(jobs)
+	message = ""
 	jobs.job.job_threats.each do |t|
+		
 		event = EventMap.find_by_thread_id(t.threat_id)
 		if !event.nil?   
 			if !event.name.blank? 
@@ -221,7 +219,7 @@ def showAllThreatsName(jobs)
 		end     
 		  message=message+'<br>'
 	end
-	message
+	message.html_safe
 end
 
 def check_finish(job)
