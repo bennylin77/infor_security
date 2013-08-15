@@ -1,15 +1,14 @@
-
-<h1>---統計---</h1><br>
 <%= form_tag do%>
 	<!---  radio_button(一組name(array name) ,array index , index value)  --->
  <h1>Output form : </h1>
 1.<br> List  By 狀態<%= radio_button("chbox", "category", 0,checked:true)%>  <br>
        List  By 系所<%=radio_button("chbox", "category", 1)%>  <br>
-	   List  By 事件<%=radio_button("chbox", "category", 2)%>(未完成)
+	   List  By 事件<%=radio_button("chbox", "category", 2)%>
 <br><br>
-2.<br> <%= radio_button("chtime", "category", 1)%>指定時段 :  
+2.<br> <%= radio_button("chtime", "category", 1)%>指定時段 : 
+ From
 <input type="text" id="dp1" name="d1">
- to 
+ To 
 <input type="text" id="dp2" name="d2">
   <br> <%= radio_button("chtime", "category", 0,checked:true)%>不指定
 <br><br>
@@ -30,3 +29,5 @@
    $('#dp2').datetimepicker({
   });
 </script>
+<br>
+<font color="ff0000">* 請注意 by 系所、事件 時間若'不指定' 會造成查尋失敗 </font>

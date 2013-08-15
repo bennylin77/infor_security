@@ -118,7 +118,8 @@ end
 
 def count_dep(jobs)
 	list = LinkedList.new('nil',0)
-	
+	params[:labels] = Array.new
+	params[:data] = Array.new
 	jobs.each do |j|
 		if j.job.ip_map_id.blank?	
 			list.add('Unknown IP',1)
@@ -132,10 +133,12 @@ def count_dep(jobs)
 	while current.next_node != nil
 		current = current.next_node
 		html+='<tr><td>'+current.name.to_s+'</td><td>'+current.value.to_s+'</td></tr>'
+		params[:labels]<<current.name.to_s
+		params[:data]<<current.value
 	end
-	
 	html.html_safe
 end
+
 
 def count_total(jobs)
 	total=0

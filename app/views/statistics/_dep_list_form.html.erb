@@ -19,3 +19,8 @@
 	
 </tbody>
 </table>
+
+<br>
+<%= image_tag(Gchart.pie :labels => params[:labels],
+                   :data => params[:data]              
+                   ) %>

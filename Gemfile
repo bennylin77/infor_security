@@ -4,7 +4,7 @@ gem 'rails', '3.2.6'
 gem 'mysql2'
 gem 'ckeditor'
 gem "paperclip"
-
+gem 'googlecharts'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
