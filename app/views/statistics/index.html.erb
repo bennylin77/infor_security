@@ -10,8 +10,9 @@
 <input type="text" id="dp1" name="d1">
  To 
 <input type="text" id="dp2" name="d2">
-  <br> <%= radio_button("chtime", "category", 0,checked:true)%>不指定
-<br><br>
+  <br> <%= radio_button("chtime", "category", 0,checked:true)%>不指定  <font color="ff0000">* 起點為2013/5/1   </font>
+<br>
+<br>
 3.<br> <%= radio_button("chip", "category", 1)%>指定ip網段 :  
 <%= text_field_tag :ip1, '*', :maxlength => 3, :size => 1%>.
 <%= text_field_tag :ip2, '*', :maxlength => 3, :size => 1%>.
@@ -30,4 +31,11 @@
   });
 </script>
 <br>
-<font color="ff0000">* 請注意 by 系所、事件 時間若'不指定' 會造成查尋失敗 </font>
+
+<br>
+<%if day7_image(@Res)!=0%>
+<%= image_tag(Gchart.pie :labels => params[:labels7],
+                   :data => params[:data7],          
+				   :title => '近七日事件發生分佈圖'
+                   ) %>
+<%end%>
