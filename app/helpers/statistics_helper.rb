@@ -118,12 +118,17 @@ end
 
 def count_dep(jobs)
 	list = LinkedList.new('nil',0)
-	
+	params[:labels] = Array.new
+	params[:data] = Array.new
 	jobs.each do |j|
 		if j.job.ip_map_id.blank?	
 			list.add('Unknown IP',1)
 		else			
+			if j.job.ip_map.campus_buildings_list.blank?
+				list.add('Unknown IP',1)
+			else
 				list.add(j.job.ip_map.campus_buildings_list.building_name,1)
+			end	
 		end	
 	end
 	
@@ -132,10 +137,12 @@ def count_dep(jobs)
 	while current.next_node != nil
 		current = current.next_node
 		html+='<tr><td>'+current.name.to_s+'</td><td>'+current.value.to_s+'</td></tr>'
+		params[:labels]<<current.name.to_s
+		params[:data]<<current.value
 	end
-	
 	html.html_safe
 end
+
 
 def count_total(jobs)
 	total=0
@@ -228,6 +235,35 @@ def check_finish(job)
 	else
 		'Processing'
 	end
+end
+
+def day7_image(asd)
+	list = LinkedList.new('nil',0)
+	params[:labels7] = Array.new
+	params[:data7] = Array.new
+	asd.each do |j|
+		if j.job.ip_map_id.blank?	
+			list.add('Unknown IP',1)
+		else			
+			if j.job.ip_map.campus_buildings_list.blank?
+				list.add('Unknown IP',1)
+			else
+				list.add(j.job.ip_map.campus_buildings_list.building_name,1)
+			end	
+		end	
+	end	
+	current = list.re_list 
+	
+	if current.next_node.nil?
+		return 0
+	else
+		while current.next_node != nil
+			current = current.next_node
+			params[:labels7]<<current.name.to_s
+			params[:data7]<<current.value
+		end
+		return 1
+	end	
 end
 
 end
