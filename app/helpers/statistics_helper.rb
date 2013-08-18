@@ -254,7 +254,7 @@ def day7_image(job)
 	end	
 	current = list.re_list 
 	
-	if current.next_node.nil
+	if current.next_node.nil?
 		return 0
 	else
 		while current.next_node != nil
