@@ -167,10 +167,10 @@ def ip_trans
 	end
 	
 	if params[:chip][:category]=='0'
-		params[:ip1]=='.*'
-		params[:ip2]=='.*'
-		params[:ip3]=='.*'
-		params[:ip4]=='.*'
+		params[:ip1]='.*'
+		params[:ip2]='.*'
+		params[:ip3]='.*'
+		params[:ip4]='.*'
 	end
 	
 end
@@ -254,7 +254,7 @@ def day7_image(job)
 	end	
 	current = list.re_list 
 	
-	if current.next_node==nil
+	if current.next_node.nil
 		return 0
 	else
 		while current.next_node != nil
