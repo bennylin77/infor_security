@@ -183,11 +183,11 @@ ActiveRecord::Schema.define(:version => 20130731160502) do
   end
 
   create_table "job_threats", :force => true do |t|
-    t.integer  "job_id"
-    t.integer  "threat_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.string   "serverity"
+    t.integer "job_id",     :null => false
+    t.integer "threat_id",  :null => false
+    t.date    "created_at", :null => false
+    t.date    "updated_at", :null => false
+    t.string  "serverity",  :null => false
   end
 
   create_table "jobs", :force => true do |t|
