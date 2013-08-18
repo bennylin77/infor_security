@@ -167,10 +167,10 @@ def ip_trans
 	end
 	
 	if params[:chip][:category]=='0'
-		params[:ip1]=='.*'
-		params[:ip2]=='.*'
-		params[:ip3]=='.*'
-		params[:ip4]=='.*'
+		params[:ip1]='.*'
+		params[:ip2]='.*'
+		params[:ip3]='.*'
+		params[:ip4]='.*'
 	end
 	
 end
@@ -237,11 +237,11 @@ def check_finish(job)
 	end
 end
 
-def day7_image(asd)
+def day7_image(job)
 	list = LinkedList.new('nil',0)
 	params[:labels7] = Array.new
 	params[:data7] = Array.new
-	asd.each do |j|
+	job.each do |j|
 		if j.job.ip_map_id.blank?	
 			list.add('Unknown IP',1)
 		else			
@@ -254,7 +254,7 @@ def day7_image(asd)
 	end	
 	current = list.re_list 
 	
-	if current.next_node.nil?
+	if current.next_node.nil
 		return 0
 	else
 		while current.next_node != nil
