@@ -19,7 +19,7 @@
 				<td><b><%=check_dep(j)%></b></td>		
 				<td><b><%=j.src_ip.to_s%></b></td>					
 			    <td><b><%=showAllThreatsName(j)%></b></td>
-				<td><b><%=j.job.updated_at%></b></td>
+				<td><b><%=j.job.updated_at.to_s%></b></td>
 				<td><b><%=check_finish(j)%></b></td>
 			 </tr>		 
 		 <%end%>
