@@ -120,6 +120,16 @@ class SystemMailer < ActionMailer::Base
     mail( to: @receiver.email , subject:"資安通報系統 資安事件'未處理事件'通知", cc: "gavinhsu@nctu.edu.tw")
   end  
     
+#============================================================================================
+ def meetingmail(receiver)
+	@receiver=receiver 
+	@Res=JobDetail.find(:all,:joins=>:job,:conditions=>['((alert=1 and log_count>=1000) or (alert=0 and log_count>=5)) and jobs.always_handle=1 and jobs.deleted=0 and job_details.updated_at>= ?',DateTime.now.since(7.day)])
+	@Res_all=JobDetail.find(:all,:joins=>:job,:conditions=>['((alert=1 and log_count>=1000) or (alert=0 and log_count>=5)) and jobs.always_handle=1 and jobs.deleted=0 and job_details.updated_at>= ?','2013-05-01 00:00:00'])
+
+	mail( to: @receiver.email , subject:"資安通報系統 資安會議通知", cc: "gavinhsu@nctu.edu.tw")
+ end
+ 	
+	
 end
 
 
