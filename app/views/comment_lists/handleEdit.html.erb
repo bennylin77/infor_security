@@ -9,7 +9,7 @@
 		<%= text_area_tag :content %>
 	</div>
 	<%= hidden_field_tag 'id', @comment.id%>
-	<%= hidden_field_tag 'adm_id', @comment.assigning_adm_user_id%>	
+	<%= hidden_field_tag 'assign_user_id', @comment.assigning_adm_user_id%>	
     <%=submit_tag "送出", data: { confirm: "確定送出?" }%>
   </div>
 <% end %>
