@@ -1,7 +1,10 @@
 <h1>事件處理</h1>
 <br>
 <%= render :partial => "comment_detail_form", :locals => { :comment => @comment } %>
-
+<%if not @comment.adm_note.nil?%>
+	<font color="ff0000">* 此意見曾被退回，原因為: <%=@comment.adm_note%></font><br>
+<%end%>
+<br>
 <%= form_tag do%>
 	<h1>處理紀錄</h1>
 	<br>
