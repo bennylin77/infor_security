@@ -67,7 +67,7 @@ class CommentListsController < ApplicationController
 			@comment.stage = 3						# next stage
 			@comment.save!			
 			
-			adm_user=AdmUser.find(params[:adm_id])
+			adm_user=AdmUser.find(params[:assigned_user])
 			SystemMailer.commentHandle(adm_user, @comment).deliver
 			
 			redirect_to :controller=>'comment_lists', :action=>'index', :notice=>'完成事件處理' 
