@@ -28,7 +28,7 @@ def showRes
 end
 
 def self.MeetingMail
-	@adm_users=AdmUser.joins(:mail_config).where('meeting_notification==1')	
+	@adm_users=AdmUser.joins(:mail_config).where('meeting_notification=1')	
 	SystemMailer.meetingmail(@adm_users).deliver
 end
 
