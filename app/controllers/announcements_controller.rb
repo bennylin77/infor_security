@@ -52,7 +52,7 @@
 		@groups=AdmUserGroup.all.map{|aa| [aa.name,aa.id]}
 		@groups.push(["所有訪客" , 10000])
 		@groups.push(["所有使用者" , 20000])
-		
+		@groupsforedit=@announcement.announcemapsgroup.all
 		#@groups.push(kk)
 	end
 	def create
