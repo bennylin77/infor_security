@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130731160502) do
+ActiveRecord::Schema.define(:version => 20130923055719) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -227,7 +227,7 @@ ActiveRecord::Schema.define(:version => 20130731160502) do
     t.integer  "job",               :default => 0, :null => false
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
-    t.integer  "comment",           :default => 0, :null => false
+    t.integer  "comment",           :default => 1, :null => false
     t.integer  "adm_user_group_id"
     t.integer  "announcement",      :default => 0, :null => false
   end
