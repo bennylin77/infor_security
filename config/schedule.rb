@@ -25,6 +25,6 @@ every  1.day, :at => '8:00 am'  do
     runner "MainController.dailyMail"
 end
 
-every :thursday, :at => '10:00 am' do
+every 1.day, :at => '10:00 am' do
 	runner "StatisticsController.MeetingMail"
 end
