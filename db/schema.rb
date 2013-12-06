@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130923055719) do
+ActiveRecord::Schema.define(:version => 20131004023934) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -183,11 +183,11 @@ ActiveRecord::Schema.define(:version => 20130923055719) do
   end
 
   create_table "job_threats", :force => true do |t|
-    t.integer "job_id",     :null => false
-    t.integer "threat_id",  :null => false
-    t.date    "created_at", :null => false
-    t.date    "updated_at", :null => false
-    t.string  "serverity",  :null => false
+    t.integer  "job_id"
+    t.integer  "threat_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "serverity"
   end
 
   create_table "jobs", :force => true do |t|
@@ -230,6 +230,13 @@ ActiveRecord::Schema.define(:version => 20130923055719) do
     t.integer  "comment",           :default => 1, :null => false
     t.integer  "adm_user_group_id"
     t.integer  "announcement",      :default => 0, :null => false
+  end
+
+  create_table "permission_configs_groups", :force => true do |t|
+    t.integer  "permission_config_id"
+    t.integer  "adm_user_group_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
   end
 
   create_table "s_assigns", :force => true do |t|
