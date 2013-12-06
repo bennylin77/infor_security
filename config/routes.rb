@@ -81,6 +81,8 @@ Infor::Application.routes.draw do
   
   #statistics
   get "statistics/showRes" => 'statistics#showRes'
+  get "statistics/long_stat"
+  post "statistics/long_stat"
   
   get "announcements/edit_show" => 'announcements#editShow'
   get "announcements/adm_show" => 'announcements#admShow'

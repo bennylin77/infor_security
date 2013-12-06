@@ -1,0 +1,105 @@
+<%=form_tag do%>
+	2013年<%=select_tag :month,options_for_select(@ary_m)%>月
+	<%=submit_tag '查詢'%>
+<%end%>
+<%if @flag==1%>
+2013年<%=@d_mon.to_s%>月
+</br>
+<%count=0%>
+<table>
+	<tr>
+		<th colspan="3">Top 10 Attack action type</th>
+	</tr>	
+	<tr>
+		<td>Rank</td>
+		<td>Name</td>
+		<td>Count</td>
+	</tr>
+	<%@res.each do |r|%>
+	<%count=count+1%>
+	<tr>
+	<td><%=count.to_s%></td>	
+	<%em =  EventMap.where("thread_id=?",r.threat_id).first %>
+		<% if not em.blank? %>
+			<%if not em.name.blank?%>
+				<td><%=em.name.to_s%></td>
+			<%else%>
+				<td><%=r.threat_id%></td>
+			<%end%>	
+		<%else%>
+			<td>Not Record Event Id(<%=r.threat_id%>)</td>
+		<%end%>
+	<td><%=r.total%></td>
+	</tr>
+	<%end%>
+</table>	
+<%end%>
+</br></br>
+
+<%if @flag==1%>
+<div style="float:left; width:50%"> 
+<%count=0%>
+<table width="100%">
+	<tr>
+		<th></th>
+		<th colspan="2">Top 10 Attack Victim Building/IP List</th>
+		
+	</tr>	
+	<tr>
+		<td>Rank</td>
+		<td>Building</td>
+		<td>Count</td>
+	</tr>
+	<%@victim.each do |r|%>
+	<%count=count+1%>
+	<tr>
+	<td><%=count.to_s%></td>	
+	<%em =  IpMap.where("ip=?",r.victim_ip).first %>
+		<% if not em.blank? %>
+			<%build_map=CampusBuildingsList.find(em.campus_buildings_list_id)%>
+			<%if not build_map.blank?%>
+				<td><%=build_map.building_name.to_s%></td>
+			<%else%>
+				<td><%=r.victim_ip%></td>
+			<%end%>	
+		<%else%>
+			<td><%=r.victim_ip%></td>
+		<%end%>
+	<td><%=r.total%></td>
+	</tr>
+	<%end%>
+</table>	
+</div>
+<div style="float:left; width:50%"> 
+<%count=0%>
+<table width="100%">
+	<tr>
+		<th colspan="2">Top 10 Attack Source Building/IP List</th>
+	</tr>	
+	<tr>
+		
+		<td>Building</td>
+		<td>Count</td>
+	</tr>
+	<%@source.each do |r|%>
+	<%count=count+1%>
+	<tr>
+	
+	<%em =  IpMap.where("ip=?",r.src_ip).first %>
+		<% if not em.blank? %>
+			<%build_map=CampusBuildingsList.find(em.campus_buildings_list_id)%>
+			<%if not build_map.blank?%>
+				<td><%=build_map.building_name.to_s%></td>
+			<%else%>
+				<td><%=r.src_ip%></td>
+			<%end%>	
+		<%else%>
+			<td><%=r.src_ip%></td>
+		<%end%>
+	<td><%=r.total%></td>
+	</tr>
+	<%end%>
+</table>	
+</div>
+<%end%>
+
