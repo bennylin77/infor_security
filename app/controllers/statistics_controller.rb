@@ -69,6 +69,34 @@ def long_stat
                     
 end
 
+def top10
+  @ary_m = Array.new
+  @ary_y = Array.new
+  for i in 0..11
+   time = Time.now.ago(i.month)
+   @ary_m << time.month
+   @ary_y << time.year
+  end
+  
+  @flag = 0
+ 
+  if request.post?
+  @flag=1
+  @d_mon = params[:month]
+  date1 = '2013-'+params[:month].to_s+'-01'
+  @d1 = Time.strptime(date1, "%Y-%m-%d").to_time
+  @d2 = @d1.since(1.month)
+  @res = JobThreat.find(
+                        :all,
+                        :select => 'threat_id ,count(*) total,serverity',
+                        :group => 'threat_id',
+                        :conditions => ["updated_at>? and updated_at<?",@d1,@d2],
+                        :order => 'total DESC',
+                        :limit => 10)
+  end
+
+end
+
 def showRes
 	
 end

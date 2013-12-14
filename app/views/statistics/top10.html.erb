@@ -1,0 +1,47 @@
+<%=form_tag do%>
+	2013年<%=select_tag :month,options_for_select(@ary_m)%>月
+	<%=submit_tag '查詢'%>
+<%end%>
+<%if @flag==1%>
+2013年<%=@d_mon.to_s%>月
+</br>
+<table border="1" id="event_lists_table">	
+	<tr bgColor="CDCDC1">
+		<td>Serverity</td>
+		<td>Top 10 Threat ID</td>
+		<td>Threat Type</td>
+		<td>Sessions</td>
+		<td>來源地點</td>
+		<td>受害地點</td>
+		<td>時間曲線圖</td>
+		<td>Top 5 Attacker Country</td>
+	</tr>
+	<%@res.each do |r|%>
+		<tr>
+			<td><%=r.serverity.to_s%></td>	
+			<%em =  EventMap.where("thread_id=?",r.threat_id).first %>
+				<% if not em.blank? %>
+					<%if not em.name.blank?%>
+						<td><%=em.name.to_s%>(<%=r.threat_id.to_s%>)</td>
+					<%else%>
+						<td>(<%=r.threat_id%>)</td>
+					<%end%>	
+				<%else%>
+					<td>Not Record Event Id(<%=r.threat_id%>)</td>
+				<%end%>
+				
+				<%if not em.category.blank?%>
+					<td><%=em.category.to_s%></td>
+				<%else%>
+					<td>No Record</td>	
+				<%end%>
+				
+			<td><%=r.total.to_s%></td>
+			<td><%=show_splace(r.threat_id,@d1,@d2)%></td>
+			<td><%=show_vplace(r.threat_id,@d1,@d2)%></td>
+			<td></td>
+			<td></td>
+		</tr>
+	<%end%>
+</table>	
+<%end%>
