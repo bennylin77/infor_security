@@ -266,6 +266,73 @@ def day7_image(job)
 	end	
 end
 
+def show_vplace(threat_id,d1,d2)
+  html_string = ""
+  @victim = JobLog.find(
+                      :all,
+                      :select => 'victim_ip ,count(*) total',
+                      :group => 'victim_ip',
+                      :conditions => ["log_time>? and log_time<? and threat_id=?",d1,d2,threat_id],
+                      :order => 'total DESC',
+                      :limit => 5)
+  @victim.each do |r|
+    em =  IpMap.where("ip=?",r.victim_ip).first 
+    if not em.blank?
+        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
+        if not build_map.blank?
+          html_string +="<p>("
+          html_string +=r.victim_ip
+          html_string +=")"
+          html_string += build_map.building_name.to_s
+          html_string += "</p>"
+        else
+           html_string +="<p>("
+           html_string +=r.victim_ip
+           html_string +=")No Recorded</p>"
+        end
+    else
+          html_string +="<p>("
+          html_string +=r.victim_ip
+          html_string +=")No Defined</p>"
+    end
+  end
+  
+  return html_string.html_safe
+end
 
+def show_splace(threat_id,d1,d2)
+  html_string = ""
+  @source = JobThreat.find(
+                      :all,
+                      :joins => "LEFT JOIN `job_details` ON job_details.job_id = job_threats.job_id",
+                      :select => 'src_ip ,count(*) total',
+                      :group => 'src_ip',
+                      :conditions => ["job_threats.updated_at>? and job_threats.updated_at<? and threat_id=?",@d1,@d2,threat_id],
+                      :order => 'total DESC',
+                      :limit => 5)  
+  @source.each do |r|
+    em =  IpMap.where("ip=?",r.src_ip).first 
+    if not em.blank?
+        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
+        if not build_map.blank?
+          html_string +="<p>("
+          html_string +=r.src_ip
+          html_string +=")"
+          html_string += build_map.building_name.to_s
+          html_string += "</p>"
+        else
+           html_string +="<p>("
+           html_string +=r.src_ip
+           html_string +=")No Recorded</p>"
+        end
+    else
+          html_string +="<p>("
+          html_string +=r.src_ip
+          html_string +=")No Defined</  p>"
+    end
+  end
+  
+  return html_string.html_safe
+end
 
 end
