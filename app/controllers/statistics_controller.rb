@@ -86,16 +86,24 @@ def top10
   date1 = '2013-'+params[:month].to_s+'-01'
   @d1 = Time.strptime(date1, "%Y-%m-%d").to_time
   @d2 = @d1.since(1.month)
-  @res = JobThreat.find(
+  @res = JobLog.find(
                         :all,
-                        :select => 'threat_id ,count(*) total,serverity',
+                        :select => 'threat_id ,count(*) total',
                         :group => 'threat_id',
-                        :conditions => ["updated_at>? and updated_at<?",@d1,@d2],
+                        :conditions => ["log_time>? and log_time<?",@d1,@d2],
                         :order => 'total DESC',
                         :limit => 10)
   end
 
 end
+
+def show_chart
+  @res = JobLog.find(:all,
+                     :select=>'HOUR(log_time) AS t,count(*) total',
+                     :group=> 't',
+                     :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]])
+end
+
 
 def showRes
 	
@@ -105,6 +113,7 @@ def self.MeetingMail
 	@adm_users=AdmUser.joins(:mail_config).where('meeting_notification=1')	
 	SystemMailer.meetingmail(@adm_users).deliver
 end
+
 
 
 end

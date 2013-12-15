@@ -85,6 +85,7 @@ Infor::Application.routes.draw do
   post "statistics/long_stat"
   get "statistics/top10"
   post "statistics/top10"
+  get "statistics/show_chart"
   
   get "announcements/edit_show" => 'announcements#editShow'
   get "announcements/adm_show" => 'announcements#admShow'

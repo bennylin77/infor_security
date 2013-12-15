@@ -270,9 +270,9 @@ def show_vplace(threat_id,d1,d2)
   html_string = ""
   @victim = JobLog.find(
                       :all,
-                      :select => 'victim_ip ,count(*) total',
+                      :select => 'victim_ip ,SUM(1) total',
                       :group => 'victim_ip',
-                      :conditions => ["log_time>? and log_time<? and threat_id=?",d1,d2,threat_id],
+                      :conditions => ["threat_id=? and log_time>? and log_time<?",threat_id,d1,d2],
                       :order => 'total DESC',
                       :limit => 5)
   @victim.each do |r|
@@ -302,12 +302,12 @@ end
 
 def show_splace(threat_id,d1,d2)
   html_string = ""
-  @source = JobThreat.find(
+  @source = JobLog.find(
                       :all,
-                      :joins => "LEFT JOIN `job_details` ON job_details.job_id = job_threats.job_id",
-                      :select => 'src_ip ,count(*) total',
+                      :joins => "JOIN `job_details` ON job_details.job_id = job_logs.job_id",
+                      :select => 'src_ip ,SUM(1) total',
                       :group => 'src_ip',
-                      :conditions => ["job_threats.updated_at>? and job_threats.updated_at<? and threat_id=?",@d1,@d2,threat_id],
+                      :conditions => ["threat_id=? and job_logs.log_time>? and job_logs.log_time<? ",threat_id,@d1,@d2],
                       :order => 'total DESC',
                       :limit => 5)  
   @source.each do |r|
