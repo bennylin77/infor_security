@@ -18,14 +18,15 @@
 	</tr>
 	<%@res.each do |r|%>
 		<tr>
-			<%em =  EventMap.where("thread_id=?",r.threat_id).first %>
+			<%ser = JobThreat.where("threat_id=?",r.threat_id).first%>
 			<td>
-				<%if not em.blank? and not em.severity.blank? %>
-					<%=em.severity.to_s%>
+				<%if not ser.blank? and not ser.serverity.blank? %>
+					<%=ser.serverity.to_s%>
 				<%else%>
 					No Classified
 				<%end%>
 			</td>		
+			<%em =  EventMap.where("thread_id=?",r.threat_id).first %>
 				<% if not em.blank? %>
 					<%if not em.name.blank?%>
 						<td><%=em.name.to_s%>(<%=r.threat_id.to_s%>)</td>
