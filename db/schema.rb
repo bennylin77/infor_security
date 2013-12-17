@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131217075942) do
+ActiveRecord::Schema.define(:version => 20131217082238) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(:version => 20131217075942) do
     t.string   "reference"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+    t.string   "threat_type"
   end
 
   create_table "ip_maps", :force => true do |t|
