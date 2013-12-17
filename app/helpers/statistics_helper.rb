@@ -405,10 +405,10 @@ def show_country(threat_id,d1,d2)
   html_string = ""
   @country = JobLog.find(
                       :all,                
-                      :select => 'country ,SUM(1) total',
+                      :select => 'country ',
                       :group => 'country',
                       :conditions => ["threat_id=? and job_logs.log_time>? and job_logs.log_time<? ",threat_id,@d1,@d2],
-                      :order => 'total DESC',
+                  #    :order => 'total DESC',
                       :limit => 3)
   @country.each do |c|
     html_string +="<p>"
