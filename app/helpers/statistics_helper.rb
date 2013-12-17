@@ -268,15 +268,28 @@ end
 
 def show_vplace(threat_id,d1,d2)
   html_string = ""
-  @victim = JobLog.find(
+  sum = 0
+  @victim_inner = JobLog.find(
                       :all,
                       :select => 'victim_ip ,SUM(1) total',
                       :group => 'victim_ip',
-                      :conditions => ["threat_id=? and log_time>? and log_time<?",threat_id,d1,d2],
+                      :conditions => ["threat_id=? and victim_ip NOT REGEXP '^140.113' and log_time>? and log_time<?",threat_id,d1,d2],
                       :order => 'total DESC',
-                      :limit => 5)
-  @victim.each do |r|
+                      :limit => 3)
+  @victim_outer = JobLog.find(
+                      :all,
+                      :select => 'victim_ip ,SUM(1) total',
+                      :group => 'victim_ip',
+                      :conditions => ["threat_id=? and victim_ip REGEXP '^140.113' and log_time>? and log_time<?",threat_id,d1,d2],
+                      :order => 'total DESC',
+                      :limit => 3)   
+  @victim_inner.each do |r|
+    sum = sum + r.total
+  end                    
+                                       
+  @victim_inner.each do |r|
     em =  IpMap.where("ip=?",r.victim_ip).first 
+    percent = 100.0*(r.total)/sum
     if not em.blank?
         build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
         if not build_map.blank?
@@ -284,16 +297,55 @@ def show_vplace(threat_id,d1,d2)
           html_string +=r.victim_ip
           html_string +=")"
           html_string += build_map.building_name.to_s
-          html_string += "</p>"
+          html_string += " "
+          html_string += number_with_precision(percent, :precision => 1).to_s
+          html_string +="%</p>"
         else
            html_string +="<p>("
            html_string +=r.victim_ip
-           html_string +=")No Recorded</p>"
+           html_string +=") "
+           html_string += number_with_precision(percent, :precision => 1).to_s
+           html_string +="%</p>"
         end
     else
           html_string +="<p>("
           html_string +=r.victim_ip
-          html_string +=")No Defined</p>"
+          html_string +=") "
+          html_string += number_with_precision(percent, :precision => 1).to_s
+          html_string +="%</p>"
+    end
+  end
+  html_string +="<p>--------------------------</p>"
+  sum = 0 
+  @victim_outer.each do |r|
+    sum = sum + r.total
+  end
+  @victim_outer.each do |r|
+    em =  IpMap.where("ip=?",r.victim_ip).first 
+    percent = 100.0*(r.total)/sum
+    if not em.blank?
+        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
+        if not build_map.blank?
+          html_string +="<p>("
+          html_string +=r.victim_ip
+          html_string +=")"
+          html_string += build_map.building_name.to_s
+          html_string += " "
+          html_string += number_with_precision(percent, :precision => 1).to_s
+          html_string +="%</p>"
+        else
+           html_string +="<p>("
+           html_string +=r.victim_ip
+           html_string +=") "
+           html_string += number_with_precision(percent, :precision => 1).to_s
+          html_string +="%</p>"
+        end
+    else
+          html_string +="<p>("
+          html_string +=r.victim_ip
+          html_string +=") "
+          html_string += number_with_precision(percent, :precision => 1).to_s
+          html_string +="%</p>"
     end
   end
   
@@ -302,6 +354,7 @@ end
 
 def show_splace(threat_id,d1,d2)
   html_string = ""
+  sum = 0    
   @source = JobLog.find(
                       :all,
                       :joins => "JOIN `job_details` ON job_details.job_id = job_logs.job_id",
@@ -309,9 +362,16 @@ def show_splace(threat_id,d1,d2)
                       :group => 'src_ip',
                       :conditions => ["threat_id=? and job_logs.log_time>? and job_logs.log_time<? ",threat_id,@d1,@d2],
                       :order => 'total DESC',
-                      :limit => 5)  
+                      :limit => 5) 
+                      
+                  
+  @source.each do |cnt|
+    sum = sum + cnt.total.to_i
+  end                     
+  
   @source.each do |r|
     em =  IpMap.where("ip=?",r.src_ip).first 
+    percent  = 100*(r.total)/sum
     if not em.blank?
         build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
         if not build_map.blank?
@@ -319,20 +379,43 @@ def show_splace(threat_id,d1,d2)
           html_string +=r.src_ip
           html_string +=")"
           html_string += build_map.building_name.to_s
-          html_string += "</p>"
+          html_string += " "
+          html_string += number_with_precision(percent, :precision => 1).to_s
+          html_string +="%</p>"
         else
            html_string +="<p>("
            html_string +=r.src_ip
-           html_string +=")No Recorded</p>"
+           html_string +=") "
+           html_string += number_with_precision(percent, :precision => 1).to_s
+           html_string +="%</p>"
         end
     else
           html_string +="<p>("
           html_string +=r.src_ip
-          html_string +=")No Defined</  p>"
+          html_string +=") "
+          html_string += number_with_precision(percent, :precision => 1).to_s
+          html_string +="%</p>"
     end
   end
   
   return html_string.html_safe
+end
+
+def show_country(threat_id,d1,d2)
+  html_string = ""
+  @country = JobLog.find(
+                      :all,                
+                      :select => 'country ,SUM(1) total',
+                      :group => 'country',
+                      :conditions => ["threat_id=? and job_logs.log_time>? and job_logs.log_time<? ",threat_id,@d1,@d2],
+                      :order => 'total DESC',
+                      :limit => 3)
+  @country.each do |c|
+    html_string +="<p>"
+    html_string +=c.country.to_s
+    html_string +="</p>\n"
+  end                   
+  return html_string.html_safe  
 end
 
 end
