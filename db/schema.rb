@@ -11,7 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(:version => 20131004023934) do
+=======
+ActiveRecord::Schema.define(:version => 20131217074600) do
+>>>>>>> origin/beta
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -170,6 +174,7 @@ ActiveRecord::Schema.define(:version => 20131004023934) do
     t.datetime "updated_at", :null => false
     t.integer  "threat_id"
     t.string   "action"
+    t.string   "country"
   end
 
   create_table "job_messages", :force => true do |t|
