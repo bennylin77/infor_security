@@ -1,5 +1,6 @@
 <%=form_tag do%>
-	2013年<%=select_tag :month,options_for_select(@ary_m)%>月
+	2013年<%=select_tag :month,options_for_select(@ary_m)%>月</br>
+	<!--From<input type="text" id="dp1" name="d1">To<input type="text" id="dp2" name="d2"></br>-->
 	<%=submit_tag '查詢'%>
 <%end%></br>
 <%if @flag==1%>
@@ -50,3 +51,12 @@
 	<%end%>
 </table>	
 <%end%>
+
+
+
+<script type="text/javascript">
+  $('#dp1').datetimepicker({	
+  });
+   $('#dp2').datetimepicker({
+  });
+</script>
