@@ -278,7 +278,7 @@ def show_vplace(threat_id,d1,d2)
                       :limit => 3)
   @victim_outer = JobLog.find(
                       :all,
-                      :select => 'victim_ip ,SUM(1) total',
+                      :select => 'victim_ip ,country,SUM(1) total',
                       :group => 'victim_ip',
                       :conditions => ["threat_id=? and victim_ip REGEXP '^140.113' and log_time>? and log_time<?",threat_id,d1,d2],
                       :order => 'total DESC',
@@ -293,26 +293,12 @@ def show_vplace(threat_id,d1,d2)
     if not em.blank?
         build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
         if not build_map.blank?
-          html_string +="<p>("
-          html_string +=r.victim_ip
-          html_string +=")"
-          html_string += build_map.building_name.to_s
-          html_string += " "
-          html_string += number_with_precision(percent, :precision => 1).to_s
-          html_string +="%</p>"
+          html_string +="<p>("+r.victim_ip+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
         else
-           html_string +="<p>("
-           html_string +=r.victim_ip
-           html_string +=") "
-           html_string += number_with_precision(percent, :precision => 1).to_s
-           html_string +="%</p>"
+           html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
         end
     else
-          html_string +="<p>("
-          html_string +=r.victim_ip
-          html_string +=") "
-          html_string += number_with_precision(percent, :precision => 1).to_s
-          html_string +="%</p>"
+          html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
     end
   end
   html_string +="<p>--------------------------</p>"
@@ -326,26 +312,14 @@ def show_vplace(threat_id,d1,d2)
     if not em.blank?
         build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
         if not build_map.blank?
-          html_string +="<p>("
-          html_string +=r.victim_ip
-          html_string +=")"
-          html_string += build_map.building_name.to_s
-          html_string += " "
-          html_string += number_with_precision(percent, :precision => 1).to_s
-          html_string +="%</p>"
+          html_string +="<p>("+r.victim_ip+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"% "
+          html_string +=(r.country || "")+"</p>"
         else
-           html_string +="<p>("
-           html_string +=r.victim_ip
-           html_string +=") "
-           html_string += number_with_precision(percent, :precision => 1).to_s
-          html_string +="%</p>"
+          html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"% "+(r.country || "")+"</p>"
         end
     else
-          html_string +="<p>("
-          html_string +=r.victim_ip
-          html_string +=") "
-          html_string += number_with_precision(percent, :precision => 1).to_s
-          html_string +="%</p>"
+          html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"% "+(r.country || "")+"</p>"
+
     end
   end
   
@@ -375,26 +349,12 @@ def show_splace(threat_id,d1,d2)
     if not em.blank?
         build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
         if not build_map.blank?
-          html_string +="<p>("
-          html_string +=r.src_ip
-          html_string +=")"
-          html_string += build_map.building_name.to_s
-          html_string += " "
-          html_string += number_with_precision(percent, :precision => 1).to_s
-          html_string +="%</p>"
+          html_string +="<p>("+r.src_ip+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
         else
-           html_string +="<p>("
-           html_string +=r.src_ip
-           html_string +=") "
-           html_string += number_with_precision(percent, :precision => 1).to_s
-           html_string +="%</p>"
+           html_string +="<p>("+r.src_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
         end
     else
-          html_string +="<p>("
-          html_string +=r.src_ip
-          html_string +=") "
-          html_string += number_with_precision(percent, :precision => 1).to_s
-          html_string +="%</p>"
+          html_string +="<p>("+r.src_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
     end
   end
   
