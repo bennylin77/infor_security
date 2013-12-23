@@ -29,19 +29,50 @@
           	<%end%>
           <%end%>
       <%elsif @type.to_i==1%>
-      	  ["bbb",1],
-      	["qweq",2],
-      	["123",3]
+      	 <%temp=1%>
+          <%@res.each do |r|%>
+	          <%if r.t.to_i > temp.to_i%>
+	            <%while temp.to_i!=r.t.to_i%>         
+	          		["<%=number_to_weekday(temp)%>",0],
+	          		<%temp=temp+1%>
+	          	<%end%>
+	          	["<%=number_to_weekday(r.t)%>",<%=r.total.to_s%>],
+	          <%else%>
+	          	["<%=number_to_weekday(r.t)%>",<%=r.total.to_s%>],
+	          <%end%>	
+	          <%temp=temp+1%>
+          <%end%>
+          <%if temp!=8%> 	
+          	<%while temp!=8 do%>
+          		["<%=number_to_weekday(temp)%>",0],
+          		<%temp=temp+1%>
+          	<%end%>
+          <%end%>
       <%else%>
-      	["aaa",1],
-      	["qweq",2],
-      	["123",3]
+      	<%temp=1%>
+          <%@res.each do |r|%>
+	          <%if r.t.to_i > temp.to_i%>
+	            <%while temp.to_i!=r.t.to_i%>         
+	          		["<%=number_to_month(temp)%>",0],
+	          		<%temp=temp+1%>
+	          	<%end%>
+	          	["<%=number_to_month(r.t)%>",<%=r.total.to_s%>],
+	          <%else%>
+	          	["<%=number_to_month(r.t)%>",<%=r.total.to_s%>],
+	          <%end%>	
+	          <%temp=temp+1%>
+          <%end%>
+          <%if temp!=13%> 	
+          	<%while temp!=13 do%>
+          		["<%=number_to_month(temp)%>",0],
+          		<%temp=temp+1%>
+          	<%end%>
+          <%end%>
       <%end%>    
         ]);
 
         var options = {
           title: '分布圖',
-          hAxis: {title: '時',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 1}
         };
 
@@ -51,6 +82,7 @@
     </script>
   </head>
   <body>
+  	<div style="text-align:center"><font size="3"><b><%=@threat_name%></b></font></div>
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
    
   </body>

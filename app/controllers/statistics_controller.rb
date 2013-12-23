@@ -93,22 +93,31 @@ def top10
 end
 
 def show_chart
-  @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d") - Time.strptime(params[:d1],"%Y-%m-%d"))/24.hour).round
+  @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d") - Time.strptime(params[:d1],"%Y-%m-%d"))/24.hour).round    # DAY
+  @threat_name = EventMap.where("thread_id=?",params[:threat_id]).first.name.to_s
+  if @elapsed > 92
+     @res = JobLog.find(:all,
+                     :select=>'MONTH(log_time) AS t,count(*) total',
+                     :group=> 't',
+                     :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]],
+                     :order => 't ASC')
+    @type = 2   
   
- # if @elapsed > 7
+  elsif @elapsed > 7
   
- #   @res = JobLog.find(:all,
- #                    :select=>'DAYOFWEEK(log_time) AS t,count(*) total',
- #                    :group=> 't',
-  #                   :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]])
- #   @type = 1                 
- # else
+    @res = JobLog.find(:all,
+                     :select=>'DAYOFWEEK(log_time) AS t,count(*) total',
+                     :group=> 't',
+                     :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]],
+                     :order => 't ASC')
+    @type = 1                 
+  else
     @res = JobLog.find(:all,
                      :select=>'HOUR(log_time) AS t,count(*) total',
                      :group=> 't',
                      :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]])   
     @type = 0                                 
- # end                  
+  end                  
                      
 end
 

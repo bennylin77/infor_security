@@ -44,7 +44,7 @@
 			<td><%=r.total.to_s%></td>
 			<td><%=show_splace(r.threat_id,@d1,@d2)%></td>
 			<td><%=show_vplace(r.threat_id,@d1,@d2)%></td>
-			<td><%=link_to "分布圖" ,:action=>"show_chart" ,:threat_id=>r.threat_id,:d1=>@d1,:d2=>@d2%></td>
+			<td><%=link_to "分布圖" ,:action=>"show_chart" ,:threat_id=>r.threat_id,:d1=>@d1,:d2=>@d2,:threat_id=>r.threat_id%></td>
 		</tr>
 	<%end%>
 </table>	

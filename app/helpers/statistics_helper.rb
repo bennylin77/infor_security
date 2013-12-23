@@ -379,20 +379,50 @@ def show_country(threat_id,d1,d2)
 end
 
 def number_to_weekday(num)
-  if num=='1'
+  if num==1
     "Sunday"
-  elsif num=='2'  
+  elsif num==2  
     "Monday"
-  elsif num=='3'
+  elsif num==3
     "Tuesday" 
-  elsif num=='4'
+  elsif num==4
     "Wednsday" 
-  elsif num=='5'
+  elsif num==5
     "Thursday" 
-  elsif num=='6'
+  elsif num==6
     "Friday" 
-  elsif num=='7'
+  elsif num==7
     "Saturday" 
+  else
+    "ERROR"  
+  end
+end
+
+def number_to_month(num)
+  if num==1
+    "January"
+  elsif num==2  
+    "February"
+  elsif num==3
+    "March" 
+  elsif num==4
+    "April" 
+  elsif num==5
+    "May" 
+  elsif num==6
+    "June" 
+  elsif num==7
+    "July" 
+  elsif num==8
+    "Auguest"
+  elsif num==9
+    "September"
+  elsif num==10
+    "October"
+  elsif num==11
+    "November"
+  elsif num==12
+    "December"          
   else
     "ERROR"  
   end
