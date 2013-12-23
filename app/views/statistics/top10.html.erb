@@ -1,11 +1,9 @@
 <%=form_tag do%>
-	2013年<%=select_tag :month,options_for_select(@ary_m)%>月</br>
-	<!--From<input type="text" id="dp1" name="d1">To<input type="text" id="dp2" name="d2"></br>-->
-	<%=submit_tag '查詢'%>
+	<font size="3">搜尋條件 ： From <%= text_field_tag :dp1,Time.now.ago(1.month).strftime("%Y/%m/%d")%> To <%= text_field_tag :dp2,Time.now.strftime("%Y/%m/%d")%></font>
+	<%=submit_tag '查詢',:disable_with => "請稍後...",:id=>"but"%></br><div id="alert_msg"></div>
 <%end%></br>
 <%if @flag==1%>
-<p align=center>2013年<%=@d_mon.to_s%>月</p>
-</br>
+<div style="text-align:center"><font size="3">搜尋時間 ：<b> <%=@d1.strftime("%Y/%m/%d")%> ~ <%=@d2.strftime("%Y/%m/%d")%> </b></font></div></br>
 <table border="1" id="event_lists_table" width="115%">	
 	<tr bgColor="CDCDC1">
 		<td width="5%">Serverity</td>
@@ -55,8 +53,44 @@
 
 
 <script type="text/javascript">
-  $('#dp1').datetimepicker({	
+  $('#dp1').datepicker({	
+  	dateFormat: 'yy/mm/dd',
+  	showOn: "button",
+		buttonImage: "<%=image_path("calendar.png")%>",
+		buttonImageOnly: true
   });
-   $('#dp2').datetimepicker({
+   $('#dp2').datepicker({
+   	dateFormat: 'yy/mm/dd',
+   	showOn: "button",
+	buttonImage: "<%=image_path("calendar.png")%>",
+	buttonImageOnly: true
   });
+  
+  
+  $( "#dp1,#dp2" ).change(  
+  	function(){
+  		var d1_date = document.getElementById("dp1").value ;
+		var d2_date = document.getElementById("dp2").value ;
+  		var date1 = new Date(d1_date) ;
+		var date2 = new Date(d2_date) ;
+		var date_now = new Date() ;
+		if(date2<date1){
+			document.getElementById("alert_msg").innerHTML="<font color=\"red\"><b>時間區間錯誤 請重填</b></font>";
+			document.getElementById("but").disabled = true ;
+		}else if(date_now<date1 || date_now<date2){
+			document.getElementById("alert_msg").innerHTML="<font color=\"red\"><b>搜尋不可超過現在時間 請重填</b></font>";
+			document.getElementById("but").disabled = true ;
+		}else{
+			var elapsed = (date2.getTime() - date1.getTime())/1000/3600 ;
+			var day = Math.floor(elapsed/24);
+			if(day>62)
+				document.getElementById("alert_msg").innerHTML="<font color=\"green\"><b>搜尋時間較長請注意</b></font>";
+			else
+				document.getElementById("alert_msg").innerHTML="";				
+			document.getElementById("but").disabled = false ;
+				
+		}
+  });
+  
+  
 </script>

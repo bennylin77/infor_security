@@ -70,22 +70,17 @@ def long_stat
 end
 
 def top10
-  @ary_m = Array.new
-  @ary_y = Array.new
-  for i in 0..11
-   time = Time.now.ago(i.month)
-   @ary_m << time.month
-   @ary_y << time.year
-  end
-  
   @flag = 0
- 
   if request.post?
   @flag=1
-  @d_mon = params[:month]
-  date1 = '2013-'+params[:month].to_s+'-01'
-  @d1 = Time.strptime(date1, "%Y-%m-%d").to_time
-  @d2 = @d1.since(1.month)
+  @start = Date.new(2013,5,1)
+  @d1 = Time.strptime(params[:dp1],"%Y/%m/%d")
+  
+  if @d1 < @start
+    @d1 = @start
+  end
+  
+  @d2 = Time.strptime(params[:dp2],"%Y/%m/%d")
   @res = JobLog.find(
                         :all,
                         :select => 'threat_id ,count(*) total',
@@ -98,10 +93,23 @@ def top10
 end
 
 def show_chart
-  @res = JobLog.find(:all,
+  @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d") - Time.strptime(params[:d1],"%Y-%m-%d"))/24.hour).round
+  
+ # if @elapsed > 7
+  
+ #   @res = JobLog.find(:all,
+ #                    :select=>'DAYOFWEEK(log_time) AS t,count(*) total',
+ #                    :group=> 't',
+  #                   :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]])
+ #   @type = 1                 
+ # else
+    @res = JobLog.find(:all,
                      :select=>'HOUR(log_time) AS t,count(*) total',
                      :group=> 't',
-                     :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]])
+                     :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]])   
+    @type = 0                                 
+ # end                  
+                     
 end
 
 

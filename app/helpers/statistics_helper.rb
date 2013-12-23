@@ -378,4 +378,24 @@ def show_country(threat_id,d1,d2)
   return html_string.html_safe  
 end
 
+def number_to_weekday(num)
+  if num=='1'
+    "Sunday"
+  elsif num=='2'  
+    "Monday"
+  elsif num=='3'
+    "Tuesday" 
+  elsif num=='4'
+    "Wednsday" 
+  elsif num=='5'
+    "Thursday" 
+  elsif num=='6'
+    "Friday" 
+  elsif num=='7'
+    "Saturday" 
+  else
+    "ERROR"  
+  end
+end
+
 end

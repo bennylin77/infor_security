@@ -1,3 +1,4 @@
+
 <html>
   <head>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -7,31 +8,41 @@
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Time', '統計數量'],
+      <%if @type.to_i==0%>    
           <%temp=0%>
           <%@res.each do |r|%>
 	          <%if r.t.to_i > temp.to_i%>
 	            <%while temp.to_i!=r.t.to_i%>         
-	          		[<%=temp.to_s%>,0],
+	          		["<%=temp.to_s%>:00",0],
 	          		<%temp=temp+1%>
 	          	<%end%>
-	          	[<%=r.t.to_s%>,<%=r.total.to_s%>],
+	          	["<%=r.t.to_s%>:00",<%=r.total.to_s%>],
 	          <%else%>
-	          	[<%=r.t.to_s%>,<%=r.total.to_s%>],
+	          	["<%=r.t.to_s%>:00",<%=r.total.to_s%>],
 	          <%end%>	
 	          <%temp=temp+1%>
           <%end%>
           <%if temp!=24%> 	
           	<%while temp!=24 do%>
-          		[<%=temp.to_s%>,0],
+          		["<%=temp.to_s%>:00",0],
           		<%temp=temp+1%>
           	<%end%>
           <%end%>
+      <%elsif @type.to_i==1%>
+      	  ["bbb",1],
+      	["qweq",2],
+      	["123",3]
+      <%else%>
+      	["aaa",1],
+      	["qweq",2],
+      	["123",3]
+      <%end%>    
         ]);
 
         var options = {
           title: '分布圖',
           hAxis: {title: '時',  titleTextStyle: {color: '#333'}},
-          vAxis: {minValue: 0}
+          vAxis: {minValue: 1}
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -44,3 +55,4 @@
    
   </body>
 </html>
+
