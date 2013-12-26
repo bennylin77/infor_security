@@ -273,14 +273,14 @@ def show_vplace(threat_id,d1,d2)
                       :all,
                       :select => 'victim_ip ,SUM(1) total',
                       :group => 'victim_ip',
-                      :conditions => ["threat_id=? and victim_ip  REGEXP '^140.113' and log_time>? and log_time<?",threat_id,d1,d2],
+                      :conditions => ["threat_id=? and victim_ip  REGEXP '^140.113' and log_time between ? and ?",threat_id,d1,d2],
                       :order => 'total DESC',
                       :limit => 3)
   @victim_outer = JobLog.find(
                       :all,
                       :select => 'victim_ip ,country,SUM(1) total',
                       :group => 'victim_ip',
-                      :conditions => ["threat_id=? and victim_ip NOT REGEXP '^140.113' and log_time>? and log_time<?",threat_id,d1,d2],
+                      :conditions => ["threat_id=? and victim_ip NOT REGEXP '^140.113' and log_time between ? and ?",threat_id,d1,d2],
                       :order => 'total DESC',
                       :limit => 3)   
   @victim_inner.each do |r|
@@ -334,7 +334,7 @@ def show_splace(threat_id,d1,d2)
                       :joins => "JOIN `job_details` ON job_details.job_id = job_logs.job_id",
                       :select => 'src_ip ,SUM(1) total',
                       :group => 'src_ip',
-                      :conditions => ["threat_id=? and job_logs.log_time>? and job_logs.log_time<? ",threat_id,@d1,@d2],
+                      :conditions => ["threat_id=? and job_logs.log_time between ? and ? ",threat_id,@d1,@d2],
                       :order => 'total DESC',
                       :limit => 5) 
                       
@@ -367,7 +367,7 @@ def show_country(threat_id,d1,d2)
                       :all,                
                       :select => 'country ',
                       :group => 'country',
-                      :conditions => ["threat_id=? and job_logs.log_time>? and job_logs.log_time<? ",threat_id,@d1,@d2],
+                      :conditions => ["threat_id=? and job_logs.log_time between ? and ? ",threat_id,@d1,@d2],
                   #    :order => 'total DESC',
                       :limit => 3)
   @country.each do |c|
