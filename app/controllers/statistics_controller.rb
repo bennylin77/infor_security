@@ -94,7 +94,13 @@ end
 
 def show_chart
   @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d") - Time.strptime(params[:d1],"%Y-%m-%d"))/24.hour).round    # DAY
-  @threat_name = EventMap.where("thread_id=?",params[:threat_id]).first.name.to_s
+  @threat_map = EventMap.where("thread_id=?",params[:threat_id]).first
+  if @threat_map.blank?
+     @threat_name = ""
+  else
+     @threat_name = @threat_map.name || ""
+  end 
+  
   if @elapsed > 92
      @res = JobLog.find(:all,
                      :select=>'MONTH(log_time) AS t,count(*) total',
