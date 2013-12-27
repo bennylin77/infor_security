@@ -266,8 +266,11 @@ def day7_image(job)
 	end	
 end
 
+#######
+
 def show_vplace(threat_id,d1,d2)
   html_string = ""
+  
   sum = 0
   @victim_inner = JobLog.find(
                       :all,
@@ -331,7 +334,7 @@ def show_splace(threat_id,d1,d2)
   sum = 0    
   @source = JobLog.find(
                       :all,
-                      :joins => "JOIN `job_details` ON job_details.job_id = job_logs.job_id",
+                      :joins => "JOIN job_details ON job_details.job_id = job_logs.job_id",
                       :select => 'src_ip ,SUM(1) total',
                       :group => 'src_ip',
                       :conditions => ["threat_id=? and job_logs.log_time between ? and ? ",threat_id,@d1,@d2],
