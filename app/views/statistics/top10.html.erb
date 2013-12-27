@@ -1,5 +1,5 @@
 <%=form_tag do%>
-	<font size="3">搜尋條件 ： From <%= text_field_tag :dp1,Time.now.ago(1.month).strftime("%Y/%m/%d")%> To <%= text_field_tag :dp2,Time.now.strftime("%Y/%m/%d")%></font>
+	<font size="3">搜尋條件 ： From <%= text_field_tag :dp1,Time.now.ago(1.month).strftime("%Y/%m/%d %H:%M")%> To <%= text_field_tag :dp2,Time.now.strftime("%Y/%m/%d %H:%M")%></font>
 	<%=submit_tag '查詢',:disable_with => "請稍後...",:id=>"but"%></br><div id="alert_msg"></div>
 <%end%></br>
 <%if @flag==1%>
@@ -16,7 +16,7 @@
 	</tr>
 	<%@res.each do |r|%>
 		<tr>
-			<%ser = JobThreat.where("threat_id=?",r.threat_id).first%>
+			<%ser = JobThreat.find(:first,:conditions=>["threat_id=?",r.threat_id])%>
 			<td>
 				<%if not ser.blank? and not ser.serverity.blank? %>
 					<%=ser.serverity.to_s%>
@@ -24,22 +24,22 @@
 					No Classified
 				<%end%>
 			</td>		
-			<%em =  EventMap.where("thread_id=?",r.threat_id).first %>
+			<%em =  EventMap.find(:first,:conditions=>["thread_id=?",r.threat_id]) %>
 				<% if not em.blank? %>
 					<%if not em.name.blank?%>
 						<td><%=em.name.to_s%>(<%=r.threat_id.to_s%>)</td>
 					<%else%>
 						<td>(<%=r.threat_id%>)</td>
 					<%end%>	
+					<%if not em.threat_type.blank?%>
+						<td><%=em.threat_type.to_s%></td>
+					<%else%>
+						<td>No Record</td>	
+					<%end%>
 				<%else%>
 					<td>Not Record Event Id(<%=r.threat_id%>)</td>
-				<%end%>
-				
-				<%if not em.blank? and not em.threat_type.blank?%>
-					<td><%=em.threat_type.to_s%></td>
-				<%else%>
 					<td>No Record</td>	
-				<%end%>
+				<%end%>	
 				
 			<td><%=r.total.to_s%></td>
 			<td><%=show_splace(r.threat_id,@d1,@d2)%></td>
@@ -53,13 +53,13 @@
 
 
 <script type="text/javascript">
-  $('#dp1').datepicker({	
+  $('#dp1').datetimepicker({	
   	dateFormat: 'yy/mm/dd',
   	showOn: "button",
 		buttonImage: "<%=image_path("calendar.png")%>",
 		buttonImageOnly: true
   });
-   $('#dp2').datepicker({
+   $('#dp2').datetimepicker({
    	dateFormat: 'yy/mm/dd',
    	showOn: "button",
 	buttonImage: "<%=image_path("calendar.png")%>",

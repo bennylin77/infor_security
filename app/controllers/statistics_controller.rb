@@ -74,18 +74,18 @@ def top10
   if request.post?
   @flag=1
   @start = Date.new(2013,5,1)
-  @d1 = Time.strptime(params[:dp1],"%Y/%m/%d")
+  @d1 = Time.strptime(params[:dp1],"%Y/%m/%d %H:%M")
   
   if @d1 < @start
     @d1 = @start
   end
   
-  @d2 = Time.strptime(params[:dp2],"%Y/%m/%d")
+  @d2 = Time.strptime(params[:dp2],"%Y/%m/%d %H:%M")
   @res = JobLog.find(
                         :all,
                         :select => 'threat_id ,count(*) total',
                         :group => 'threat_id',
-                        :conditions => ["log_time>? and log_time<?",@d1,@d2],
+                        :conditions => ["log_time BETWEEN ? AND ?",@d1,@d2],
                         :order => 'total DESC',
                         :limit => 10)
   end
@@ -93,6 +93,7 @@ def top10
 end
 
 def show_chart
+<<<<<<< HEAD
   @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d") - Time.strptime(params[:d1],"%Y-%m-%d"))/24.hour).round    # DAY
   @threat_map = EventMap.where("thread_id=?",params[:threat_id]).first
   if @threat_map.blank?
@@ -102,27 +103,38 @@ def show_chart
   end 
   
   if @elapsed > 92
+=======
+  @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d %H:%M") - Time.strptime(params[:d1],"%Y-%m-%d %H:%M"))/24.hour).round    # DAY
+  @threat_name = EventMap.where("thread_id=?",params[:threat_id]).first.name.to_s
+  if @elapsed > 180  #  over 6 months
+>>>>>>> origin/beta
      @res = JobLog.find(:all,
                      :select=>'MONTH(log_time) AS t,count(*) total',
                      :group=> 't',
-                     :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]],
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
                      :order => 't ASC')
     @type = 2   
   
-  elsif @elapsed > 7
+  elsif @elapsed >30   #30 ~ 180
   
     @res = JobLog.find(:all,
                      :select=>'DAYOFWEEK(log_time) AS t,count(*) total',
                      :group=> 't',
-                     :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]],
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
                      :order => 't ASC')
     @type = 1                 
-  else
+  elsif @elapsed == 1    # <1
     @res = JobLog.find(:all,
                      :select=>'HOUR(log_time) AS t,count(*) total',
                      :group=> 't',
-                     :conditions => ["threat_id=? and log_time>? and log_time<?",params[:threat_id],params[:d1],params[:d2]])   
-    @type = 0                                 
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]])   
+    @type = 777   
+  else   #    1 ~ 30
+    @res = JobLog.find(:all,
+                     :select=>'HOUR(log_time) AS t,count(*) total',
+                     :group=> 't',
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]])   
+    @type = 0                                  
   end                  
                      
 end
