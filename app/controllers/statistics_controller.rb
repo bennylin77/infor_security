@@ -93,7 +93,7 @@ def top10
 end
 
 def show_chart
-<<<<<<< HEAD
+
   @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d") - Time.strptime(params[:d1],"%Y-%m-%d"))/24.hour).round    # DAY
   @threat_map = EventMap.where("thread_id=?",params[:threat_id]).first
   if @threat_map.blank?
@@ -103,11 +103,11 @@ def show_chart
   end 
   
   if @elapsed > 92
-=======
+
   @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d %H:%M") - Time.strptime(params[:d1],"%Y-%m-%d %H:%M"))/24.hour).round    # DAY
   @threat_name = EventMap.where("thread_id=?",params[:threat_id]).first.name.to_s
-  if @elapsed > 180  #  over 6 months
->>>>>>> origin/beta
+  elsif @elapsed > 180  #  over 6 months
+
      @res = JobLog.find(:all,
                      :select=>'MONTH(log_time) AS t,count(*) total',
                      :group=> 't',
