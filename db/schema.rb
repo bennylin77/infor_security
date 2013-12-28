@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131228034150) do
+ActiveRecord::Schema.define(:version => 20131228043109) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -227,6 +227,7 @@ ActiveRecord::Schema.define(:version => 20131228034150) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.date     "log_date"
+    t.string   "src_ip"
   end
 
   create_table "outside_logs", :force => true do |t|
