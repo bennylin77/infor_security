@@ -23,50 +23,17 @@ def create
     render "showRes"
 end
 
-def long_stat 
-  @ary_m = Array.new
-  @ary_y = Array.new
-  for i in 0..11
-   time = Time.now.ago(i.month)
-   @ary_m << time.month
-   @ary_y << time.year
-  end
-  
+def long_stat   # test use
   @flag = 0
- 
   if request.post?
-  @flag=1
-  @d_mon = params[:month]
-  date1 = '2013-'+params[:month].to_s+'-01'
-  @d1 = Time.strptime(date1, "%Y-%m-%d").to_time
-  @d2 = @d1.since(1.month)
-  @res = JobThreat.find(
-                        :all,
-                        :select => 'threat_id ,count(*) total',
-                        :group => 'threat_id',
-                        :conditions => ["updated_at>? and updated_at<?",@d1,@d2],
-                        :order => 'total DESC',
-                        :limit => 10)
-  
-  @victim = JobLog.find(
-                      :all,
-                      :select => 'victim_ip ,count(*) total',
-                      :group => 'victim_ip',
-                      :conditions => ["log_time>? and log_time<? ",@d1,@d2],
-                      :order => 'total DESC',
-                      :limit => 10)
+    @flag=1
    
-  @source = JobLog.find(
-                      :all,
-                      :joins => "LEFT JOIN `job_details` ON job_details.job_id = job_logs.job_id",
-                      :select => 'src_ip ,count(*) total',
-                      :group => 'src_ip',
-                      :conditions => ["log_time>? and log_time<? ",@d1,@d2],
-                      :order => 'total DESC',
-                      :limit => 10)                                                          
-                        
-  end    
-                    
+    @d1 = Time.strptime(params[:dp1],"%Y/%m/%d %H:%M")
+    @d2 = Time.strptime(params[:dp2],"%Y/%m/%d %H:%M")
+    
+    @res = JobLog.temp(@d1,@d2)
+    
+  end
 end
 
 def top10

@@ -335,8 +335,8 @@ def show_splace(threat_id,d1,d2)
   @source = JobLog.find(
                       :all,
                       :joins => "JOIN job_details ON job_details.job_id = job_logs.job_id",
-                      :select => 'src_ip ,SUM(1) total',
-                      :group => 'src_ip',
+                      :select => 'job_details.src_ip ,SUM(1) total',
+                      :group => 'job_details.src_ip',
                       :conditions => ["threat_id=? and job_logs.log_time between ? and ? ",threat_id,@d1,@d2],
                       :order => 'total DESC',
                       :limit => 5) 
