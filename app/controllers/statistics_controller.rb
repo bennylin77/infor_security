@@ -31,7 +31,7 @@ def long_stat   # test use
     @d1 = Time.strptime(params[:dp1],"%Y/%m/%d %H:%M")
     @d2 = Time.strptime(params[:dp2],"%Y/%m/%d %H:%M")
     
-    @res = JobLog.temp(@d1,@d2)
+    @res = JobLog.temp(params[:dp1],params[:dp2])
     
   end
 end
@@ -48,13 +48,14 @@ def top10
   end
   
   @d2 = Time.strptime(params[:dp2],"%Y/%m/%d %H:%M")
-  @res = JobLog.find(
-                        :all,
-                        :select => 'threat_id ,count(*) total',
-                        :group => 'threat_id',
-                        :conditions => ["log_time BETWEEN ? AND ?",@d1,@d2],
-                        :order => 'total DESC',
-                        :limit => 10)
+ # @res = JobLog.find(
+  #                      :all,
+   #                     :select => 'threat_id ,count(*) total',
+    #                    :group => 'threat_id',
+     #                   :conditions => ["log_time BETWEEN ? AND ?",@d1,@d2],
+      #                  :order => 'total DESC',
+       #                 :limit => 10)
+    @res = JobLog.temp(params[:dp1],params[:dp2])   
   end
 
 end
@@ -68,39 +69,53 @@ def show_chart
   else
      @threat_name = @threat_map.name || ""
   end 
-  
-  if @elapsed > 92
 
-  @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d %H:%M") - Time.strptime(params[:d1],"%Y-%m-%d %H:%M"))/24.hour).round    # DAY
-  @threat_name = EventMap.where("thread_id=?",params[:threat_id]).first.name.to_s
-  elsif @elapsed > 180  #  over 6 months
+  if @elapsed > 180  #  over 6 months      MONTH
 
      @res = JobLog.find(:all,
                      :select=>'MONTH(log_time) AS t,count(*) total',
                      :group=> 't',
                      :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
                      :order => 't ASC')
+     @res2 = OutsideLog.find(:all,
+                     :select=>'MONTH(log_time) AS t,count(*) total',
+                     :group=> 't',
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
+                     :order => 't ASC')                
     @type = 2   
   
-  elsif @elapsed >30   #30 ~ 180
+  elsif @elapsed >30   #30 ~ 180   7DAY
   
     @res = JobLog.find(:all,
                      :select=>'DAYOFWEEK(log_time) AS t,count(*) total',
                      :group=> 't',
                      :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
                      :order => 't ASC')
+    @res2 = OutsideLog.find(:all,
+                     :select=>'DAYOFWEEK(log_time) AS t,count(*) total',
+                     :group=> 't',
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
+                     :order => 't ASC')                 
     @type = 1                 
-  elsif @elapsed == 1    # <1
+  elsif @elapsed == 1    # <=1     HOUR
     @res = JobLog.find(:all,
-                     :select=>'HOUR(log_time) AS t,count(*) total',
+                     :select=>'HOUR(log_time) AS t,SUM(1) total',
                      :group=> 't',
                      :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]])   
-    @type = 777   
-  else   #    1 ~ 30
+    @res2 = OutsideLog.find(:all,
+                     :select=>'HOUR(log_time) AS t,SUM(1) total',
+                     :group=> 't',
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]])                    
+    @type = 0   
+  else                  #    1 ~ 30   DATE
     @res = JobLog.find(:all,
-                     :select=>'HOUR(log_time) AS t,count(*) total',
+                     :select=>'HOUR(log_time) AS t,SUM(1)  total',
                      :group=> 't',
                      :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]])   
+    @res2 = OutsideLog.find(:all,
+                     :select=>'HOUR(log_time) AS t,SUM(1) total',
+                     :group=> 't',
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]])                   
     @type = 0                                  
   end                  
                      

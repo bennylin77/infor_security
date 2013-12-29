@@ -269,6 +269,7 @@ end
 #######
 
 def show_vplace(threat_id,d1,d2)
+  # return "skip"
   html_string = ""
   
   sum = 0
@@ -330,6 +331,7 @@ def show_vplace(threat_id,d1,d2)
 end
 
 def show_splace(threat_id,d1,d2)
+ # return "skip"
   html_string = ""
   sum = 0    
   @source = JobLog.find(
@@ -362,23 +364,6 @@ def show_splace(threat_id,d1,d2)
   end
   
   return html_string.html_safe
-end
-
-def show_country(threat_id,d1,d2)
-  html_string = ""
-  @country = JobLog.find(
-                      :all,                
-                      :select => 'country ',
-                      :group => 'country',
-                      :conditions => ["threat_id=? and job_logs.log_time between ? and ? ",threat_id,@d1,@d2],
-                  #    :order => 'total DESC',
-                      :limit => 3)
-  @country.each do |c|
-    html_string +="<p>"
-    html_string +=c.country.to_s
-    html_string +="</p>\n"
-  end                   
-  return html_string.html_safe  
 end
 
 def number_to_weekday(num)
@@ -429,6 +414,69 @@ def number_to_month(num)
   else
     "ERROR"  
   end
+end
+
+def inside_session(threat_id,d1,d2)
+  return JobLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
+end  
+
+def outside_session(threat_id,d1,d2)
+  return OutsideLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
+end 
+
+def outside_splace(threat_id,d1,d2)
+  
+  html_string = ""
+  @source = OutsideLog.find(
+        :all,
+        :select => 'country,src_ip ,SUM(1) total',
+        :group => 'src_ip',
+        :conditions => ["threat_id=? and log_time between ? and ? ",threat_id,d1,d2],
+        :order => 'total DESC',
+        :limit => 5)
+ sum = 0       
+ @source.each do |cnt|
+    sum = sum + cnt.total.to_i
+ end   
+ 
+ @source.each do |r| 
+    percent  = 100*(r.total)/sum  
+    html_string +="<p>"+r.src_ip+"("+r.country+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>\n"
+  end
+  
+  return html_string.html_safe    
+end
+
+def outside_vplace(threat_id,d1,d2)
+  html_string = ""
+  @victim = OutsideLog.find(
+        :all,
+        :select => 'victim_ip ,SUM(1) total',
+        :group => 'victim_ip',
+        :conditions => ["threat_id=? and log_time between ? and ? ",threat_id,d1,d2],
+        :order => 'total DESC',
+        :limit => 5)
+ sum = 0       
+ @victim.each do |cnt|
+    sum = sum + cnt.total.to_i
+ end   
+ 
+ @victim.each do |r| 
+    percent  = 100*(r.total)/sum
+    em =  IpMap.where("ip=?",r.victim_ip).first 
+    if not em.blank?
+        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
+        if not build_map.blank?
+          html_string +="<p>("+r.victim_ip+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+        else
+          html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+        end
+    else
+          html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+    end
+  end
+  
+  return html_string.html_safe  
 end
 
 end

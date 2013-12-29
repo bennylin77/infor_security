@@ -1,4 +1,3 @@
-
 <html>
   <head>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -10,7 +9,7 @@
           ['Time', '統計數量'],
       <%if @type.to_i==0%>    
           <%temp=0%>
-          <%@res.each do |r|%>
+          <%@res2.each do |r|%>
 	          <%if r.t.to_i > temp.to_i%>
 	            <%while temp.to_i!=r.t.to_i%>         
 	          		["<%=temp.to_s%>:00",0],
@@ -30,7 +29,7 @@
           <%end%>
       <%elsif @type.to_i==1%>
       	 <%temp=1%>
-          <%@res.each do |r|%>
+          <%@res2.each do |r|%>
 	          <%if r.t.to_i > temp.to_i%>
 	            <%while temp.to_i!=r.t.to_i%>         
 	          		["<%=number_to_weekday(temp)%>",0],
@@ -50,7 +49,7 @@
           <%end%>
       <%elsif @type.to_i==2%>
       	<%temp=1%>
-          <%@res.each do |r|%>
+          <%@res2.each do |r|%>
 	          <%if r.t.to_i > temp.to_i%>
 	            <%while temp.to_i!=r.t.to_i%>         
 	          		["<%=number_to_month(temp)%>",0],
@@ -80,19 +79,12 @@
           vAxis: {minValue: 1}
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div1'));
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
         chart.draw(data, options);
       }
     </script>
   </head>
   <body>
-  	<div style="text-align:center"><font size="3"><b><%=(@threat_name||"")%></b></font></div>
-  	<p>Inside</p>
-    <div id="chart_div1" style="width: 900px; height: 500px;"></div></br>
-    <p>Outside</p>
-    <%= render :partial => "show_outside_chart" %>
-   
-    
+    <div id="chart_div2" style="width: 900px; height: 500px;"></div></br>
   </body>
 </html>
-
