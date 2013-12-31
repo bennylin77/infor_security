@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131228043109) do
+ActiveRecord::Schema.define(:version => 20131231040311) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -41,6 +41,8 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.datetime "updated_at",               :null => false
   end
 
+  add_index "adm_users", ["campus_buildings_list_id"], :name => "index_adm_users_on_campus_buildings_list_id"
+
   create_table "admin_login_logs", :force => true do |t|
     t.integer  "adm_user_id"
     t.datetime "login_at"
@@ -48,12 +50,16 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.datetime "updated_at",  :null => false
   end
 
+  add_index "admin_login_logs", ["adm_user_id"], :name => "index_admin_login_logs_on_adm_user_id"
+
   create_table "announcemapsgroups", :force => true do |t|
     t.integer  "announcement_id"
     t.integer  "adm_group_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
   end
+
+  add_index "announcemapsgroups", ["announcement_id"], :name => "index_announcemapsgroups_on_announcement_id"
 
   create_table "announcements", :force => true do |t|
     t.integer  "adm_user_id"
@@ -103,6 +109,8 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.text     "change_note"
   end
 
+  add_index "comments", ["adm_user_id"], :name => "index_comments_on_adm_user_id"
+
   create_table "event_adm_logs", :force => true do |t|
     t.integer  "adm_user_id"
     t.datetime "edit_at"
@@ -110,6 +118,9 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.datetime "updated_at",   :null => false
     t.integer  "event_map_id"
   end
+
+  add_index "event_adm_logs", ["adm_user_id"], :name => "index_event_adm_logs_on_adm_user_id"
+  add_index "event_adm_logs", ["event_map_id"], :name => "index_event_adm_logs_on_event_map_id"
 
   create_table "event_maps", :force => true do |t|
     t.integer  "thread_id"
@@ -152,6 +163,9 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.boolean  "always_handle",            :default => true,  :null => false
   end
 
+  add_index "ip_maps", ["adm_user_id"], :name => "index_ip_maps_on_adm_user_id"
+  add_index "ip_maps", ["campus_buildings_list_id"], :name => "index_ip_maps_on_campus_buildings_list_id"
+
   create_table "job_details", :force => true do |t|
     t.integer  "job_id"
     t.string   "src_ip"
@@ -162,6 +176,8 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.boolean  "alert"
     t.string   "region"
   end
+
+  add_index "job_details", ["job_id"], :name => "index_job_details_on_job_id"
 
   create_table "job_logs", :force => true do |t|
     t.integer  "job_id"
@@ -175,6 +191,9 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.string   "threat_type"
     t.string   "src_ip"
   end
+
+  add_index "job_logs", ["job_id"], :name => "index_job_logs_on_job_id"
+  add_index "job_logs", ["log_time"], :name => "log_time"
 
   create_table "job_messages", :force => true do |t|
     t.integer  "adm_user_id"
@@ -193,6 +212,8 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.datetime "updated_at", :null => false
     t.string   "serverity"
   end
+
+  add_index "job_threats", ["job_id"], :name => "index_job_threats_on_job_id"
 
   create_table "jobs", :force => true do |t|
     t.integer  "assigning_adm_user_id"
@@ -214,6 +235,8 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.string   "from"
   end
 
+  add_index "jobs", ["ip_map_id"], :name => "index_jobs_on_ip_map_id"
+
   create_table "mail_configs", :force => true do |t|
     t.boolean  "meeting_notification", :default => false, :null => false
     t.boolean  "weekly_statistic",     :default => false, :null => false
@@ -222,12 +245,15 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.integer  "adm_user_id"
   end
 
+  add_index "mail_configs", ["adm_user_id"], :name => "index_mail_configs_on_adm_user_id"
+
   create_table "outside_counts", :force => true do |t|
     t.integer  "sum"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.date     "log_date"
     t.string   "src_ip"
+    t.string   "country"
   end
 
   create_table "outside_logs", :force => true do |t|
@@ -258,12 +284,17 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.integer  "announcement",      :default => 0, :null => false
   end
 
+  add_index "permission_configs", ["adm_user_group_id"], :name => "index_permission_configs_on_adm_user_group_id"
+  add_index "permission_configs", ["adm_user_id"], :name => "index_permission_configs_on_adm_user_id"
+
   create_table "permission_configs_groups", :force => true do |t|
     t.integer  "permission_config_id"
     t.integer  "adm_user_group_id"
     t.datetime "created_at",           :null => false
     t.datetime "updated_at",           :null => false
   end
+
+  add_index "permission_configs_groups", ["permission_config_id"], :name => "index_permission_configs_groups_on_permission_config_id"
 
   create_table "s_assigns", :force => true do |t|
     t.integer  "job_id"
@@ -272,12 +303,16 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.datetime "done_at"
   end
 
+  add_index "s_assigns", ["job_id"], :name => "index_s_assigns_on_job_id"
+
   create_table "s_checks", :force => true do |t|
     t.integer  "job_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.datetime "done_at"
   end
+
+  add_index "s_checks", ["job_id"], :name => "index_s_checks_on_job_id"
 
   create_table "s_closeds", :force => true do |t|
     t.integer  "job_id"
@@ -287,6 +322,8 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.text     "close_directly_reason"
   end
 
+  add_index "s_closeds", ["job_id"], :name => "index_s_closeds_on_job_id"
+
   create_table "s_handles", :force => true do |t|
     t.integer  "job_id"
     t.text     "handling_description"
@@ -294,6 +331,8 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.datetime "updated_at",           :null => false
     t.datetime "done_at"
   end
+
+  add_index "s_handles", ["job_id"], :name => "index_s_handles_on_job_id"
 
   create_table "s_informs", :force => true do |t|
     t.integer  "job_id"
@@ -307,6 +346,8 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.datetime "done_at"
   end
 
+  add_index "s_informs", ["job_id"], :name => "index_s_informs_on_job_id"
+
   create_table "trace_configs", :force => true do |t|
     t.integer  "adm_user_id"
     t.boolean  "login",       :default => false, :null => false
@@ -316,5 +357,7 @@ ActiveRecord::Schema.define(:version => 20131228043109) do
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
   end
+
+  add_index "trace_configs", ["adm_user_id"], :name => "index_trace_configs_on_adm_user_id"
 
 end

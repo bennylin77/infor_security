@@ -1,8 +1,12 @@
 class JobLog < ActiveRecord::Base
   attr_accessible :job_id, :log_time, :victim_ip, :threat_id, :action, :country, :threat_type
   belongs_to :job
-  
-  
+  has_one :job_detail
+ # belongs_to :job_detail
+  def self.log_time_between(d1,d2)
+	where("log_time between ? and ?",d1,d2)
+  end
+
   def self.temp(d1,d2)
     
     ActiveRecord::Base.connection.execute("DROP TEMPORARY TABLE IF EXISTS temp_table")
@@ -17,6 +21,13 @@ class JobLog < ActiveRecord::Base
     
     return @res
   end
+  
+  #def self.temp2(d1,d2)
+    
+  #  ActiveRecord::Base.connection.execute("DROP TEMPORARY TABLE IF EXISTS temp_table2")   
+  #  ActiveRecord::Base.connection.execute("CREATE TEMPORARY TABLE temp_table2 SELECT threat_id,job_id FROM job_logs WHERE log_time between '#{d1}' and '#{d2}'")
+    
+  #end
     
   
 end

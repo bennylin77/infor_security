@@ -333,33 +333,37 @@ end
 def show_splace(threat_id,d1,d2)
  # return "skip"
   html_string = ""
-  sum = 0    
-  @source = JobLog.find(
-                      :all,
-                      :joins => "JOIN job_details ON job_details.job_id = job_logs.job_id",
-                      :select => 'job_details.src_ip ,SUM(1) total',
-                      :group => 'job_details.src_ip',
-                      :conditions => ["threat_id=? and job_logs.log_time between ? and ? ",threat_id,@d1,@d2],
-                      :order => 'total DESC',
-                      :limit => 5) 
-                      
-                  
+  sum = 0
+
+  @source=ActiveRecord::Base.connection.execute("
+	SELECT src_ip, SUM( log_count ) total
+	FROM job_details
+	WHERE job_id
+	IN (
+		SELECT job_id
+		FROM job_logs
+		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' and '#{d2}'
+	)
+	GROUP BY src_ip
+	ORDER by total DESC
+	")                  
   @source.each do |cnt|
-    sum = sum + cnt.total.to_i
+	sum = sum + cnt[1].to_i
   end                     
   
-  @source.each do |r|
-    em =  IpMap.where("ip=?",r.src_ip).first 
-    percent  = 100*(r.total)/sum
+  @source.each_with_index do |r , i|
+	break if i == 5
+    em =  IpMap.where("ip=?",r[0]).first 
+    percent  = 100*(r[1])/sum
     if not em.blank?
         build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
         if not build_map.blank?
-          html_string +="<p>("+r.src_ip+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+          html_string +="<p>("+r[0]+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
         else
-           html_string +="<p>("+r.src_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+           html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
         end
     else
-          html_string +="<p>("+r.src_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+          html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
     end
   end
   
@@ -424,23 +428,34 @@ def outside_session(threat_id,d1,d2)
   return OutsideLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
 end 
 
-def outside_splace(threat_id,d1,d2)
-  
+def outside_splace(threat_id,d1,d2)	         
   html_string = ""
+#   @source=ActiveRecord::Base.connection.execute("
+#	SELECT src_ip,country, SUM( sum ) total
+#	FROM outside_counts
+#	WHERE id
+#	IN (
+#		SELECT outside_counts_id
+#		FROM outside_logs
+#		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' and '#{d2}'
+#	)
+#	GROUP BY src_ip
+#	ORDER by total DESC
+#	")        
   @source = OutsideLog.find(
-        :all,
-        :select => 'country,src_ip ,SUM(1) total',
-        :group => 'src_ip',
-        :conditions => ["threat_id=? and log_time between ? and ? ",threat_id,d1,d2],
-        :order => 'total DESC',
-        :limit => 5)
+       :all,
+       :select => 'country,src_ip ,SUM(1) total',
+       :group => 'src_ip',
+       :conditions => ["threat_id=? and log_time between ? and ? ",threat_id,d1,d2],
+       :order => 'total DESC',
+       :limit => 5)
  sum = 0       
  @source.each do |cnt|
     sum = sum + cnt.total.to_i
  end   
  
  @source.each do |r| 
-    percent  = 100*(r.total)/sum  
+    percent  = 100*(r.total.to_i)/sum  
     html_string +="<p>"+r.src_ip+"("+r.country+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>\n"
   end
   
