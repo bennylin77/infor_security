@@ -56,7 +56,7 @@ def top10
       #                  :order => 'total DESC',
        #                 :limit => 10)
     @res = JobLog.temp(params[:dp1],params[:dp2])   
-	#JobLog.temp2(params[:dp1],params[:dp2])   
+	JobLog.temp2(params[:dp1],params[:dp2])   
   end
 
 end

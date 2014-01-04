@@ -22,12 +22,13 @@ class JobLog < ActiveRecord::Base
     return @res
   end
   
-  #def self.temp2(d1,d2)
+  def self.temp2(d1,d2)
     
-  #  ActiveRecord::Base.connection.execute("DROP TEMPORARY TABLE IF EXISTS temp_table2")   
-  #  ActiveRecord::Base.connection.execute("CREATE TEMPORARY TABLE temp_table2 SELECT threat_id,job_id FROM job_logs WHERE log_time between '#{d1}' and '#{d2}'")
-    
-  #end
+    ActiveRecord::Base.connection.execute("DROP TEMPORARY TABLE IF EXISTS temp_table2")   
+    ActiveRecord::Base.connection.execute("CREATE TEMPORARY TABLE temp_table2 SELECT threat_id,job_id,victim_ip FROM job_logs WHERE log_time between '#{d1}' and '#{d2}'")
+    ActiveRecord::Base.connection.execute("CREATE INDEX index_threat_id ON temp_table2 (threat_id)")
+	ActiveRecord::Base.connection.execute("CREATE INDEX index_job_id ON temp_table2 (job_id)")
+  end
     
   
 end
