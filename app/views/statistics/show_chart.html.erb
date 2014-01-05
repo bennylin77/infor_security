@@ -2,12 +2,14 @@
 <html>
   <head>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<%if not @res.count==0%>    
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Time', '統計數量'],
+
       <%if @type.to_i==0%>    
           <%temp=0%>
           <%@res.each do |r|%>
@@ -66,13 +68,18 @@
         chart.draw(data, options);
       }
     </script>
+<%end%>    
   </head>
   <body>
   	<div style="text-align:center"><font size="3"><b><%=(@threat_name||"")%></b></font></div>
+<%if not @res.count==0%>  	
   	<p>[Inside]</p>
     <div id="chart_div1" ></div></br>
+<%end%> 
+<%if not @res2.count==0%>    
     <p>[Outside]</p>
     <%= render :partial => "show_outside_chart" %>
+<%end%>    
     </br>
   </body>
 </html>
