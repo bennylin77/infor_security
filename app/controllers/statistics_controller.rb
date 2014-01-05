@@ -39,30 +39,25 @@ end
 def top10
   @flag = 0
   if request.post?
-  @flag=1
-  @start = Date.new(2013,5,1)
-  @d1 = Time.strptime(params[:dp1],"%Y/%m/%d %H:%M")
+    @flag=1
+    @start = Date.new(2013,5,1)
+    @d1 = Time.strptime(params[:dp1],"%Y/%m/%d %H:%M")
+    
+    if @d1 < @start
+      @d1 = @start
+    end
+    
+    @d2 = Time.strptime(params[:dp2],"%Y/%m/%d %H:%M")
   
-  if @d1 < @start
-    @d1 = @start
-  end
-  
-  @d2 = Time.strptime(params[:dp2],"%Y/%m/%d %H:%M")
- # @res = JobLog.find(
-  #                      :all,
-   #                     :select => 'threat_id ,count(*) total',
-    #                    :group => 'threat_id',
-     #                   :conditions => ["log_time BETWEEN ? AND ?",@d1,@d2],
-      #                  :order => 'total DESC',
-       #                 :limit => 10)
-    @res = JobLog.temp(params[:dp1],params[:dp2])   
-	JobLog.temp2(params[:dp1],params[:dp2])   
+      @res = JobLog.temp(params[:dp1],params[:dp2])   
+  	  JobLog.temp2(params[:dp1],params[:dp2])   
   end
 
 end
 
 def show_chart
-
+  @d1 = params[:d1]
+  @d2 = params[:d2]
   @elapsed = ((Time.strptime(params[:d2],"%Y-%m-%d") - Time.strptime(params[:d1],"%Y-%m-%d"))/24.hour).round    # DAY
   @threat_map = EventMap.where("thread_id=?",params[:threat_id]).first
   if @threat_map.blank?
@@ -88,15 +83,15 @@ def show_chart
   elsif @elapsed >30   #30 ~ 180   7DAY
   
     @res = JobLog.find(:all,
-                     :select=>'DAYOFWEEK(log_time) AS t,count(*) total',
-                     :group=> 't',
+                     :select=>'DATE_FORMAT(log_time,"%m/%d/%Y") as d,sum(1) total',
+                     :group=> 'd',
                      :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
-                     :order => 't ASC')
+                     :order => 'd ASC')
     @res2 = OutsideLog.find(:all,
-                     :select=>'DAYOFWEEK(log_time) AS t,count(*) total',
-                     :group=> 't',
+                     :select=>'DATE_FORMAT(log_time,"%m/%d/%Y") AS d,sum(1) total',
+                     :group=> 'd',
                      :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
-                     :order => 't ASC')                 
+                     :order => 'd ASC')                 
     @type = 1                 
   elsif @elapsed == 1    # <=1     HOUR
     @res = JobLog.find(:all,
@@ -110,14 +105,18 @@ def show_chart
     @type = 0   
   else                  #    1 ~ 30   DATE
     @res = JobLog.find(:all,
-                     :select=>'HOUR(log_time) AS t,SUM(1)  total',
+                     :select=>'log_time as d , DATE_FORMAT(log_time,"%c/%e/%Y") AS t,count(*)  total',
                      :group=> 't',
-                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]])   
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
+                     :order=>"d ASC"
+                     )   
     @res2 = OutsideLog.find(:all,
-                     :select=>'HOUR(log_time) AS t,SUM(1) total',
+                     :select=>'log_time as d , DATE_FORMAT(log_time,"%c/%e/%Y") AS t,count(*) total',
                      :group=> 't',
-                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]])                   
-    @type = 0                                  
+                     :conditions => ["threat_id=? and log_time between ? and ?",params[:threat_id],params[:d1],params[:d2]],
+                     :order=>"d ASC"
+                     )                   
+    @type = 3                                  
   end                  
                      
 end

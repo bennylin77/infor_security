@@ -480,11 +480,7 @@ def lalala(threat_id)
     end
   return html_string.html_safe;
 end
-def inside_session(threat_id,d1,d2)
-  
-  return JobLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
-end  
-def inside_session2(threat_id)
+def inside_session(threat_id)
   @source=ActiveRecord::Base.connection.execute("SELECT count(job_id) FROM temp_table2 WHERE threat_id='#{threat_id}'")
   return @source.first[0]
   #return JobLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
@@ -557,6 +553,28 @@ def outside_vplace(threat_id,d1,d2)
   end
   
   return html_string.html_safe  
+end
+
+def diff_7day(d1,res)
+  html_string = ""
+  tmp_d1 = d1.to_datetime
+  tmp_count = 0
+  res.each do |r|
+    date = DateTime.strptime(r.d, "%m/%d/%Y").to_datetime
+    if date >= tmp_d1.ago(1.day) and date <= tmp_d1.since(6.day)
+      tmp_count = tmp_count + r.total.to_i
+    else
+      html_string = html_string +"['"+tmp_d1.strftime("%m/%d").to_s+"',"+tmp_count.to_s+"]," 
+      tmp_count = r.total.to_i
+      tmp_d1 = tmp_d1.since(7.day) 
+      until (date>=tmp_d1.ago(1.day) and date<=tmp_d1.since(6.day)) do  
+         html_string = html_string +"['"+tmp_d1.strftime("%m/%d").to_s+"',0]," 
+         tmp_d1 = tmp_d1.since(7.day)    
+      end      
+    end
+  end # do
+  html_string = html_string +"['"+tmp_d1.strftime("%m/%d").to_s+"',"+tmp_count.to_s+"],"
+  return html_string
 end
 
 end
