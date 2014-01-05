@@ -29,7 +29,7 @@
           	<%end%>
           <%end%>
       <%elsif @type.to_i==1%>
-      	 <%=diff_7day(@d1,@res).to_s%>
+      	 <%=diff_7day(@d1,@d2,@res).to_s%>
       <%elsif @type.to_i==2%>
       	<%temp=1%>
           <%@res.each do |r|%>
