@@ -29,25 +29,7 @@
           	<%end%>
           <%end%>
       <%elsif @type.to_i==1%>
-      	 <%temp=1%>
-          <%@res.each do |r|%>
-	          <%if r.t.to_i > temp.to_i%>
-	            <%while temp.to_i!=r.t.to_i%>         
-	          		["<%=number_to_weekday(temp)%>",0],
-	          		<%temp=temp+1%>
-	          	<%end%>
-	          	["<%=number_to_weekday(r.t)%>",<%=r.total.to_s%>],
-	          <%else%>
-	          	["<%=number_to_weekday(r.t)%>",<%=r.total.to_s%>],
-	          <%end%>	
-	          <%temp=temp+1%>
-          <%end%>
-          <%if temp!=8%> 	
-          	<%while temp!=8 do%>
-          		["<%=number_to_weekday(temp)%>",0],
-          		<%temp=temp+1%>
-          	<%end%>
-          <%end%>
+      	 <%=diff_7day(@d1,@res).to_s%>
       <%elsif @type.to_i==2%>
       	<%temp=1%>
           <%@res.each do |r|%>
@@ -68,10 +50,10 @@
           		<%temp=temp+1%>
           	<%end%>
           <%end%>
-      <%else%>    
-      	[1,1],
-      	[2,2],
-      	[3,3]
+      <%elsif @type.to_i==3%>    
+      	<%@res.each do |r|%>         
+	       ["<%=r.d.strftime("%m/%d")%>",<%=r.total.to_s%>],  
+        <%end%>
       <%end%>    
         ]);
 
@@ -80,19 +62,18 @@
           vAxis: {minValue: 1}
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div1'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
         chart.draw(data, options);
       }
     </script>
   </head>
   <body>
   	<div style="text-align:center"><font size="3"><b><%=(@threat_name||"")%></b></font></div>
-  	<p>Inside</p>
-    <div id="chart_div1" style="width: 900px; height: 500px;"></div></br>
-    <p>Outside</p>
+  	<p>[Inside]</p>
+    <div id="chart_div1" ></div></br>
+    <p>[Outside]</p>
     <%= render :partial => "show_outside_chart" %>
-   
-    
+    </br>
   </body>
 </html>
 

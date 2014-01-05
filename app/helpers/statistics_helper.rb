@@ -267,7 +267,23 @@ def day7_image(job)
 end
 
 #######
-
+def show_vplace2(threat_id)
+  # return "skip"
+  html_string = ""
+  
+  sum = 0
+  @source=ActiveRecord::Base.connection.execute("
+	SELECT victim_ip ,SUM(1) total 
+	FROM temp_table2
+	WHERE threat_id='#{threat_id}' and victim_ip  REGEXP '^140.113'
+	GROUP BY victim_ip
+	ORDER BY total DESC 
+	LIMIT 3")
+ 
+ 
+  
+  return html_string.html_safe
+end
 def show_vplace(threat_id,d1,d2)
   # return "skip"
   html_string = ""
@@ -329,7 +345,44 @@ def show_vplace(threat_id,d1,d2)
   
   return html_string.html_safe
 end
+def show_splace2(threat_id)
+ # return "skip"
+  html_string = ""
+  sum = 0
 
+  @source=ActiveRecord::Base.connection.execute("
+	SELECT src_ip, SUM( log_count ) total
+	FROM job_details
+	WHERE job_id
+	IN (
+		SELECT job_id
+		FROM temp_table2
+		WHERE threat_id ='#{threat_id}'
+	)
+	GROUP BY src_ip
+	ORDER by total DESC
+	")                  
+  @source.each do |cnt|
+	sum = sum + cnt[1].to_i
+  end
+  @source.each_with_index do |r , i|
+	break if i == 5
+    em =  IpMap.where("ip=?",r[0]).first 
+    percent  = 100*(r[1])/sum
+    if not em.blank?
+        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
+        if not build_map.blank?
+          html_string +="<p>("+r[0]+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+        else
+           html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+        end
+    else
+          html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+    end
+  end
+  
+  return html_string.html_safe
+end
 def show_splace(threat_id,d1,d2)
  # return "skip"
   html_string = ""
@@ -419,11 +472,19 @@ def number_to_month(num)
     "ERROR"  
   end
 end
-
-def inside_session(threat_id,d1,d2)
-  return JobLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
-end  
-
+def lalala(threat_id)
+  html_string = ""
+	@source=ActiveRecord::Base.connection.execute("SELECT job_id FROM temp_table2 WHERE threat_id='#{threat_id}' limit 5")
+	@source.each do |r|
+		html_string +="<p>("+r[0].to_s+")"
+    end
+  return html_string.html_safe;
+end
+def inside_session(threat_id)
+  @source=ActiveRecord::Base.connection.execute("SELECT count(job_id) FROM temp_table2 WHERE threat_id='#{threat_id}'")
+  return @source.first[0]
+  #return JobLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
+end
 def outside_session(threat_id,d1,d2)
   return OutsideLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
 end 
@@ -492,6 +553,28 @@ def outside_vplace(threat_id,d1,d2)
   end
   
   return html_string.html_safe  
+end
+
+def diff_7day(d1,res)
+  html_string = ""
+  tmp_d1 = d1.to_datetime
+  tmp_count = 0
+  res.each do |r|
+    date = DateTime.strptime(r.d, "%m/%d/%Y").to_datetime
+    if date >= tmp_d1.ago(1.day) and date <= tmp_d1.since(6.day)
+      tmp_count = tmp_count + r.total.to_i
+    else
+      html_string = html_string +"['"+tmp_d1.strftime("%m/%d").to_s+"',"+tmp_count.to_s+"]," 
+      tmp_count = r.total.to_i
+      tmp_d1 = tmp_d1.since(7.day) 
+      until (date>=tmp_d1.ago(1.day) and date<=tmp_d1.since(6.day)) do  
+         html_string = html_string +"['"+tmp_d1.strftime("%m/%d").to_s+"',0]," 
+         tmp_d1 = tmp_d1.since(7.day)    
+      end      
+    end
+  end # do
+  html_string = html_string +"['"+tmp_d1.strftime("%m/%d").to_s+"',"+tmp_count.to_s+"],"
+  return html_string
 end
 
 end

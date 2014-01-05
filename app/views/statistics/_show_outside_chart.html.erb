@@ -6,8 +6,10 @@
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Time', '統計數量'],
-      <%if @type.to_i==0%>    
+          ['Time', '統計數量'],  
+      <%if @res.count==0%>
+          [0,0]      
+      <%elsif @type.to_i==0%>    
           <%temp=0%>
           <%@res2.each do |r|%>
 	          <%if r.t.to_i > temp.to_i%>
@@ -28,25 +30,7 @@
           	<%end%>
           <%end%>
       <%elsif @type.to_i==1%>
-      	 <%temp=1%>
-          <%@res2.each do |r|%>
-	          <%if r.t.to_i > temp.to_i%>
-	            <%while temp.to_i!=r.t.to_i%>         
-	          		["<%=number_to_weekday(temp)%>",0],
-	          		<%temp=temp+1%>
-	          	<%end%>
-	          	["<%=number_to_weekday(r.t)%>",<%=r.total.to_s%>],
-	          <%else%>
-	          	["<%=number_to_weekday(r.t)%>",<%=r.total.to_s%>],
-	          <%end%>	
-	          <%temp=temp+1%>
-          <%end%>
-          <%if temp!=8%> 	
-          	<%while temp!=8 do%>
-          		["<%=number_to_weekday(temp)%>",0],
-          		<%temp=temp+1%>
-          	<%end%>
-          <%end%>
+      	<%=diff_7day(@d1,@res2).to_s%>
       <%elsif @type.to_i==2%>
       	<%temp=1%>
           <%@res2.each do |r|%>
@@ -67,11 +51,11 @@
           		<%temp=temp+1%>
           	<%end%>
           <%end%>
-      <%else%>    
-      	[1,1],
-      	[2,2],
-      	[3,3]
-      <%end%>    
+      <%elsif @type.to_i==3%>    
+      	<%@res2.each do |r|%>         
+	       ["<%=r.d.strftime("%m/%d")%>",<%=r.total.to_s%>],  
+        <%end%>
+      <%end%>       
         ]);
 
         var options = {
@@ -79,12 +63,12 @@
           vAxis: {minValue: 1}
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
         chart.draw(data, options);
       }
     </script>
   </head>
   <body>
-    <div id="chart_div2" style="width: 900px; height: 500px;"></div></br>
+    <div id="chart_div2" ></div></br>
   </body>
 </html>
