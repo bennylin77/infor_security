@@ -1,15 +1,14 @@
 <html>
   <head>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<%if not @res2.count==0%>    
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Time', '統計數量'],  
-      <%if @res.count==0%>
-          [0,0]      
-      <%elsif @type.to_i==0%>    
+          ['Time', '統計數量'],      
+      <%if @type.to_i==0%>    
           <%temp=0%>
           <%@res2.each do |r|%>
 	          <%if r.t.to_i > temp.to_i%>
@@ -67,6 +66,7 @@
         chart.draw(data, options);
       }
     </script>
+<%end%>    
   </head>
   <body>
     <div id="chart_div2" ></div></br>
