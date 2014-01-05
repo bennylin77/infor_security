@@ -80,7 +80,7 @@ def show_chart
                      :order => 't ASC')                
     @type = 2   
   
-  elsif @elapsed >30   #30 ~ 180   7DAY
+  elsif @elapsed >32   #30 ~ 180   7DAY
   
     @res = JobLog.find(:all,
                      :select=>'DATE_FORMAT(log_time,"%m/%d/%Y") as d,sum(1) total',
