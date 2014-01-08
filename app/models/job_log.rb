@@ -12,7 +12,7 @@ class JobLog < ActiveRecord::Base
     ActiveRecord::Base.connection.execute("DROP TEMPORARY TABLE IF EXISTS temp_table")
     
     ActiveRecord::Base.connection.execute("CREATE TEMPORARY TABLE temp_table SELECT threat_id FROM job_logs WHERE log_time between '#{d1}' and '#{d2}'")
-    ActiveRecord::Base.connection.execute("INSERT INTO temp_table SELECT threat_id FROM outside_logs WHERE log_time between '#{d1}' and '#{d2}'")
+    #ActiveRecord::Base.connection.execute("INSERT INTO temp_table SELECT threat_id FROM outside_logs WHERE log_time between '#{d1}' and '#{d2}'")
     
     @res =  ActiveRecord::Base.connection.execute("SELECT threat_id,count(*) total FROM temp_table GROUP BY threat_id ORDER BY total DESC LIMIT 10")
     

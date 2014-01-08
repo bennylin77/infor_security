@@ -411,7 +411,7 @@ def show_splace(threat_id,d1,d2)
     if not em.blank?
         build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
         if not build_map.blank?
-          html_string +="<p>("+r[0]+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+          html_string +="<p>("+r[0]+")"+build_map.building_name+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
         else
            html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
         end

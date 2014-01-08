@@ -19,7 +19,7 @@
 	</tr>
 	<%@res.each do |r|%>
 		<tr>
-			<%ser = JobThreat.find(:first,:conditions=>["threat_id=?",r[0]])%>
+			<%ser = JobThreat.find(:first,:conditions=>["threat_id=?",r.threat_id])%>
 			<td>
 				<%if not ser.blank? and not ser.serverity.blank? %>
 					<%=ser.serverity.to_s%>
@@ -27,12 +27,12 @@
 					No Classified
 				<%end%>
 			</td>		
-			<%em =  EventMap.find(:first,:conditions=>["thread_id=?",r[0]]) %>
+			<%em =  EventMap.find(:first,:conditions=>["thread_id=?",r.threat_id]) %>
 				<% if not em.blank? %>
 					<%if not em.name.blank?%>
-						<td><%=em.name.to_s%>(<%=r[0]%>)</td>
+						<td><%=em.name.to_s%>(<%=r.threat_id.to_s%>)</td>
 					<%else%>
-						<td>(<%=r[0]%>)</td>
+						<td>(<%=r.threat_id.to_s%>)</td>
 					<%end%>	
 					<%if not em.threat_type.blank?%>
 						<td><%=em.threat_type.to_s%></td>
@@ -40,17 +40,17 @@
 						<td>No Record</td>	
 					<%end%>
 				<%else%>
-					<td>Not Record Event Id(<%=r[0]%>)</td>
+					<td>Not Record Event Id(<%=r.threat_id.to_s%>)</td>
 					<td>No Record</td>	
 				<%end%>	
 				
-			<td><%=inside_session(r[0])%></td>
-			<td><%=show_splace2(r[0])%></td>
-			<td><%=show_vplace(r[0],@d1,@d2)%></td>
-			<td><%=outside_session(r[0],@d1,@d2)%></td>
-			<td><%=outside_splace(r[0],@d1,@d2)%></td>
-			<td><%=outside_vplace(r[0],@d1,@d2)%></td>
-			<td><%=link_to "分布圖" ,:action=>"show_chart" ,:threat_id=>r[0],:d1=>@d1,:d2=>@d2 %></td>
+			<td><%=inside_session(r.threat_id)%></td>
+			<td><%=show_splace2(r.threat_id)%></td>
+			<td><%=show_vplace(r.threat_id,@d1,@d2)%></td>
+			<td><%=outside_session(r.threat_id,@d1,@d2)%></td>
+			<td><%=outside_splace(r.threat_id,@d1,@d2)%></td>
+			<td><%=outside_vplace(r.threat_id,@d1,@d2)%></td>
+			<td><%=link_to "分布圖" ,:action=>"show_chart" ,:threat_id=>r.threat_id,:d1=>@d1,:d2=>@d2 %></td>
 		</tr>
 	<%end%>
 </table>	
