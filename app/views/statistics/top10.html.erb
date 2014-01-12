@@ -4,19 +4,17 @@
 <%end%></br>
 <%if @flag==1%>
 <div style="text-align:center"><font size="3">搜尋時間 ：<b> <%=@d1.strftime("%Y/%m/%d %H:%M")%> ~ <%=@d2.strftime("%Y/%m/%d %H:%M")%> </b></font></div></br>
-<table border="1" id="event_lists_table" width="150%">	
+<table border="1" id="event_lists_table" width="115%">	
 	<tr bgColor="CDCDC1">
 		<td width="5%">Serverity</td>
 		<td width="25%">Top 10 Threat ID</td>
 		<td width="8%">Threat Type</td>
-		<td width="5%">Sessions(inside)</td>
-		<td width="15%">來源地點(內)</td>
-		<td width="15%">受害地點(內)</td>
-		<td width="5%">Sessions(outside)</td>
-		<td width="15%">來源地點(外)</td>
-		<td width="15%">受害地點(外)</td>
-		<td width="15%">時間曲線圖</td>
+		<td width="5%">Sessions<%= select_tag :show_type , options_for_select([["內部",0],["外部",1]])%></td>
+		<td width="20%">來源地點</td>
+		<td width="20%">受害地點</td>
+		<td width="5%">時間曲線圖</td>
 	</tr>
+	<%count=1%>
 	<%@res.each do |r|%>
 		<tr>
 			<%ser = JobThreat.find(:first,:conditions=>["threat_id=?",r.threat_id])%>
@@ -44,14 +42,21 @@
 					<td>No Record</td>	
 				<%end%>	
 				
-			<td><%=inside_session(r.threat_id)%></td>
-			<td><%=show_splace2(r.threat_id)%></td>
-			<td><%=show_vplace(r.threat_id,@d1,@d2)%></td>
-			<td><%=outside_session(r.threat_id,@d1,@d2)%></td>
-			<td><%=outside_splace(r.threat_id,@d1,@d2)%></td>
-			<td><%=outside_vplace(r.threat_id,@d1,@d2)%></td>
+			<td>
+				<div id="session_in_<%=count.to_s%>"><%=inside_session(r.threat_id)%></div>
+				<div id="session_out_<%=count.to_s%>" style="display:none"><%=outside_session(r.threat_id,@d1,@d2)%></div>
+			</td>
+			<td>
+				<div id="splace_in_<%=count.to_s%>"><%=show_splace2(r.threat_id)%></div>
+				<div id="splace_out_<%=count.to_s%>" style="display:none"><%=outside_splace(r.threat_id,@d1,@d2)%></div>
+			</td>
+			<td>
+				<div id="vplace_in_<%=count.to_s%>"><%=show_vplace(r.threat_id,@d1,@d2)%></div>
+				<div id="vplace_out_<%=count.to_s%>" style="display:none"><%=outside_vplace(r.threat_id,@d1,@d2)%></div>
+			</td>
 			<td><%=link_to "分布圖" ,:action=>"show_chart" ,:threat_id=>r.threat_id,:d1=>@d1,:d2=>@d2 %></td>
 		</tr>
+		<%count=count+1%>
 	<%end%>
 </table>	
 <%end%>
@@ -98,5 +103,27 @@
 		}
   });
   
-  
+  $( "#show_type" ).change( 
+  function(){
+ 	if( $("#show_type option:selected").val()==1 ){ //outside
+ 		for(i=1;i<=10;i++){
+ 			document.getElementById("session_in_"+i).style.display = 'none' ;
+ 			document.getElementById("session_out_"+i).style.display = '' ;
+ 			document.getElementById("splace_in_"+i).style.display = 'none' ;
+ 			document.getElementById("splace_out_"+i).style.display = '' ;
+ 			document.getElementById("vplace_in_"+i).style.display = 'none' ;
+ 			document.getElementById("vplace_out_"+i).style.display = '' ;
+ 		}
+ 	}else{ //inside
+ 		for(i=1;i<=10;i++){
+ 			document.getElementById("session_in_"+i).style.display = '' ;
+ 			document.getElementById("session_out_"+i).style.display = 'none' ;
+ 			document.getElementById("splace_in_"+i).style.display = '' ;
+ 			document.getElementById("splace_out_"+i).style.display = 'none' ;
+ 			document.getElementById("vplace_in_"+i).style.display = '' ;
+ 			document.getElementById("vplace_out_"+i).style.display = 'none' ;
+ 		}
+ 	}
+ 	
+  });
 </script>
