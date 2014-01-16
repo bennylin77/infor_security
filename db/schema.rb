@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131231040311) do
+ActiveRecord::Schema.define(:version => 20140116094448) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -178,6 +178,7 @@ ActiveRecord::Schema.define(:version => 20131231040311) do
   end
 
   add_index "job_details", ["job_id"], :name => "index_job_details_on_job_id"
+  add_index "job_details", ["src_ip"], :name => "index_job_details_on_src_ip"
 
   create_table "job_logs", :force => true do |t|
     t.integer  "job_id"
@@ -193,7 +194,9 @@ ActiveRecord::Schema.define(:version => 20131231040311) do
   end
 
   add_index "job_logs", ["job_id"], :name => "index_job_logs_on_job_id"
-  add_index "job_logs", ["log_time"], :name => "log_time"
+  add_index "job_logs", ["log_time"], :name => "index_job_logs_on_log_time"
+  add_index "job_logs", ["threat_id"], :name => "index_job_logs_on_threat_id"
+  add_index "job_logs", ["victim_ip"], :name => "index_job_logs_on_victim_ip"
 
   create_table "job_messages", :force => true do |t|
     t.integer  "adm_user_id"
@@ -206,11 +209,11 @@ ActiveRecord::Schema.define(:version => 20131231040311) do
   end
 
   create_table "job_threats", :force => true do |t|
-    t.integer "job_id",     :null => false
-    t.integer "threat_id",  :null => false
-    t.date    "created_at", :null => false
-    t.date    "updated_at", :null => false
-    t.string  "serverity",  :null => false
+    t.integer  "job_id"
+    t.integer  "threat_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "serverity"
   end
 
   add_index "job_threats", ["job_id"], :name => "index_job_threats_on_job_id"
@@ -256,6 +259,8 @@ ActiveRecord::Schema.define(:version => 20131231040311) do
     t.string   "country"
   end
 
+  add_index "outside_counts", ["src_ip"], :name => "index_outside_counts_on_src_ip"
+
   create_table "outside_logs", :force => true do |t|
     t.integer  "outside_counts_id"
     t.datetime "log_time"
@@ -269,6 +274,11 @@ ActiveRecord::Schema.define(:version => 20131231040311) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
+
+  add_index "outside_logs", ["log_time"], :name => "index_outside_logs_on_log_time"
+  add_index "outside_logs", ["outside_counts_id"], :name => "index_outside_logs_on_outside_counts_id"
+  add_index "outside_logs", ["threat_id"], :name => "index_outside_logs_on_threat_id"
+  add_index "outside_logs", ["victim_ip"], :name => "index_outside_logs_on_victim_ip"
 
   create_table "permission_configs", :force => true do |t|
     t.integer  "adm_user_id"

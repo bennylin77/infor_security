@@ -267,27 +267,11 @@ def day7_image(job)
 end
 
 #######
-def show_vplace2(threat_id)
-  # return "skip"
-  html_string = ""
-  
-  sum = 0
-  @source=ActiveRecord::Base.connection.execute("
-	SELECT victim_ip ,SUM(1) total 
-	FROM temp_table2
-	WHERE threat_id='#{threat_id}' and victim_ip  REGEXP '^140.113'
-	GROUP BY victim_ip
-	ORDER BY total DESC 
-	LIMIT 3")
- 
- 
-  
-  return html_string.html_safe
-end
+
 def show_vplace(threat_id,d1,d2)
   # return "skip"
   html_string = ""
-  
+  now=Time.now.to_f
   sum = 0
   @victim_inner = JobLog.find(
                       :all,
@@ -339,29 +323,30 @@ def show_vplace(threat_id,d1,d2)
         end
     else
           html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"% "+(r.country || "")+"</p>"
-
+		  
     end
   end
-  
+  x=Time.now.to_f-now
+  html_string+="<p>TIME1:"+x.to_s+"</p>"
   return html_string.html_safe
 end
-def show_splace2(threat_id)
+def show_splace(threat_id,d1,d2)
  # return "skip"
   html_string = ""
   sum = 0
-
+  now=Time.now.to_f
   @source=ActiveRecord::Base.connection.execute("
 	SELECT src_ip, SUM( log_count ) total
 	FROM job_details
 	WHERE job_id
 	IN (
 		SELECT job_id
-		FROM temp_table2
-		WHERE threat_id ='#{threat_id}'
+		FROM job_logs
+		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' AND '#{d2}'
 	)
 	GROUP BY src_ip
 	ORDER by total DESC
-	")                  
+	")                  #temp_table2
   @source.each do |cnt|
 	sum = sum + cnt[1].to_i
   end
@@ -381,47 +366,12 @@ def show_splace2(threat_id)
     end
   end
   
+  x=Time.now.to_f-now
+  html_string+="<p>TIME2:"+x.to_s+"</p>"
+  
   return html_string.html_safe
 end
-def show_splace(threat_id,d1,d2)
- # return "skip"
-  html_string = ""
-  sum = 0
 
-  @source=ActiveRecord::Base.connection.execute("
-	SELECT src_ip, SUM( log_count ) total
-	FROM job_details
-	WHERE job_id
-	IN (
-		SELECT job_id
-		FROM job_logs
-		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' and '#{d2}'
-	)
-	GROUP BY src_ip
-	ORDER by total DESC
-	")                  
-  @source.each do |cnt|
-	sum = sum + cnt[1].to_i
-  end                     
-  
-  @source.each_with_index do |r , i|
-	break if i == 5
-    em =  IpMap.where("ip=?",r[0]).first 
-    percent  = 100*(r[1])/sum
-    if not em.blank?
-        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
-        if not build_map.blank?
-          html_string +="<p>("+r[0]+")"+build_map.building_name+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        else
-           html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        end
-    else
-          html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-    end
-  end
-  
-  return html_string.html_safe
-end
 
 def number_to_weekday(num)
   if num==1
@@ -472,59 +422,69 @@ def number_to_month(num)
     "ERROR"  
   end
 end
-def lalala(threat_id)
-  html_string = ""
-	@source=ActiveRecord::Base.connection.execute("SELECT job_id FROM temp_table2 WHERE threat_id='#{threat_id}' limit 5")
-	@source.each do |r|
-		html_string +="<p>("+r[0].to_s+")"
-    end
-  return html_string.html_safe;
-end
-def inside_session(threat_id)
-  @source=ActiveRecord::Base.connection.execute("SELECT count(job_id) FROM temp_table2 WHERE threat_id='#{threat_id}'")
-  return @source.first[0]
-  #return JobLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
+
+def inside_session(threat_id,d1,d2)
+  html_string=""
+  now=Time.now.to_f
+  #@source=ActiveRecord::Base.connection.execute("SELECT count(job_id) FROM temp_table2 WHERE threat_id='#{threat_id}'")
+  #return @source.first[0]
+  html_string+=JobLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count.to_s
+  x=Time.now.to_f-now
+  
+  html_string+="<p>TIME:"+x.to_s+"</p>"
+  return html_string.html_safe
+  
 end
 def outside_session(threat_id,d1,d2)
-  return OutsideLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
+
+  html_string=""
+  now=Time.now.to_f
+  html_string+=OutsideLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count.to_s
+  
+  x=Time.now.to_f-now
+  html_string+="<p>TIME:"+x.to_s+"</p>"
+  
+  return html_string.html_safe
 end 
+
 
 def outside_splace(threat_id,d1,d2)	         
   html_string = ""
-#   @source=ActiveRecord::Base.connection.execute("
-#	SELECT src_ip,country, SUM( sum ) total
-#	FROM outside_counts
-#	WHERE id
-#	IN (
-#		SELECT outside_counts_id
-#		FROM outside_logs
-#		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' and '#{d2}'
-#	)
-#	GROUP BY src_ip
-#	ORDER by total DESC
-#	")        
-  @source = OutsideLog.find(
-       :all,
-       :select => 'country,src_ip ,SUM(1) total',
-       :group => 'src_ip',
-       :conditions => ["threat_id=? and log_time between ? and ? ",threat_id,d1,d2],
-       :order => 'total DESC',
-       :limit => 5)
- sum = 0       
- @source.each do |cnt|
-    sum = sum + cnt.total.to_i
- end   
- 
- @source.each do |r| 
-    percent  = 100*(r.total.to_i)/sum  
-    html_string +="<p>"+r.src_ip+"("+r.country+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>\n"
+  now=Time.now.to_f
+  @source=ActiveRecord::Base.connection.execute("
+	SELECT src_ip , country , SUM(sum) total
+	FROM outside_counts
+	WHERE id
+	IN (
+		SELECT outside_counts_id
+		FROM outside_logs
+		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' AND '#{d2}'
+	)
+	GROUP BY src_ip
+	ORDER by total DESC
+	") # LIMIT 5
+  sum = 0       
+  @source.each do |cnt|
+    sum = sum + cnt[2].to_i
+  end
+   @source.each_with_index do |r , i|
+	break if i == 5
+    percent  = 100*(r[2]).to_i/sum  
+    html_string +="<p>"+r[0]+"("+(r[1]||"")+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>\n"
   end
   
-  return html_string.html_safe    
+  x=Time.now.to_f-now
+  html_string+="<p>TIME:"+x.to_s+"</p>"
+  
+  return html_string.html_safe
 end
+
+
+
 
 def outside_vplace(threat_id,d1,d2)
   html_string = ""
+  now=Time.now.to_f
   @victim = OutsideLog.find(
         :all,
         :select => 'victim_ip ,SUM(1) total',
@@ -551,6 +511,9 @@ def outside_vplace(threat_id,d1,d2)
           html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
     end
   end
+  
+  x=Time.now.to_f-now
+  html_string+="<p>TIME:"+x.to_s+"</p>"
   
   return html_string.html_safe  
 end
