@@ -193,7 +193,6 @@ ActiveRecord::Schema.define(:version => 20131231040311) do
   end
 
   add_index "job_logs", ["job_id"], :name => "index_job_logs_on_job_id"
-  add_index "job_logs", ["log_time"], :name => "log_time"
 
   create_table "job_messages", :force => true do |t|
     t.integer  "adm_user_id"
