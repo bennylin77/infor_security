@@ -47,7 +47,7 @@ def top10
       @d1 = @start
     end    
     @d2 = Time.strptime(params[:dp2],"%Y/%m/%d %H:%M")
-  
+    @beginsearchtime=Time.now
      # @res = JobLog.temp(params[:dp1],params[:dp2]) 
        @res = JobLog.find( :all,
                            :select => 'country,threat_id,SUM(1) total',
@@ -55,7 +55,7 @@ def top10
                            :conditions => ["log_time between ? and ? ",@d1,@d2],
                            :order => 'total DESC',
                            :limit => 10) 
-  	  JobLog.temp2(params[:dp1],params[:dp2])   
+  	 # JobLog.temp2(params[:dp1],params[:dp2])   
   end
 
 end
