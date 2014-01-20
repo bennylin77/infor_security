@@ -334,39 +334,41 @@ end
 def show_splace(threat_id,d1,d2,totalsession)
  # return "skip"
   html_string = ""
-
-  now=Time.now.to_f
-  @source=ActiveRecord::Base.connection.execute("
-	SELECT src_ip, SUM( log_count ) total
-	FROM job_details
-	WHERE job_id
-	IN (
-		SELECT job_id
-		FROM job_logs
-		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' AND '#{d2}'
-	)
-	GROUP BY src_ip
-	ORDER by total DESC
-	")                  #temp_table2
+  if totalsession!=0
+	  now=Time.now.to_f
+	  @source=ActiveRecord::Base.connection.execute("
+		SELECT src_ip, SUM( log_count ) total
+		FROM job_details
+		WHERE job_id
+		IN (
+			SELECT job_id
+			FROM job_logs
+			WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' AND '#{d2}'
+		)
+		GROUP BY src_ip
+		ORDER by total DESC
+		")                  #temp_table2
+	  
+	  @source.each_with_index do |r , i|
+		break if i == 5
+		em =  IpMap.where("ip=?",r[0]).first 
+		percent  = 100*(r[1])/totalsession
+		if not em.blank?
+			build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
+			if not build_map.blank?
+			  html_string +="<p>("+r[0]+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+			else
+			   html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+			end
+		else
+			  html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+		end
+	  end
+	  
+	  x=Time.now.to_f-now
+	  #html_string+="<p>TIME2:"+x.to_s+"</p>"
+  end  
   
-  @source.each_with_index do |r , i|
-	break if i == 5
-    em =  IpMap.where("ip=?",r[0]).first 
-    percent  = 100*(r[1])/totalsession.to_i
-    if not em.blank?
-        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
-        if not build_map.blank?
-          html_string +="<p>("+r[0]+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        else
-           html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        end
-    else
-          html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-    end
-  end
-  
-  x=Time.now.to_f-now
-  #html_string+="<p>TIME2:"+x.to_s+"</p>"
   
   return html_string.html_safe
 end
@@ -431,7 +433,7 @@ def inside_session(threat_id,d1,d2)
   x=Time.now.to_f-now
   
   #html_string+="<p>TIME:"+x.to_s+"</p>"
-  return html_string.html_safe
+  return html_string
   
 end
 def outside_session(threat_id,d1,d2)
@@ -443,7 +445,7 @@ def outside_session(threat_id,d1,d2)
   x=Time.now.to_f-now
   #html_string+="<p>TIME:"+x.to_s+"</p>"
   
-  return html_string.html_safe
+  return html_string
 end 
 
 
@@ -466,7 +468,7 @@ def outside_splace(threat_id,d1,d2,totalsession)
 
 	   @source.each_with_index do |r , i|
 		break if i == 5
-		percent  = 100*(r[2]).to_i/totalsession.to_i  
+		percent  = 100*(r[2]).to_i/totalsession  
 		html_string +="<p>"+r[0]+"("+(r[1]||"")+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>\n"
 	   end
 	  
@@ -496,7 +498,7 @@ def outside_vplace(threat_id,d1,d2,totalsession)
 	    
 	 
 	 @victim.each do |r| 
-		percent  = 100*(r.total)/totalsession.to_i
+		percent  = 100*(r.total)/totalsession
 		em =  IpMap.where("ip=?",r.victim_ip).first 
 		if not em.blank?
 			build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
@@ -573,17 +575,21 @@ def show_result(r,d1,d2,count)
 		insidesession=inside_session(r[countt].threat_id,d1,d2)
 		html<< '<div id="session_in_'+countt.to_s+'">'+insidesession+"</div>"
 		outsidesession=outside_session(r[countt].threat_id,d1,d2)
-		html<< '<div id="session_out_'+countt.to_s+'" style="display:none">'+outsidesession.to_s+"</div>"
+		html<< '<div id="session_out_'+countt.to_s+'" style="display:none">'+outsidesession+"</div>"
 		html<< "</td>"
 		html<< "<td>"
-		html<< '<div id="splace_in_'+countt.to_s+'">'+show_splace(r[countt].threat_id,d1,d2,insidesession)+"</div>"
-		html<< '<div id="splace_out_'+countt.to_s+'" style="display:none">'+outside_splace(r[countt].threat_id,d1,d2,outsidesession)+"</div>"
+		
+		html<< '<div id="splace_in_'+countt.to_s+'">'+show_splace(r[countt].threat_id,d1,d2,insidesession.to_i)+"</div>"
+		
+		html<< '<div id="splace_out_'+countt.to_s+'" style="display:none">'+outside_splace(r[countt].threat_id,d1,d2,outsidesession.to_i)+"</div>"
 		html<< "</td>"
 		html<< "<td>"
+		#showvplace=show_vplace(r[countt].threat_id,d1,d2)
 		html<< '<div id="vplace_in_'+countt.to_s+'">'+show_vplace(r[countt].threat_id,d1,d2)+"</div>"
-		html<< '<div id="vplace_out_'+countt.to_s+'" style="display:none">'+outside_vplace(r[countt].threat_id,@d1,@d2,outsidesession)+"</div>"
+		#outsidevplace=outside_vplace(r[countt].threat_id,@d1,@d2,outsidesession)
+		html<< '<div id="vplace_out_'+countt.to_s+'" style="display:none">'+outside_vplace(r[countt].threat_id,@d1,@d2,outsidesession.to_i)+"</div>"
 		html<< "</td>"
-		html<< '<td><a href="/statistics/show_chart?d1='+d1.to_s+"&d2="+d2.to_s+"&threat_id="+r[countt].threat_id.to_s+'">分佈圖</td>"'
+		html<< '<td><a href="/statistics/show_chart?d1='+d1.to_s+"&d2="+d2.to_s+"&threat_id="+r[countt].threat_id.to_s+'">chart</td>'
 		html<< "</tr>"
 		countt+=1
 	end
