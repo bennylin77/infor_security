@@ -39,14 +39,20 @@ end
 def top10
   @flag = 0
   if request.post?
+    
     @flag=1
     @start = Date.new(2013,5,1)
-    @d1 = Time.strptime(params[:dp1],"%Y/%m/%d %H:%M")
+	Time.zone='Taipei'
+	@d1 = Time.zone.parse(params[:dp1]).advance(:hours => 8).utc
+	
+	
+    #@d1 = Time.strptime(params[:dp1],"%Y/%m/%d %H:%M")
     
     if @d1 < @start
       @d1 = @start
     end    
-    @d2 = Time.strptime(params[:dp2],"%Y/%m/%d %H:%M")
+    #@d2 = Time.strptime(params[:dp2],"%Y/%m/%d %H:%M")
+	@d2 = Time.zone.parse(params[:dp2]).advance(:hours => 8).utc
     @beginsearchtime=Time.now
      # @res = JobLog.temp(params[:dp1],params[:dp2]) 
        @res = JobLog.find( :all,

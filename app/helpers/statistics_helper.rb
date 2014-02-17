@@ -336,27 +336,32 @@ def show_splace(threat_id,d1,d2,totalsession)
   html_string = ""
   if totalsession!=0
 	  now=Time.now.to_f
-	  #@source=ActiveRecord::Base.connection.execute("
-	#	SELECT src_ip, SUM( log_count ) total
-	#	FROM job_details
-	#	WHERE job_id
-	#	IN (
-	#		SELECT job_id
-	#		FROM job_logs
-	#		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' AND '#{d2}'
-	#	)
-	#	GROUP BY src_ip
-	#	ORDER by total DESC
-	#	")                 
+                
+	  # @source=ActiveRecord::Base.connection.execute("
+	  # SELECT src_ip,sum(log_count) total FROM(
+		# SELECT A.job_id,A.src_ip,A.log_count FROM job_details AS A
+		# LEFT JOIN job_logs AS B ON A.job_id=B.job_id
+		# WHERE B.threat_id=#{threat_id} AND log_time BETWEEN '#{d1}' AND '#{d2}'
+		# GROUP BY A.job_id
+		# )AS A
+	  # GROUP BY A.src_ip 
+	  # ORDER BY total  DESC
+	  # ")
 	  @source=ActiveRecord::Base.connection.execute("
-	  SELECT src_ip,sum(log_count) total FROM(
-		SELECT A.job_id,A.src_ip,A.log_count FROM job_details AS A
-		LEFT JOIN job_logs AS B ON A.job_id=B.job_id
-		WHERE B.threat_id=#{threat_id} AND log_time BETWEEN '#{d1}' AND '#{d2}'
-		GROUP BY A.job_id
+		SELECT src_ip,sum(total) sum_log_count FROM(
+			SELECT A.job_id,A.src_ip,B.total 
+			FROM job_details AS A 
+			RIGHT JOIN (
+				SELECT job_id,count(job_id) total 
+				FROM `job_logs` 
+				WHERE threat_id=#{threat_id} 
+				AND log_time BETWEEN '#{d1}' AND '#{d2}'
+				GROUP BY job_id
+			) AS B 
+			ON A.job_id=B.job_id
 		)AS A
-	  GROUP BY A.src_ip 
-	  ORDER BY total  DESC
+		GROUP BY src_ip
+		ORDER BY sum_log_count  DESC
 	  ")
 	  @source.each_with_index do |r , i|
 		break if i == 5
@@ -462,27 +467,21 @@ def outside_splace(threat_id,d1,d2,totalsession)
   html_string = ""
   if totalsession != 0 
 	  now=Time.now.to_f
-	  #@source=ActiveRecord::Base.connection.execute("
-	#	SELECT src_ip , country , SUM(sum) total
-	#	FROM outside_counts
-	#	WHERE id
-	#	IN (
-	#		SELECT outside_counts_id
-	#		FROM outside_logs
-	#		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' AND '#{d2}'
-	#	)
-	#	GROUP BY src_ip
-	#	ORDER by total DESC
-	#	") 
+	  # @source=ActiveRecord::Base.connection.execute("
+		# SELECT src_ip,country,sum(sum) total FROM(
+			# SELECT A.src_ip,A.country,A.sum FROM outside_counts AS A
+			# LEFT JOIN outside_logs AS B ON A.id=B.outside_counts_id
+			# WHERE B.threat_id=#{threat_id} AND log_time BETWEEN '#{d1}' AND '#{d2}'
+			# GROUP BY A.id
+			# )AS A
+		  # GROUP BY A.src_ip 
+		  # ORDER BY total  DESC
+	  # ")
 	  @source=ActiveRecord::Base.connection.execute("
-		SELECT src_ip,country,sum(sum) total FROM(
-			SELECT A.src_ip,A.country,A.sum FROM outside_counts AS A
-			LEFT JOIN outside_logs AS B ON A.id=B.outside_counts_id
-			WHERE B.threat_id=#{threat_id} AND log_time BETWEEN '#{d1}' AND '#{d2}'
-			GROUP BY A.id
-			)AS A
-		  GROUP BY A.src_ip 
-		  ORDER BY total  DESC
+		SELECT src_ip,country,count(src_ip) sum_log_count FROM `outside_logs` 
+		WHERE threat_id=#{threat_id} AND log_time BETWEEN '#{d1}' AND '#{d2}'
+		GROUP BY src_ip
+		ORDER BY sum_log_count DESC
 	  ")
 	   @source.each_with_index do |r , i|
 		break if i == 5
