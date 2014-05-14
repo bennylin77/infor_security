@@ -9,9 +9,9 @@
 <br><br>
 2.<br> <%= radio_button("chtime", "category", 1)%>指定時段 : 
  From
-<%= text_field_tag :d1,Time.now.ago(1.month).strftime("%Y/%m/%d %H:%M")%>
+<%= text_field_tag :d1,Time.now.ago(1.month).strftime("%m/%d/%Y %H:%M")%>
  To 
- <%= text_field_tag :d2,Time.now.strftime("%Y/%m/%d %H:%M")%>
+ <%= text_field_tag :d2,Time.now.strftime("%m/%d/%Y %H:%M")%>
   <br> <%= radio_button("chtime", "category", 0,checked:true)%>不指定  <font color="ff0000">* 起點為2013/5/1   </font>
 <br>
 <br>
@@ -28,13 +28,13 @@
 
 <script type="text/javascript">
 $('#d1').datetimepicker({	
-  	dateFormat: 'yy/mm/dd',
+  	dateFormat: 'mm/dd/yy',
   	showOn: "button",
 		buttonImage: "<%=image_path("calendar.png")%>",
 		buttonImageOnly: true
   });
    $('#d2').datetimepicker({
-   	dateFormat: 'yy/mm/dd',
+   	dateFormat: 'mm/dd/yy',
    	showOn: "button",
 	buttonImage: "<%=image_path("calendar.png")%>",
 	buttonImageOnly: true
