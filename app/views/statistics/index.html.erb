@@ -1,9 +1,11 @@
 <%= form_tag do%>
 	<!---  radio_button(一組name(array name) ,array index , index value)  --->
  <h1>Output form : </h1>
-1.<br> List  By 狀態<%= radio_button("chbox", "category", 0,checked:true)%>  <br>
-       List  By 系所<%=radio_button("chbox", "category", 1)%>  <br>
-	   List  By 事件<%=radio_button("chbox", "category", 2)%>
+1.<br> List  By 狀態<%= radio_button("chbox", "category", 0,checked:true, :onchange=>"showlist(0);")%>  <br>
+       List  By 系所<%=radio_button("chbox", "category", 1, :onchange=>"showlist(0);")%>  <br>
+	   List  By 事件<%=radio_button("chbox", "category", 2, :onchange=>"showlist(0);")%> <br>
+	   List  By 事件等級<%=radio_button("chbox", "category", 3, :onchange=>"showlist(1);")%>
+	 <!--  <%= select_tag "serverity", options_for_select(@serverity) %> -->
 <br><br>
 2.<br> <%= radio_button("chtime", "category", 1)%>指定時段 : 
  From
@@ -25,10 +27,23 @@
 <%end%>
 
 <script type="text/javascript">
+/*
+$(function(){$("#serverity").hide();});
   $('#dp1').datetimepicker({	
   });
    $('#dp2').datetimepicker({
   });
+  function showlist(show){
+	if(show==1){
+		$("#serverity").show();
+		show=1;
+	}
+	else{
+		$("#serverity").hide();
+		show=0;
+	}
+  }
+  */
 </script>
 <br>
 

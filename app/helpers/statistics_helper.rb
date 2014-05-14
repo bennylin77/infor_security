@@ -115,7 +115,9 @@ def count_stage(jobs)
 	total
 	
 end
+def count_serverity(jobs)
 
+end
 def count_dep(jobs)
 	list = LinkedList.new('nil',0)
 	params[:labels] = Array.new
@@ -611,6 +613,18 @@ def show_result(r,d1,d2,count)
 		countt+=1
 	end
 	return html.html_safe
+end
+
+def count_serverity(serverity,res)
+	cnt = 0
+	res.each do |job_detail|
+		JobThreat.where(:job_id=>job_detail.id).each do |jth|			
+			if jth.serverity==serverity
+				cnt+=1
+			end
+		end 
+	end
+	return cnt.to_s
 end
 
 end

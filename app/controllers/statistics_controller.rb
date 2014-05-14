@@ -3,7 +3,17 @@ include StatisticsHelper
 
 def index
 	@Res=JobDetail.find(:all,:joins=>:job,:conditions=>['((alert=1 and log_count>=1000) or (alert=0 and log_count>=5)) and jobs.always_handle=1 and jobs.deleted=0 and job_details.updated_at>= ?',DateTime.now.ago(7.day)])
+	#@serverity=JobThreat.find(:all,
+							  #:select=>'DISTINCT serverity as a')
+	@serverity=Array.new
+	@serverity.push(['informational',"informational"])
+	@serverity.push(['high',"high"])
+	@serverity.push(['medium',"medium"])
+	@serverity.push(['low',"low"])
+	@serverity.push(['critical',"critical"])
 
+	
+	
 end
 def create
 	@date=params[:chbox][:category]
