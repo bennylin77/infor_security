@@ -231,6 +231,44 @@ def showAllThreatsName(jobs)
 	message.html_safe
 end
 
+def showTargetThreatsName(jobs, serverity)
+	message = ""
+	jobs.job.job_threats.each do |t|
+		if t.serverity==serverity
+			event = EventMap.find_by_thread_id(t.threat_id)
+			if !event.nil?   
+				if !event.name.blank? 
+			  		message=message+'('+t.threat_id.to_s+')'+event.name  
+				else
+			  		message=message+'('+t.threat_id.to_s+')'+'--'    
+				end 
+			
+				if !event.chinese_name.blank? 
+			  		message=message+'/'+event.chinese_name  
+				else
+			  		message=message+'/'+'--'         
+				end
+			else
+				message=message+'('+t.threat_id.to_s+')'+'--/--'   
+			end     
+			message=message+'<br>'
+		end #if serverity  
+	end
+	message.html_safe
+end
+
+def targetThreatCount(jobs, serverity)
+	cnt = 0
+	jobs.each do |j|
+		j.job.job_threats.each do |t|
+			if t.serverity==serverity
+				cnt +=1
+			end #if serverity  
+		end
+	end
+	return cnt
+end
+
 def check_finish(job)
 	if job.job.stage5=='finish'
 		job.job.s_closed.done_at.to_s
