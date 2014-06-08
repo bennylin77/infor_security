@@ -277,6 +277,55 @@ def check_finish(job)
 	end
 end
 
+
+def outsideQueryTime(time_start, time_end, ip_cond, serverity)
+	if time_start.blank?
+		return OutsideLog.find(:all,
+					:conditions=>['victim_ip REGEXP ? AND serverity = ?', ip_cond, serverity],
+					:group=>'outside_counts_id, threat_id'
+					)
+	else
+		return OutsideLog.find(:all,
+					:conditions=>['created_at BETWEEN ? AND ? victim_ip REGEXP ? AND serverity = ?', time_start, time_end, ip_cond, serverity],
+					:group=>'outside_counts_id, threat_id'
+					)
+	end
+end
+def threatMap(id)
+	map = EventMap.where("thread_id=?",id).first || nil
+	if map 
+		return map.name.to_s
+	else
+		return "(No Mapping)"
+	end	 
+
+end
+
+#### no use
+def outsideResCount(res, ip_str, serverity)
+	ip_str_split = ip_str.split('.')
+	cnt = 0
+	res.each do |e|
+		OutsideLog.where(:outside_counts_id=>e.id).each do |l|
+			flag = 1
+			ip_split = l.victim_ip.split('.')
+			for i in 0..3 
+				if ip_split[i]==ip_str_split[i] or ip_str_split[i]=='*'
+					######
+				else
+					flag = 0
+				end
+			end
+			if l.serverity != serverity 
+				flag = 0
+			end
+			cnt += flag
+		end	 
+	end
+	return cnt.to_s
+end
+####
+
 def day7_image(job)
 	list = LinkedList.new('nil',0)
 	params[:labels7] = Array.new
