@@ -1,4 +1,4 @@
-<table style="filter:Alpha(Opacity=20, FinishOpacity=80, Style=1)" border=1 width=60% ;background-color: rgb(255, 255, 255)>
+<table style="filter:Alpha(Opacity=20, FinishOpacity=80, Style=1)" border=1 ;background-color: rgb(255, 255, 255)>
 <tbody>
 <%if params[:chtime][:category]=='1'%>
 	<tr><td colspan=5 bgcolor=#FFCC99>時間 : <font color="ff0000"> <%=params[:d1]%>~<%=params[:d2]%> </font></td></tr>
@@ -29,7 +29,7 @@
 					<td><b><%=check_dep(j)%></b></td>		
 					<td><b><%=j.src_ip.to_s%></b></td>					
 			    	<td><b><%=threat%></b></td>
-					<td><b><%=j.job.created_at.to_s%></b></td>
+					<td><b><%=j.job.created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")%></b></td>
 					<td><b><%=check_finish(j)%></b></td>
 			 	</tr>		
 			 <%end%> 
@@ -43,22 +43,25 @@
 		   <td bgcolor=#006633><font color=#fffff>來源國家</font></td>
 		   <td bgcolor=#006633><font color=#fffff>事件來源端IP</font></td>
 		   <td bgcolor=#006633><font color=#fffff>事件名稱</font></td>   	 	
-
+		   <td bgcolor=#006633><font color=#fffff>發生時間</font></td>
 		</tr>
 			<%tmp = 0%>
 			<%@outsideRes.each do |o|%>
 				<%if o.outside_counts_id != tmp%>
+				<%if tmp!=0%>
+			<td><%=OutsideCount.find(o.outside_counts_id).created_at.to_s%>
+				<%end%>
 					<%tmp = o.outside_counts_id%>
 		<tr>			
-			<td><%=o.country%>
-			<td><%=o.src_ip%>
+			<td><%=o.country%></td>
+			<td><%=o.src_ip%></td>
 			<td><%=o.threat_id.to_s%> <%=threatMap(o.threat_id)%>
 				<%else%>
 					</br> <%=o.threat_id.to_s%> <%=threatMap(o.threat_id)%>
 					<%next%>
 				<%end%>
 			<%end%>
-		
+			<td><%=OutsideCount.find(@outsideRes.last.outside_counts_id).created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S %Z")%></td>
 </tbody>		
 
 </table>

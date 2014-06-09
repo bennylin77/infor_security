@@ -271,7 +271,7 @@ end
 
 def check_finish(job)
 	if job.job.stage5=='finish'
-		job.job.s_closed.done_at.to_s
+		job.job.s_closed.done_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")
 	else
 		'Processing'
 	end
