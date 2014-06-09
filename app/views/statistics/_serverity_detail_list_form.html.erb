@@ -49,7 +49,7 @@
 			<%@outsideRes.each do |o|%>
 				<%if o.outside_counts_id != tmp%>
 				<%if tmp!=0%>
-			<td><%=OutsideCount.find(o.outside_counts_id).created_at.to_s%>
+			<td><%=OutsideCount.find(o.outside_counts_id).created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")%>
 				<%end%>
 					<%tmp = o.outside_counts_id%>
 		<tr>			
@@ -61,7 +61,7 @@
 					<%next%>
 				<%end%>
 			<%end%>
-			<td><%=OutsideCount.find(@outsideRes.last.outside_counts_id).created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S %Z")%></td>
+			<td><%=OutsideCount.find(@outsideRes.last.outside_counts_id).created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")%></td>
 </tbody>		
 
 </table>
