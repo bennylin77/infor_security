@@ -286,7 +286,7 @@ def outsideQueryTime(time_start, time_end, ip_cond, serverity)
 					)
 	else
 		return OutsideLog.find(:all,
-					:conditions=>['created_at BETWEEN ? AND ? victim_ip REGEXP ? AND serverity = ?', time_start, time_end, ip_cond, serverity],
+					:conditions=>['created_at BETWEEN ? AND ? AND victim_ip REGEXP ? AND serverity = ?', time_start, time_end, ip_cond, serverity],
 					:group=>'outside_counts_id, threat_id'
 					)
 	end

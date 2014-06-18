@@ -61,7 +61,11 @@
 					<%next%>
 				<%end%>
 			<%end%>
-			<td><%=OutsideCount.find(@outsideRes.last.outside_counts_id).created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")%></td>
+			<td>
+				<%unless @outsideRes.last.blank?%>
+			<%=OutsideCount.find(@outsideRes.last.outside_counts_id).created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")%>
+				<%end%>
+			</td>
 </tbody>		
 
 </table>

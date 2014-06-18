@@ -22,7 +22,7 @@ def create
 	@ip_for_cond = params[:ip1]+'\.'+params[:ip2]+'\.'+params[:ip3]+'\.'+params[:ip4]
 	@ip_org = params[:ip1]+'.'+params[:ip2]+'.'+params[:ip3]+'.'+params[:ip4]
 	@specify_time = params[:chtime][:category].to_i
-	logger.debug "[DEBUG] SPEC:"+@specify_time.to_s+"  params:"+params[:chtime][:category].to_s
+#	logger.debug @ip_for_cond
 	@time_start = nil
 	@time_end = nil		
 	if @specify_time==1  #target time specify
