@@ -22,11 +22,17 @@
 <%= text_field_tag :ip4, '*', :maxlength => 3, :size => 1%>  ( * 或 不填入 為不指定)
   <br> <%= radio_button("chip", "category", 0,checked:true)%>不指定
 <br><br>
-<%=submit_tag "查詢" %><br><br>
+<%=submit_tag "查詢",:id=>"sub_but", :onclick => "return loadingStr(this);"%><br><br>
 
 <%end%>
-
+ 
 <script type="text/javascript">
+
+function loadingStr(but){
+	$("#sub_but").val("Loading..");
+	//$("#sub_but").disabled = true ;
+}
+
 $('#d1').datetimepicker({	
   	dateFormat: 'mm/dd/yy',
   	showOn: "button",
