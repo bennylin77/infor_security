@@ -7,12 +7,12 @@
 	   List  By 事件等級<%=radio_button("chbox", "category", 3, :onclick=>"showlist(1)")%>
 	   <%= select_tag "serverity", options_for_select(@serverity) %> 
 <br><br>
-2.<br> <%= radio_button("chtime", "category", 1)%>指定時段 : 
+2.<br> <%= radio_button("chtime", "category", 1, checked:true)%>指定時段 : 
  From
 <%= text_field_tag :d1,Time.now.ago(1.month).strftime("%m/%d/%Y %H:%M")%>
  To 
  <%= text_field_tag :d2,Time.now.strftime("%m/%d/%Y %H:%M")%>
-  <br> <%= radio_button("chtime", "category", 0,checked:true)%>不指定  <font color="ff0000">* 起點為2013/5/1   </font>
+  <br> <%= radio_button("chtime", "category", 0)%>不指定  <font color="ff0000">* 起點為2013/5/1   </font>
 <br>
 <br>
 3.<br> <%= radio_button("chip", "category", 1)%>指定ip網段 :  
