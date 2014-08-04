@@ -31,11 +31,16 @@
 					<%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.building)%>
 	                <li><%=link_to '校區建築列表' , campus_buildings_lists_path %></li>
 	                <%end%>
-					 <li><%=link_to '統計' , statistics_path %></li>
-					  <li><%=link_to 'Top10統計' , {:controller=>:statistics, :action=>:top10} %></li>
+					 
 					  
 	            </ul>
-	        </li> 	    
+	        </li> 	
+	        <li><a href="#">統計</a>
+	        	<ul>
+					<li><%=link_to '統計' , statistics_path %></li>
+					<li><%=link_to 'Top10統計' , {:controller=>:statistics, :action=>:top10} %></li>
+	            </ul>
+	        </li>    
 	        <li><a href="#">意見回饋</a>
 	        	<ul>
 					<li><%=link_to '意見回饋' , {:controller=>:main, :action=>:comment}%></li>     
