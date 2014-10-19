@@ -19,7 +19,7 @@ require "time"
 				if data[:log_time]
 					@fire = FireeyeLog.new(:event_level=>data[:event_level], :event_id=>data[:event_id],
 						:malware_name=>data[:malware_name], :src_ip=>data[:src_ip], :dst_ip=>data[:dst_ip],
-						:log_time=>data[:log_time])		
+						:log_time=>data[:log_time], :receive_from=>data[:received])		
 					@fire.save!
 					data.clear
 				end	
@@ -90,10 +90,12 @@ require "time"
 			end	
 
 		end
-		@fire = FireeyeLog.new(:event_level=>data[:event_level], :event_id=>data[:event_id],
-			:malware_name=>data[:malware_name], :src_ip=>data[:src_ip], :dst_ip=>data[:dst_ip],
-			:log_time=>data[:log_time])		
-		@fire.save!
+		if data[:received]
+			@fire = FireeyeLog.new(:event_level=>data[:event_level], :event_id=>data[:event_id],
+				:malware_name=>data[:malware_name], :src_ip=>data[:src_ip], :dst_ip=>data[:dst_ip],
+				:log_time=>data[:log_time], :receive_from=>data[:received])		
+			@fire.save!
+		end
 
 		# clear log content
 		File.open('/var/mail/inform', 'w') {|file| file.truncate(0) }
