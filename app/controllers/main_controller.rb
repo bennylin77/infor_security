@@ -192,7 +192,7 @@ end
       if !@job.ip_map.adm_user.blank?      
         if !@job.s_inform.log_level.blank?
           SystemMailer.informUserSending(@job.ip_map.adm_user, @job).deliver 
-		  if @job.ip_map.adm_user.name == "張育群" and ( @job.ip_map.ipv4_3 == 88 or @job.ip_map.ipv4_3 == 241 )
+		  if @job.ip_map.adm_user.name == "張育群" and ( @job.ip_map.IPv4_3 == 88 or @job.ip_map.IPv4_3 == 241 )
 			SystemMailer.specInform("hsshiue@eic.nctu.edu.tw", @job).deliver
 		  end
           if @job.s_inform.informed_at.blank?

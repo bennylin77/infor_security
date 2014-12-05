@@ -99,5 +99,10 @@ namespace :LogServer do
  			#p rb_file
 		end	
 	end
+	
+	desc "just test"
+	task :test=> :environment do
+		p IpMap.find(1).IPv4_4
+	end
 
 end
