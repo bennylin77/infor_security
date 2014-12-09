@@ -4,7 +4,20 @@ namespace :splunk do
 
 	desc "dump log files from splunk server"
 	task :dump do
-		p " I'm dump :/ "
+require 'net/ssh'
+require 'net/ssh/shell'
+
+		host = "192.168.0.154"
+		user = "itop"
+		psw = "itop%@*^!"		
+		time_range = Time.now.ago(1.hour).strftime("%Y/%m/%d@%H")
+		cmd = "ftp export log threat passive-mode equal yes start-time equal #{time_range}:00:00 end-time equal #{time_range}:59:59 to Gway:qazwsx1234@140.113.27.249"
+		test_cmd = "netstat"
+		
+		Net::SSH.start(host, user, :password=>psw) do |session|   # , :verbose=> :debug
+			p cmd 
+			ssh_exec!(session, cmd).inspect 
+		end
 	end
 
 	desc "parse log file dat to DB"
@@ -58,6 +71,40 @@ namespace :splunk do
 	end
 
 private
+	
+	def ssh_exec!(ssh, command)
+	  stdout_data = ""
+	  stderr_data = ""
+	  exit_code = nil
+	  exit_signal = nil
+	  ssh.open_channel do |channel|
+		channel.send_channel_request "shell" do |ch,success|
+		  unless success
+			abort "FAILED: couldn't execute command (ssh.channel.exec)"
+		  end
+		  ch.send_data "#{command}\n"
+		  channel.on_data do |ch,data|
+		puts "stdout:#{data}"
+			stdout_data+=data
+			channel.close
+		  end
+
+		  channel.on_extended_data do |ch,type,data|
+			stderr_data+=data
+		puts "got stderr:#{data}"
+		  end
+		  channel.on_request("exit-status") do |ch,data|
+			exit_code = data.read_long
+		puts "EXIT-STATUS!!!\n"
+		  end
+
+		  channel.on_request("exit-signal") do |ch, data|
+			exit_signal = data.read_long
+		puts "EXIT-SIGNAL!!!\n"
+		  end
+		end
+	  end
+	end
 	
 	def job_detail_new(row)
 	
