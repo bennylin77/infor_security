@@ -512,7 +512,7 @@ end
   end
 #================================================================================================================================for auto mail  
   def self.dailyMail
-    @jobs=Job.find(:all, :conditions => [" deleted = ? and ( (log_count >= 5 and alert <> ?) or (log_count >= 1000 and alert <> ?) )", false, true, false], :joins => :job_detail) 
+    @jobs=Job.find(:all, :conditions => [" deleted = ? and ( (isflood_scan=1 and log_count>50) or (isflood_scan=1 and alert <> ?) or (log_count >= 1000 and alert <> ?) )", false, true, false], :joins => :job_detail) 
     @jobs.each do |j| 
       if (j.stage1=='un' or j.stage1=='returned') and j.stage5=='un'     
         if (Time.now - j.created_at.in_time_zone('UTC') )/60/60/24 > 3    
