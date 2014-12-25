@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140116094448) do
+ActiveRecord::Schema.define(:version => 20141225071942) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -138,6 +138,18 @@ ActiveRecord::Schema.define(:version => 20140116094448) do
     t.string   "threat_type"
   end
 
+  create_table "fireeye_logs", :force => true do |t|
+    t.string   "event_level"
+    t.integer  "event_id"
+    t.string   "malware_name"
+    t.string   "src_ip"
+    t.string   "dst_ip"
+    t.datetime "log_time"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.string   "receive_from"
+  end
+
   create_table "ip_maps", :force => true do |t|
     t.string   "ip"
     t.integer  "IPv4_1"
@@ -171,10 +183,11 @@ ActiveRecord::Schema.define(:version => 20140116094448) do
     t.string   "src_ip"
     t.integer  "log_count"
     t.date     "log_date"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.boolean  "alert"
     t.string   "region"
+    t.integer  "isflood_scan", :default => 0
   end
 
   add_index "job_details", ["job_id"], :name => "index_job_details_on_job_id"
@@ -194,12 +207,9 @@ ActiveRecord::Schema.define(:version => 20140116094448) do
   end
 
   add_index "job_logs", ["job_id"], :name => "index_job_logs_on_job_id"
-<<<<<<< HEAD
-=======
   add_index "job_logs", ["log_time"], :name => "index_job_logs_on_log_time"
   add_index "job_logs", ["threat_id"], :name => "index_job_logs_on_threat_id"
   add_index "job_logs", ["victim_ip"], :name => "index_job_logs_on_victim_ip"
->>>>>>> origin/beta
 
   create_table "job_messages", :force => true do |t|
     t.integer  "adm_user_id"
