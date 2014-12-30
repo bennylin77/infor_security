@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.6'
+gem 'rails', '3.2.12'
 gem 'mysql2'
 gem 'ckeditor'
-gem "paperclip"
+gem 'paperclip'
 gem 'googlecharts'
 
 group :assets do
@@ -18,3 +18,5 @@ gem 'rails-i18n'
 gem 'will_paginate', '~> 3.0'
 gem 'whenever', :require => false
 
+gem 'execjs'
+gem 'therubyracer', :platforms => :ruby
