@@ -1,7 +1,7 @@
 <h1>新增資安事件工作</h1>
 *必填
 <%=form_tag do%>
-			通報來源:<br><%=select_tag :from,  options_for_select([["email", 'email'], ["PA手動",'PA手動'], ["教育部",'教育部'], ["警察局", '警察局'], ["法院", '法院'], ["友校", '友校'], ["其它", '其它'] ]), {:include_blank => '請選擇..'} %><br>
+			通報來源:<br><%=select_tag :from,  options_for_select([["email", 'email'], ["Splunk", 'Splunk'], ["PA手動",'PA手動'], ["教育部",'教育部'], ["警察局", '警察局'], ["法院", '法院'], ["友校", '友校'], ["其它", '其它'] ]), {:include_blank => '請選擇..'} %><br>
 			*事件發生時間:<br><%=text_field_tag :log_date, Time.now.strftime("%m/%d/%Y") ,{:readonly => true}%><br>
 			*事件來源端IP Address:<br><%=text_field_tag :src_ip%><br>
 	  		*事件動作:<br><%= select_tag :alert ,options_for_select([['alert',true],['非alert',false]])%><br>		

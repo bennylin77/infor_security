@@ -1,0 +1,66 @@
+<h1>IP - Switch IP 查詢:</h1>
+<%if permissionRead(AdmUser.find_by_id(session[:adm_user_id]).permission_config.ip)%>
+	<%= form_tag '/ip_switch/search', :method =>:get do %>
+		<%= text_field  :search, :term, :size=>35 %>
+		<%= submit_tag "搜尋" %>
+	<% end %>
+<% end %>
+
+<br>
+<% if @ip_maps %>
+<% @ip_maps.each do |ip_map| %>
+<span style = "font-size:1.2em;">
+IP: <%= ip_map.IPv4_1 %>.<%= ip_map.IPv4_2 %>.<%= ip_map.IPv4_3 %>.<%= ip_map.IPv4_4 %>
+<br>
+校區建築: 
+	<%if !ip_map.campus_buildings_list_id.blank?%>   	
+    	<%= CampusBuildingsList.find(ip_map.campus_buildings_list_id).campus_name+"-"+CampusBuildingsList.find(ip_map.campus_buildings_list_id).building_name %>
+	<%else%>
+    	無
+	<%end%>
+<br>
+房間: <%= ip_map.room %>
+<br>
+使用者: <%= ip_map.user %>
+<br>
+網管人員: 
+	<%if !ip_map.adm_user_id.blank?%>
+    	<%= AdmUser.find(ip_map.adm_user_id).name %>
+	<%else%>
+    	無
+	<%end%>
+<br>
+使用人分機: <%= ip_map.extend %>
+<br>
+
+<br>
+<table border="1" id="ip_maps_table">
+  <tr>
+  	<th>MAC</th>
+  	<th>Switch IP</th>
+    <th>Interface</th>
+    <th>startTime</th>
+    <th>endTime</th>
+  </tr>
+<%if @switch_ip %>
+<% @switch_ip.each do |row|%>
+  <tr>
+  	<td> &nbsp; <span style = "font-size:1.2em;"><%= row[1] %></span> &nbsp; </td> 	
+    <td> &nbsp; <span style = "font-size:1.2em;"><%= row[5] %></span> &nbsp; </td>
+    <td> &nbsp; <span style = "font-size:1.2em;"><%= row[2] %></span> &nbsp; </td>
+    <td> &nbsp; <span style = "font-size:1.2em;"><%= row[3] %></span> &nbsp; </td>
+    <td> &nbsp; <span style = "font-size:1.2em;"><%= row[4] %></span> &nbsp; </td>
+  </tr>
+<% end %>
+<% end %>
+</table>
+<%end%>
+</span>
+
+<% else %>
+請輸入完整IP
+<%end%>
+<br>
+<%if  @switch_ip.kind_of?(Array)%>
+<div class="apple_pagination"><%= will_paginate(@switch_ip) %></div>
+<%end%>

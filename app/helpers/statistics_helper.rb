@@ -115,7 +115,9 @@ def count_stage(jobs)
 	total
 	
 end
+def count_serverity(jobs)
 
+end
 def count_dep(jobs)
 	list = LinkedList.new('nil',0)
 	params[:labels] = Array.new
@@ -229,13 +231,100 @@ def showAllThreatsName(jobs)
 	message.html_safe
 end
 
+def showTargetThreatsName(jobs, serverity)
+	message = ""
+	jobs.job.job_threats.each do |t|
+		if t.serverity==serverity
+			event = EventMap.find_by_thread_id(t.threat_id)
+			if !event.nil?   
+				if !event.name.blank? 
+			  		message=message+'('+t.threat_id.to_s+')'+event.name  
+				else
+			  		message=message+'('+t.threat_id.to_s+')'+'--'    
+				end 
+			
+				if !event.chinese_name.blank? 
+			  		message=message+'/'+event.chinese_name  
+				else
+			  		message=message+'/'+'--'         
+				end
+			else
+				message=message+'('+t.threat_id.to_s+')'+'--/--'   
+			end     
+			message=message+'<br>'
+		end #if serverity  
+	end
+	message.html_safe
+end
+
+def targetThreatCount(jobs, serverity)
+	cnt = 0
+	jobs.each do |j|
+		j.job.job_threats.each do |t|
+			if t.serverity==serverity
+				cnt +=1
+			end #if serverity  
+		end
+	end
+	return cnt
+end
+
 def check_finish(job)
 	if job.job.stage5=='finish'
-		job.job.s_closed.done_at.to_s
+		job.job.s_closed.done_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")
 	else
 		'Processing'
 	end
 end
+
+
+def outsideQueryTime(time_start, time_end, ip_cond, serverity)
+	if time_start.blank?
+		return OutsideLog.find(:all,
+					:conditions=>['victim_ip REGEXP ? AND serverity = ?', ip_cond, serverity],
+					:group=>'outside_counts_id, threat_id'
+					)
+	else
+		return OutsideLog.find(:all,
+					:conditions=>['created_at BETWEEN ? AND ? AND victim_ip REGEXP ? AND serverity = ?', time_start, time_end, ip_cond, serverity],
+					:group=>'outside_counts_id, threat_id'
+					)
+	end
+end
+def threatMap(id)
+	map = EventMap.where("thread_id=?",id).first || nil
+	if map 
+		return map.name.to_s
+	else
+		return "(No Mapping)"
+	end	 
+
+end
+
+#### no use
+def outsideResCount(res, ip_str, serverity)
+	ip_str_split = ip_str.split('.')
+	cnt = 0
+	res.each do |e|
+		OutsideLog.where(:outside_counts_id=>e.id).each do |l|
+			flag = 1
+			ip_split = l.victim_ip.split('.')
+			for i in 0..3 
+				if ip_split[i]==ip_str_split[i] or ip_str_split[i]=='*'
+					######
+				else
+					flag = 0
+				end
+			end
+			if l.serverity != serverity 
+				flag = 0
+			end
+			cnt += flag
+		end	 
+	end
+	return cnt.to_s
+end
+####
 
 def day7_image(job)
 	list = LinkedList.new('nil',0)
@@ -267,28 +356,12 @@ def day7_image(job)
 end
 
 #######
-def show_vplace2(threat_id)
-  # return "skip"
-  html_string = ""
-  
-  sum = 0
-  @source=ActiveRecord::Base.connection.execute("
-	SELECT victim_ip ,SUM(1) total 
-	FROM temp_table2
-	WHERE threat_id='#{threat_id}' and victim_ip  REGEXP '^140.113'
-	GROUP BY victim_ip
-	ORDER BY total DESC 
-	LIMIT 3")
- 
- 
-  
-  return html_string.html_safe
-end
+
 def show_vplace(threat_id,d1,d2)
   # return "skip"
   html_string = ""
-  
-  sum = 0
+  now=Time.now.to_f
+  #
   @victim_inner = JobLog.find(
                       :all,
                       :select => 'victim_ip ,SUM(1) total',
@@ -303,6 +376,7 @@ def show_vplace(threat_id,d1,d2)
                       :conditions => ["threat_id=? and victim_ip NOT REGEXP '^140.113' and log_time between ? and ?",threat_id,d1,d2],
                       :order => 'total DESC',
                       :limit => 3)   
+  sum = 0
   @victim_inner.each do |r|
     sum = sum + r.total
   end                    
@@ -339,89 +413,69 @@ def show_vplace(threat_id,d1,d2)
         end
     else
           html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"% "+(r.country || "")+"</p>"
-
+		  
     end
   end
-  
+  x=Time.now.to_f-now
+  #html_string+="<p>TIME1:"+x.to_s+"</p>"
   return html_string.html_safe
 end
-def show_splace2(threat_id)
+def show_splace(threat_id,d1,d2,totalsession)
  # return "skip"
   html_string = ""
-  sum = 0
-
-  @source=ActiveRecord::Base.connection.execute("
-	SELECT src_ip, SUM( log_count ) total
-	FROM job_details
-	WHERE job_id
-	IN (
-		SELECT job_id
-		FROM temp_table2
-		WHERE threat_id ='#{threat_id}'
-	)
-	GROUP BY src_ip
-	ORDER by total DESC
-	")                  
-  @source.each do |cnt|
-	sum = sum + cnt[1].to_i
-  end
-  @source.each_with_index do |r , i|
-	break if i == 5
-    em =  IpMap.where("ip=?",r[0]).first 
-    percent  = 100*(r[1])/sum
-    if not em.blank?
-        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
-        if not build_map.blank?
-          html_string +="<p>("+r[0]+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        else
-           html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        end
-    else
-          html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-    end
-  end
+  if totalsession!=0
+	  now=Time.now.to_f
+                
+	  # @source=ActiveRecord::Base.connection.execute("
+	  # SELECT src_ip,sum(log_count) total FROM(
+		# SELECT A.job_id,A.src_ip,A.log_count FROM job_details AS A
+		# LEFT JOIN job_logs AS B ON A.job_id=B.job_id
+		# WHERE B.threat_id=#{threat_id} AND log_time BETWEEN '#{d1}' AND '#{d2}'
+		# GROUP BY A.job_id
+		# )AS A
+	  # GROUP BY A.src_ip 
+	  # ORDER BY total  DESC
+	  # ")
+	  @source=ActiveRecord::Base.connection.execute("
+		SELECT src_ip,sum(total) sum_log_count FROM(
+			SELECT A.job_id,A.src_ip,B.total 
+			FROM job_details AS A 
+			RIGHT JOIN (
+				SELECT job_id,count(job_id) total 
+				FROM `job_logs` 
+				WHERE threat_id=#{threat_id} 
+				AND log_time BETWEEN '#{d1}' AND '#{d2}'
+				GROUP BY job_id
+			) AS B 
+			ON A.job_id=B.job_id
+		)AS A
+		GROUP BY src_ip
+		ORDER BY sum_log_count  DESC
+	  ")
+	  @source.each_with_index do |r , i|
+		break if i == 5
+		em =  IpMap.where("ip=?",r[0]).first 
+		percent  = 100*(r[1])/totalsession
+		if not em.blank?
+			build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
+			if not build_map.blank?
+			  html_string +="<p>("+r[0]+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+			else
+			   html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+			end
+		else
+			  html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+		end
+	  end
+	  
+	  x=Time.now.to_f-now
+	  #html_string+="<p>TIME2:"+x.to_s+"</p>"
+  end  
+  
   
   return html_string.html_safe
 end
-def show_splace(threat_id,d1,d2)
- # return "skip"
-  html_string = ""
-  sum = 0
 
-  @source=ActiveRecord::Base.connection.execute("
-	SELECT src_ip, SUM( log_count ) total
-	FROM job_details
-	WHERE job_id
-	IN (
-		SELECT job_id
-		FROM job_logs
-		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' and '#{d2}'
-	)
-	GROUP BY src_ip
-	ORDER by total DESC
-	")                  
-  @source.each do |cnt|
-	sum = sum + cnt[1].to_i
-  end                     
-  
-  @source.each_with_index do |r , i|
-	break if i == 5
-    em =  IpMap.where("ip=?",r[0]).first 
-    percent  = 100*(r[1])/sum
-    if not em.blank?
-        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
-        if not build_map.blank?
-          html_string +="<p>("+r[0]+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        else
-           html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        end
-    else
-          html_string +="<p>("+r[0]+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-    end
-  end
-  
-  return html_string.html_safe
-end
 
 def number_to_weekday(num)
   if num==1
@@ -472,86 +526,101 @@ def number_to_month(num)
     "ERROR"  
   end
 end
-def lalala(threat_id)
-  html_string = ""
-	@source=ActiveRecord::Base.connection.execute("SELECT job_id FROM temp_table2 WHERE threat_id='#{threat_id}' limit 5")
-	@source.each do |r|
-		html_string +="<p>("+r[0].to_s+")"
-    end
-  return html_string.html_safe;
-end
-def inside_session(threat_id)
-  @source=ActiveRecord::Base.connection.execute("SELECT count(job_id) FROM temp_table2 WHERE threat_id='#{threat_id}'")
-  return @source.first[0]
-  #return JobLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
+
+def inside_session(threat_id,d1,d2)
+  html_string=""
+  now=Time.now.to_f
+  #@source=ActiveRecord::Base.connection.execute("SELECT count(job_id) FROM temp_table2 WHERE threat_id='#{threat_id}'")
+  #return @source.first[0]
+  html_string+=JobLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count.to_s
+  x=Time.now.to_f-now
+  
+  #html_string+="<p>TIME:"+x.to_s+"</p>"
+  return html_string
+  
 end
 def outside_session(threat_id,d1,d2)
-  return OutsideLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count
+
+  html_string=""
+  now=Time.now.to_f
+  html_string+=OutsideLog.where("threat_id=? and log_time BETWEEN ? AND ?",threat_id,d1,d2).count.to_s
+  
+  x=Time.now.to_f-now
+  #html_string+="<p>TIME:"+x.to_s+"</p>"
+  
+  return html_string
 end 
 
-def outside_splace(threat_id,d1,d2)	         
+
+def outside_splace(threat_id,d1,d2,totalsession)	         
   html_string = ""
-#   @source=ActiveRecord::Base.connection.execute("
-#	SELECT src_ip,country, SUM( sum ) total
-#	FROM outside_counts
-#	WHERE id
-#	IN (
-#		SELECT outside_counts_id
-#		FROM outside_logs
-#		WHERE threat_id ='#{threat_id}' AND log_time BETWEEN '#{d1}' and '#{d2}'
-#	)
-#	GROUP BY src_ip
-#	ORDER by total DESC
-#	")        
-  @source = OutsideLog.find(
-       :all,
-       :select => 'country,src_ip ,SUM(1) total',
-       :group => 'src_ip',
-       :conditions => ["threat_id=? and log_time between ? and ? ",threat_id,d1,d2],
-       :order => 'total DESC',
-       :limit => 5)
- sum = 0       
- @source.each do |cnt|
-    sum = sum + cnt.total.to_i
- end   
- 
- @source.each do |r| 
-    percent  = 100*(r.total.to_i)/sum  
-    html_string +="<p>"+r.src_ip+"("+r.country+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>\n"
+  if totalsession != 0 
+	  now=Time.now.to_f
+	  # @source=ActiveRecord::Base.connection.execute("
+		# SELECT src_ip,country,sum(sum) total FROM(
+			# SELECT A.src_ip,A.country,A.sum FROM outside_counts AS A
+			# LEFT JOIN outside_logs AS B ON A.id=B.outside_counts_id
+			# WHERE B.threat_id=#{threat_id} AND log_time BETWEEN '#{d1}' AND '#{d2}'
+			# GROUP BY A.id
+			# )AS A
+		  # GROUP BY A.src_ip 
+		  # ORDER BY total  DESC
+	  # ")
+	  @source=ActiveRecord::Base.connection.execute("
+		SELECT src_ip,country,count(src_ip) sum_log_count FROM `outside_logs` 
+		WHERE threat_id=#{threat_id} AND log_time BETWEEN '#{d1}' AND '#{d2}'
+		GROUP BY src_ip
+		ORDER BY sum_log_count DESC
+	  ")
+	   @source.each_with_index do |r , i|
+		break if i == 5
+		percent  = 100*(r[2]).to_i/totalsession  
+		html_string +="<p>"+r[0]+"("+(r[1]||"")+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>\n"
+	   end
+	  
+	  x=Time.now.to_f-now
+	  #html_string+="<p>TIME:"+x.to_s+"</p>"
   end
   
-  return html_string.html_safe    
+  
+  return html_string.html_safe
 end
 
-def outside_vplace(threat_id,d1,d2)
+
+
+
+def outside_vplace(threat_id,d1,d2,totalsession)
   html_string = ""
-  @victim = OutsideLog.find(
-        :all,
-        :select => 'victim_ip ,SUM(1) total',
-        :group => 'victim_ip',
-        :conditions => ["threat_id=? and log_time between ? and ? ",threat_id,d1,d2],
-        :order => 'total DESC',
-        :limit => 5)
- sum = 0       
- @victim.each do |cnt|
-    sum = sum + cnt.total.to_i
- end   
- 
- @victim.each do |r| 
-    percent  = 100*(r.total)/sum
-    em =  IpMap.where("ip=?",r.victim_ip).first 
-    if not em.blank?
-        build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
-        if not build_map.blank?
-          html_string +="<p>("+r.victim_ip+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        else
-          html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-        end
-    else
-          html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
-    end
+  if totalsession!=0
+	  now=Time.now.to_f
+	  @victim = OutsideLog.find(
+			:all,
+			:select => 'victim_ip ,SUM(1) total',
+			:group => 'victim_ip',
+			:conditions => ["threat_id=? and log_time between ? and ? ",threat_id,d1,d2],
+			:order => 'total DESC',
+			:limit => 5)
+	 
+	    
+	 
+	 @victim.each do |r| 
+		percent  = 100*(r.total)/totalsession
+		em =  IpMap.where("ip=?",r.victim_ip).first 
+		if not em.blank?
+			build_map=CampusBuildingsList.find(em.campus_buildings_list_id)
+			if not build_map.blank?
+			  html_string +="<p>("+r.victim_ip+")"+build_map.building_name.to_s+" "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+			else
+			  html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+			end
+		else
+			  html_string +="<p>("+r.victim_ip+") "+number_with_precision(percent, :precision => 1).to_s+"%</p>"
+		end
+	  end
+	  
+	  x=Time.now.to_f-now
+	  #html_string+="<p>TIME:"+x.to_s+"</p>"
   end
-  
   return html_string.html_safe  
 end
 
@@ -575,6 +644,74 @@ def diff_7day(d1,d2,res)
   end # do
   html_string = html_string +"['"+tmp_d1.strftime("%m/%d").to_s+"',"+tmp_count.to_s+"],"
   return html_string
+end
+
+def show_result(r,d1,d2,count)
+	
+	html = ""
+	countt=count
+	while countt <= count+1 do
+	
+		html << "<tr>\n"
+		ser = JobThreat.find(:first,:conditions=>["threat_id=?",r[countt].threat_id])
+		html<< "<td>\n"
+		if not ser.blank? and not ser.serverity.blank? 
+			html<< ser.serverity.to_s
+		else
+			html<< "\tNo Classified"
+		end
+		html<< "</td>\n"		
+		em =  EventMap.find(:first,:conditions=>["thread_id=?",r[countt].threat_id])
+		if not em.blank?
+			if not em.name.blank?
+				html<< "<td>"+em.name.to_s+"("+r[countt].threat_id.to_s+")</td>"
+			else
+				html<< "<td>("+r[countt].threat_id.to_s+")</td>"
+			end
+			if not em.threat_type.blank?
+				html<< "<td>"+em.threat_type.to_s+"</td>"
+			else
+				html<< "<td>No Record</td>"	
+			end
+		else
+			html<< "<td>Not Record Event Id("+r[countt].threat_id.to_s+")</td>"
+			html<< "<td>No Record</td>"	
+		end
+		html<< "<td>"
+		insidesession=inside_session(r[countt].threat_id,d1,d2)
+		html<< '<div id="session_in_'+countt.to_s+'">'+insidesession+"</div>"
+		outsidesession=outside_session(r[countt].threat_id,d1,d2)
+		html<< '<div id="session_out_'+countt.to_s+'" style="display:none">'+outsidesession+"</div>"
+		html<< "</td>"
+		html<< "<td>"
+		
+		html<< '<div id="splace_in_'+countt.to_s+'">'+show_splace(r[countt].threat_id,d1,d2,insidesession.to_i)+"</div>"
+		
+		html<< '<div id="splace_out_'+countt.to_s+'" style="display:none">'+outside_splace(r[countt].threat_id,d1,d2,outsidesession.to_i)+"</div>"
+		html<< "</td>"
+		html<< "<td>"
+		#showvplace=show_vplace(r[countt].threat_id,d1,d2)
+		html<< '<div id="vplace_in_'+countt.to_s+'">'+show_vplace(r[countt].threat_id,d1,d2)+"</div>"
+		#outsidevplace=outside_vplace(r[countt].threat_id,@d1,@d2,outsidesession)
+		html<< '<div id="vplace_out_'+countt.to_s+'" style="display:none">'+outside_vplace(r[countt].threat_id,@d1,@d2,outsidesession.to_i)+"</div>"
+		html<< "</td>"
+		html<< '<td><a href="/statistics/show_chart?d1='+d1.to_s+"&d2="+d2.to_s+"&threat_id="+r[countt].threat_id.to_s+'">chart</td>'
+		html<< "</tr>"
+		countt+=1
+	end
+	return html.html_safe
+end
+
+def count_serverity(serverity,res)
+	cnt = 0
+	res.each do |job_detail|
+		JobThreat.where(:job_id=>job_detail.id).each do |jth|			
+			if jth.serverity==serverity
+				cnt+=1
+			end
+		end 
+	end
+	return cnt.to_s
 end
 
 end

@@ -28,6 +28,11 @@ class SystemMailer < ActionMailer::Base
       mail( to: @receiver.email , subject:"資安事件ID:"+@job.id.to_s+" 新的資安事件通知")
   end
   
+  def specInform(email, job)
+  	@job = job
+  	mail( to: email , subject:"資安事件ID:"+@job.id.to_s+" 通知")
+  end
+  
   def handleJobSending(receiver, job)
       @receiver=receiver
       @job=job          

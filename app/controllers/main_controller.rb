@@ -33,7 +33,7 @@ class MainController < ApplicationController
     @notice=params[:notice]
     adm_user=AdmUser.find(session[:adm_user_id])
     if adm_user.permission_config.job & Infor::Application.config.READ_PERMISSION != 0 
-      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["( ( (stage1 = 'un' or stage1 = 'returned') and stage5 = 'un' and deleted = ? and always_handle = ?) and ( (log_count >= 5 and alert <> ?) or (log_count >= 1000 and alert <> ?) or PA = ? ) )", false, true, true, false, false], :joins => :job_detail).order('id DESC')
+      @jobs = Job.paginate(:per_page => 50, :page => params[:page], :conditions => ["( ( (stage1 = 'un' or stage1 = 'returned') and stage5 = 'un' and deleted = ? and always_handle = ?) and ( (isflood_scan=1 and log_count>50) or (isflood_scan=1 and alert <> ?) or (log_count >= 1000 and alert <> ?) or PA = ? ) )", false, true, true, false, false], :joins => :job_detail).order('id DESC')
     else
       redirect_to :controller=>'main', :action=>'index', :notice=>'您沒有權限'   
     end     
@@ -192,6 +192,9 @@ end
       if !@job.ip_map.adm_user.blank?      
         if !@job.s_inform.log_level.blank?
           SystemMailer.informUserSending(@job.ip_map.adm_user, @job).deliver 
+		  if @job.ip_map.adm_user.name == "張育群" and ( @job.ip_map.IPv4_3 == 88 or @job.ip_map.IPv4_3 == 241 )
+			SystemMailer.specInform("hsshiue@eic.nctu.edu.tw", @job).deliver
+		  end
           if @job.s_inform.informed_at.blank?
             @job.s_inform.informed_at=Time.now
           end
@@ -509,7 +512,7 @@ end
   end
 #================================================================================================================================for auto mail  
   def self.dailyMail
-    @jobs=Job.find(:all, :conditions => [" deleted = ? and ( (log_count >= 5 and alert <> ?) or (log_count >= 1000 and alert <> ?) )", false, true, false], :joins => :job_detail) 
+    @jobs=Job.find(:all, :conditions => [" deleted = ? and ( (isflood_scan=1 and log_count>50) or (isflood_scan=1 and alert <> ?) or (log_count >= 1000 and alert <> ?) )", false, true, false], :joins => :job_detail) 
     @jobs.each do |j| 
       if (j.stage1=='un' or j.stage1=='returned') and j.stage5=='un'     
         if (Time.now - j.created_at.in_time_zone('UTC') )/60/60/24 > 3    

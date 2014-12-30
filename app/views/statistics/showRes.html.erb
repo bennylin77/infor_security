@@ -1,5 +1,4 @@
 <h1>Result</h1>
-<!---<%=show_ip(@Res)%>--->
 <%if params[:chbox][:category]=='0'%>
 	<%= render :partial => "stage_list_form" %>
 <%end%>
@@ -8,4 +7,7 @@
 <%end%>
 <%if params[:chbox][:category]=='2'%>
 	<%= render :partial => "all_list_form" %>
+<%end%>
+<%if params[:chbox][:category]=='3'%>
+	<%= render :partial => "serverity_detail_list_form" %>
 <%end%>

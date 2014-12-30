@@ -4,55 +4,29 @@
 <%end%></br>
 <%if @flag==1%>
 <div style="text-align:center"><font size="3">搜尋時間 ：<b> <%=@d1.strftime("%Y/%m/%d %H:%M")%> ~ <%=@d2.strftime("%Y/%m/%d %H:%M")%> </b></font></div></br>
-<table border="1" id="event_lists_table" width="150%">	
+<table border="1" id="event_lists_table" width="115%">	
 	<tr bgColor="CDCDC1">
 		<td width="5%">Serverity</td>
 		<td width="25%">Top 10 Threat ID</td>
 		<td width="8%">Threat Type</td>
-		<td width="5%">Sessions(inside)</td>
-		<td width="15%">來源地點(內)</td>
-		<td width="15%">受害地點(內)</td>
-		<td width="5%">Sessions(outside)</td>
-		<td width="15%">來源地點(外)</td>
-		<td width="15%">受害地點(外)</td>
-		<td width="15%">時間曲線圖</td>
+		<td width="5%">Sessions<%= select_tag :show_type , options_for_select([["內部",0],["外部",1]])%></td>
+		<td width="20%">來源地點</td>
+		<td width="20%">受害地點</td>
+		<td width="5%">時間曲線圖</td>
 	</tr>
-	<%@res.each do |r|%>
-		<tr>
-			<%ser = JobThreat.find(:first,:conditions=>["threat_id=?",r[0]])%>
-			<td>
-				<%if not ser.blank? and not ser.serverity.blank? %>
-					<%=ser.serverity.to_s%>
-				<%else%>
-					No Classified
-				<%end%>
-			</td>		
-			<%em =  EventMap.find(:first,:conditions=>["thread_id=?",r[0]]) %>
-				<% if not em.blank? %>
-					<%if not em.name.blank?%>
-						<td><%=em.name.to_s%>(<%=r[0]%>)</td>
-					<%else%>
-						<td>(<%=r[0]%>)</td>
-					<%end%>	
-					<%if not em.threat_type.blank?%>
-						<td><%=em.threat_type.to_s%></td>
-					<%else%>
-						<td>No Record</td>	
-					<%end%>
-				<%else%>
-					<td>Not Record Event Id(<%=r[0]%>)</td>
-					<td>No Record</td>	
-				<%end%>	
-				
-			<td><%=inside_session(r[0])%></td>
-			<td><%=show_splace2(r[0])%></td>
-			<td><%=show_vplace(r[0],@d1,@d2)%></td>
-			<td><%=outside_session(r[0],@d1,@d2)%></td>
-			<td><%=outside_splace(r[0],@d1,@d2)%></td>
-			<td><%=outside_vplace(r[0],@d1,@d2)%></td>
-			<td><%=link_to "分布圖" ,:action=>"show_chart" ,:threat_id=>r[0],:d1=>@d1,:d2=>@d2 %></td>
-		</tr>
-	<%end%>
+	<% threads=[] %>
+
+	<% (0..4).each do |i| %>
+		<% threads<<Thread.new{Thread.current[:output] = show_result(@res,@d1,@d2,i*2)} %>
+		
+	<% end %>
+	<% threads.each do |t| %>
+		<%t.join%>
+		<%= t[:output]%>
+		
+	<% end %>
+
+	<div style="text-align:center"><font size="3" color="blue">花費時間 ：<b> <%=Time.now.to_f-@beginsearchtime.to_f%></b></font></div></br>
 </table>	
 <%end%>
 
@@ -98,5 +72,27 @@
 		}
   });
   
-  
+  $( "#show_type" ).change( 
+  function(){
+ 	if( $("#show_type option:selected").val()==1 ){ //outside
+ 		for(i=0;i<=9;i++){
+ 			document.getElementById("session_in_"+i).style.display = 'none' ;
+ 			document.getElementById("session_out_"+i).style.display = '' ;
+ 			document.getElementById("splace_in_"+i).style.display = 'none' ;
+ 			document.getElementById("splace_out_"+i).style.display = '' ;
+ 			document.getElementById("vplace_in_"+i).style.display = 'none' ;
+ 			document.getElementById("vplace_out_"+i).style.display = '' ;
+ 		}
+ 	}else{ //inside
+ 		for(i=0;i<=9;i++){
+ 			document.getElementById("session_in_"+i).style.display = '' ;
+ 			document.getElementById("session_out_"+i).style.display = 'none' ;
+ 			document.getElementById("splace_in_"+i).style.display = '' ;
+ 			document.getElementById("splace_out_"+i).style.display = 'none' ;
+ 			document.getElementById("vplace_in_"+i).style.display = '' ;
+ 			document.getElementById("vplace_out_"+i).style.display = 'none' ;
+ 		}
+ 	}
+ 	
+  });
 </script>

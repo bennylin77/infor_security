@@ -1,0 +1,49 @@
+﻿<table style="filter:Alpha(Opacity=20, FinishOpacity=80, Style=1)" border=1 width=60% ;background-color: rgb(255, 255, 255)>
+<tbody>
+	<%if params[:chtime][:category]=='1'%>
+		<tr><td colspan=3 bgcolor=#FFCC99>時間 : <font color="ff0000"> <%=params[:d1]%>~<%=params[:d2]%> </font></td></tr>
+	<%end%>
+	
+	<%if params[:chip][:category]=='1'%>
+		<tr><td colspan=3 bgcolor=#FFCC99>指定ip : <font color="ff0000">  <%=params[:ip1]%>.<%=params[:ip2]%>.<%=params[:ip3]%>.<%=params[:ip4]%></font></td></tr>
+	<%end%>
+	<tr>
+		   <td bgcolor=#006633><font color=#fffff>事件等級</font></td>
+		   <td bgcolor=#006633><font color=#fffff>件數</font></td>  	 	
+	</tr>
+
+	<tr>
+		<td>informational</td>
+		<td id="t1"><%=count_serverity('informational',@Res)%></td>
+	</tr>	 
+	<tr>
+		<td>low</td>
+		<td id="t2"><%=count_serverity('low',@Res)%></td>
+	</tr>	
+	<tr>
+		<td>medium</td>
+		<td id="t3"><%=count_serverity('medium',@Res)%></td>
+	</tr>	
+	<tr>
+		<td>high</td>
+		<td id="t4"><%=count_serverity('high',@Res)%></td>
+	</tr>	
+	<tr>
+		<td>critical</td>
+		<td id="t5"><%=count_serverity('critical',@Res)%></td>
+	</tr>	
+	<tr>
+		<td bgcolor=#FFCC99>Total</td>
+		<td id="t6" bgcolor=#FFCC99></td>
+	</tr>
+	
+</tbody>
+</table>
+
+<script>
+	$(function(){
+		var a1 = parseInt($("#t1").text())+parseInt($("#t2").text())+parseInt($("#t3").text())+
+				parseInt($("#t4").text())+parseInt($("#t5").text()) ;
+		$("#t6").text(a1);
+	});
+</script>

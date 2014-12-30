@@ -1,16 +1,18 @@
 <%= form_tag do%>
 	<!---  radio_button(一組name(array name) ,array index , index value)  --->
  <h1>Output form : </h1>
-1.<br> List  By 狀態<%= radio_button("chbox", "category", 0,checked:true)%>  <br>
-       List  By 系所<%=radio_button("chbox", "category", 1)%>  <br>
-	   List  By 事件<%=radio_button("chbox", "category", 2)%>
+1.<br> List  By 狀態<%= radio_button("chbox", "category", 0,checked:true, :onclick=>"showlist(0)")%>  <br>
+       List  By 系所<%=radio_button("chbox", "category", 1, :onclick=>"showlist(0)")%>  <br>
+	   List  By 事件<%=radio_button("chbox", "category", 2, :onclick=>"showlist(0)")%> <br>
+	   List  By 事件等級<%=radio_button("chbox", "category", 3, :onclick=>"showlist(1)")%>
+	   <%= select_tag "serverity", options_for_select(@serverity) %> 
 <br><br>
-2.<br> <%= radio_button("chtime", "category", 1)%>指定時段 : 
+2.<br> <%= radio_button("chtime", "category", 1, checked:true)%>指定時段 : 
  From
-<input type="text" id="dp1" name="d1">
+<%= text_field_tag :d1,Time.now.ago(1.month).strftime("%m/%d/%Y %H:%M")%>
  To 
-<input type="text" id="dp2" name="d2">
-  <br> <%= radio_button("chtime", "category", 0,checked:true)%>不指定  <font color="ff0000">* 起點為2013/5/1   </font>
+ <%= text_field_tag :d2,Time.now.strftime("%m/%d/%Y %H:%M")%>
+  <br> <%= radio_button("chtime", "category", 0)%>不指定  <font color="ff0000">* 起點為2013/5/1   </font>
 <br>
 <br>
 3.<br> <%= radio_button("chip", "category", 1)%>指定ip網段 :  
@@ -20,16 +22,45 @@
 <%= text_field_tag :ip4, '*', :maxlength => 3, :size => 1%>  ( * 或 不填入 為不指定)
   <br> <%= radio_button("chip", "category", 0,checked:true)%>不指定
 <br><br>
-<%=submit_tag "查詢" %><br><br>
+<%=submit_tag "查詢",:id=>"sub_but", :onclick => "return loadingStr(this);"%><br><br>
 
 <%end%>
-
+ 
 <script type="text/javascript">
-  $('#dp1').datetimepicker({	
+
+function loadingStr(but){
+	$("#sub_but").val("Loading..");
+	//$("#sub_but").disabled = true ;
+}
+
+$('#d1').datetimepicker({	
+  	dateFormat: 'mm/dd/yy',
+  	showOn: "button",
+		buttonImage: "<%=image_path("calendar.png")%>",
+		buttonImageOnly: true
   });
-   $('#dp2').datetimepicker({
+   $('#d2').datetimepicker({
+   	dateFormat: 'mm/dd/yy',
+   	showOn: "button",
+	buttonImage: "<%=image_path("calendar.png")%>",
+	buttonImageOnly: true
   });
+
+$(function(){$("#serverity").hide();});
+
+  function showlist(show){
+	if(show==1){
+		$("#serverity").show();
+		show=1;
+	}
+	else{
+		$("#serverity").hide();
+		show=0;
+	}
+  }
+
 </script>
+
 <br>
 
 <br>

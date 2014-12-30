@@ -1,0 +1,84 @@
+<table style="filter:Alpha(Opacity=20, FinishOpacity=80, Style=1)" border=1 ;background-color: rgb(255, 255, 255)>
+<tbody>
+<%if params[:chtime][:category]=='1'%>
+	<tr><td colspan=5 bgcolor=#FFCC99>時間 : <font color="ff0000"> <%=params[:d1]%>~<%=params[:d2]%> </font></td></tr>
+<%end%>
+<%if params[:chip][:category]=='1'%>
+	<tr><td colspan=5 bgcolor=#FFCC99>指定ip : <font color="ff0000">  <%=params[:ip1]%>.<%=params[:ip2]%>.<%=params[:ip3]%>.<%=params[:ip4]%></font></td></tr>
+<%end%>
+<tr>
+	<td colspan=5 bgcolor=#FFCC99>
+		事件等級 : <font color="ff0000"> <%=params[:serverity]%></font>
+		<%= select_tag :show_type , options_for_select([["內部",0],["外部",1]])%>
+	</td>
+</tr>
+</tbody>
+<tbody id="inside">
+<tr><td colspan=5 bgcolor=#FFCC99>總件數 : <font color="ff0000"><%=targetThreatCount(@Res, params[:serverity])%></font></td></tr>
+		 <tr>
+		   <td bgcolor=#006633><font color=#fffff>單位名稱</font></td>
+		   <td bgcolor=#006633><font color=#fffff>事件來源端IP</font></td>
+		   <td bgcolor=#006633><font color=#fffff>事件名稱</font></td>   	 	
+		   <td bgcolor=#006633><font color=#fffff>事件發生時間</font></td>
+		   <td bgcolor=#006633><font color=#fffff>事件結案時間</font></td>
+		 </tr>
+		 <%@Res.each do |j|%>
+		 	 <%threat = showTargetThreatsName(j,params[:serverity])%> 
+		 	 <%unless threat.blank?%>
+			 	<tr>		   
+					<td><b><%=check_dep(j)%></b></td>		
+					<td><b><%=j.src_ip.to_s%></b></td>					
+			    	<td><b><%=threat%></b></td>
+					<td><b><%=j.job.created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")%></b></td>
+					<td><b><%=check_finish(j)%></b></td>
+			 	</tr>		
+			 <%end%> 
+		 <%end%>
+</tbody>
+
+<%@outsideRes = outsideQueryTime(@time_start, @time_end, @ip_for_cond, params[:serverity] )%>
+<tbody id="outside" style="display:none">		 
+		<tr><td colspan=5 bgcolor=#FFCC99>總件數 : <font color="ff0000"><%=@outsideRes.count.to_s %></font></td></tr>
+		<tr>
+		   <td bgcolor=#006633><font color=#fffff>來源國家</font></td>
+		   <td bgcolor=#006633><font color=#fffff>事件來源端IP</font></td>
+		   <td bgcolor=#006633><font color=#fffff>事件名稱</font></td>   	 	
+		   <td bgcolor=#006633><font color=#fffff>發生時間</font></td>
+		</tr>
+			<%tmp = 0%>
+			<%@outsideRes.each do |o|%>
+				<%if o.outside_counts_id != tmp%>
+				<%if tmp!=0%>
+			<td><%=OutsideCount.find(o.outside_counts_id).created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")%>
+				<%end%>
+					<%tmp = o.outside_counts_id%>
+		<tr>			
+			<td><%=o.country%></td>
+			<td><%=o.src_ip%></td>
+			<td><%=o.threat_id.to_s%> <%=threatMap(o.threat_id)%>
+				<%else%>
+					</br> <%=o.threat_id.to_s%> <%=threatMap(o.threat_id)%>
+					<%next%>
+				<%end%>
+			<%end%>
+			<td>
+				<%unless @outsideRes.last.blank?%>
+			<%=OutsideCount.find(@outsideRes.last.outside_counts_id).created_at.since(8.hour).strftime("%Y-%m-%d %H:%M:%S")%>
+				<%end%>
+			</td>
+</tbody>		
+
+</table>
+
+<script>
+$( "#show_type" ).change( function(){
+ 	if( $("#show_type option:selected").val()==1 ){ //outside
+ 		$("#outside").show() ;
+ 		$("#inside").hide() ;
+ 	}else{ //inside
+ 		$("#outside").hide() ;
+ 		$("#inside").show() ;
+ 	}
+ 	
+});
+</script>
