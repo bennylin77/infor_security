@@ -83,7 +83,7 @@ module MainHelper
   
   def victimIpShowing(job_id=nil, always_visible=false)  
     if !always_visible
-      job_logs=JobLog.find(:all, :conditions => [ "job_id = ?", job_id], :order=>"log_time DESC", :limit=>5)
+      job_logs=JobLog.find(:all, :conditions => [ "job_id = ?", job_id], :order=>"log_time DESC", :limit=>150)
       message=String.new
       job_logs.each do |j|
         message=message+j.victim_ip+' @ '+j.log_time.in_time_zone('UTC').to_formatted_s(:short)+'<br>'
