@@ -9,25 +9,28 @@
 	<th>最後發生時間</th>
 	<th>記錄次數</th>
 </tr>
-<% @jobs.each do |job|%>
+<% @jds.each do |jd|%>
 <tr>
-	<td><%=job.job_detail.src_ip%></td>
+	<td><%=jd.src_ip%></td>
 	<td>
-		<% im = IpMap.where('ip=?',job.job_detail.src_ip).last %>
+		<% im = IpMap.where('ip=?',jd.src_ip).last %>
 		
 		<% if im %>
-			<%=im.campus_buildings_list.building_name%> <%=im.room%>
+			<% if im.campus_buildings_list%>
+				<%=im.campus_buildings_list.building_name%> 
+			<% end %>
+			<%=im.room%>
 		<% end %>
 	</td>
 	<td>
-		<%=eventMapNameShowing(job).html_safe%>
+		<%=eventMapNameShowing(jd.job).html_safe%>
 	</td>
 	<td>
-		<%= job.created_at.strftime("%F %T")%>
+		<%= jd.job.created_at.strftime("%F %T")%>
 	</td>
 
-	<td><%=job.job_detail.updated_at.strftime("%F %T")%></td>
-	<td><%=job.job_detail.log_count.to_s%></td>
+	<td><%=jd.updated_at.strftime("%F %T")%></td>
+	<td><%=jd.log_count.to_s%></td>
 </tr>
 <% end %>
 </table>
