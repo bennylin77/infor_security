@@ -19,6 +19,7 @@ Infor::Application.routes.draw do
   post  "main/mailConfig"
   post  "main/permissionConfig"  
   post  "main/traceConfig"  
+  get "main/test"
   
   get "adm_users/groupIndex"
   get "adm_users/groupCreate" 

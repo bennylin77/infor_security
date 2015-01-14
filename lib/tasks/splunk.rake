@@ -28,7 +28,7 @@ require 'net/ssh/shell'
 		job_details = JobDetail.all
 		job_detail_new = []
 		
-		Dir.glob('/home/cwlo/src/*_threat*.csv') do |rb_file|
+		Dir.glob('/home/Gway/src/*_threat*.csv') do |rb_file|
 			match1, match2 = /^(140\.113\.)/, /^(211\.76\.)/
  			CSV.foreach(rb_file, :headers => true) do |row|
  				row = row.to_hash

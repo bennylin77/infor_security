@@ -131,10 +131,16 @@ class SystemMailer < ActionMailer::Base
 	@Res=JobDetail.find(:all,:joins=>:job,:conditions=>['((alert=1 and log_count>=1000) or (alert=0 and log_count>=5)) and jobs.always_handle=1 and jobs.deleted=0 and job_details.updated_at>= ?',DateTime.now.since(7.day)])
 	@Res_all=JobDetail.find(:all,:joins=>:job,:conditions=>['((alert=1 and log_count>=1000) or (alert=0 and log_count>=5)) and jobs.always_handle=1 and jobs.deleted=0 and job_details.updated_at>= ?','2013-05-01 00:00:00'])
 
-	mail( to: 'u9510606@gmail.com', subject:"資安通報系統 資安會議通知", cc: "gavinhsu@nctu.edu.tw")
+	mail( to: 'u9510606@gmail.com', subject:"資安通報系統 資安會議通知")
 	 #@receiver.email
  end
  	
+	def dailyStatistics(recv)
+		#recv = AdmUser.all.select{|user| user.mail_config.weekly_statistic==1}
+		@time = Time.now.ago(1.day)
+		@jobs = Job.joins(:job_detail).where('job_details.updated_at BETWEEN ? AND ? ',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59'))
+		mail( to: recv.email , subject:"資安通報系統 每日報表")
+	end
 	
 end
 
