@@ -1,0 +1,33 @@
+<h3>Statistics from <%=@time.strftime('%F 00:00:00')%> to <%=@time.strftime('%F 23:59:59')%></h3>
+</br>
+<table border="1">
+<tr>
+	<th>事件ip</th>
+	<th>單位名稱</th>
+	<th>事件名稱</th>
+	<th>開單日期</th>
+	<th>最後發生時間</th>
+	<th>記錄次數</th>
+</tr>
+<% @jobs.each do |job|%>
+<tr>
+	<td><%=job.job_detail.src_ip%></td>
+	<td>
+		<% im = IpMap.where('ip=?',job.job_detail.src_ip).last %>
+		
+		<% if im %>
+			<%=im.campus_buildings_list.building_name%> <%=im.room%>
+		<% end %>
+	</td>
+	<td>
+		<%=eventMapNameShowing(job).html_safe%>
+	</td>
+	<td>
+		<%= job.created_at.strftime("%F %T")%>
+	</td>
+
+	<td><%=job.job_detail.updated_at.strftime("%F %T")%></td>
+	<td><%=job.job_detail.log_count.to_s%></td>
+</tr>
+<% end %>
+</table>

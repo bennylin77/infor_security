@@ -1,6 +1,6 @@
 # encoding: UTF-8
 module ApplicationHelper
-  
+
   def domainIp
     "http://140.113.27.249"
   end
@@ -70,5 +70,20 @@ module ApplicationHelper
     adm_user.authorization=="adm"
   end 
   
-   
+	def job_status_msg(job)
+		
+		if job.stage5 != 'un'
+			'已結案'
+		elsif job.stage4 != 'un'
+			'工程師完成確認中'
+		elsif job.stage3 != 'un'
+			'網管處理事件中'
+		elsif job.stage2 != 'un'
+			'工程師通知網管中'
+		elsif job.stage1 != 'un'	
+			'管理員指派工程師中'
+		else
+			'尚未處理'
+		end
+	end 
 end

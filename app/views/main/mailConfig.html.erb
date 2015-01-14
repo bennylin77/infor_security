@@ -5,12 +5,14 @@
   	<%= @mail_config.adm_user.name %>
 </div>
 <%=form_tag do%>
-	<div class="field">
+<!--
+	<div class="field">	
 	<label>開會通知:</label>
 	<%=check_box_tag :meeting_notification,'true', @mail_config.meeting_notification%>	
 	</div>
+-->	
 	<div class="field">
-    <label>每週統計:</label>
+    <label>每日統計:</label>
 	<%=check_box_tag :weekly_statistic,'true', @mail_config.weekly_statistic%>
   	</div>
   	<%= hidden_field  :mail_config, :id, :value=>@mail_config.id %>

@@ -447,7 +447,7 @@ end
   def mailConfig
     if request.post?               
       @mail_config = MailConfig.find(params[:mail_config][:id]) 
-      @mail_config.meeting_notification = params[:meeting_notification]
+  #    @mail_config.meeting_notification = params[:meeting_notification]
       @mail_config.weekly_statistic = params[:weekly_statistic]
       @mail_config.save!
       redirect_to adm_users_url          
@@ -535,6 +535,13 @@ end
   end
 
 #================================================================================================================================= protected  
+
+def test
+	@time = Time.now.ago(1.day)
+	@jobs = Job.joins(:job_detail).where('job_details.updated_at > ? ','2014-01-18 12:00:00')
+	render :layout=>false
+end
+
 protected
   
   def admLoginLog
