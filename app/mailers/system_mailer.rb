@@ -135,11 +135,10 @@ class SystemMailer < ActionMailer::Base
 	 #@receiver.email
  end
  	
-	def dailyStatistics(recv)
-		#recv = AdmUser.all.select{|user| user.mail_config.weekly_statistic==1}
+	def dailyStatistics(emails)
 		@time = Time.now.ago(1.day)
-		@jobs = Job.joins(:job_detail).where('job_details.updated_at BETWEEN ? AND ? ',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59'))
-		mail( to: recv.email , subject:"資安通報系統 每日報表")
+		@jds = JobDetail.where('updated_at BETWEEN ? AND ? ',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59'))
+		mail( to: emails , subject:"資安事件通報系統 - 每日處理事件IP")
 	end
 	
 end
