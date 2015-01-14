@@ -21,6 +21,10 @@
 
 set :output, "#{path}/log/cron.log"
 
+every 1.day, :at => '1:00 am' do 
+	rake "Mail:daily_statistics_send"
+end
+
 #every  1.day, :at => '8:00 am'  do
 #    runner "MainController.dailyMail"
 #end
