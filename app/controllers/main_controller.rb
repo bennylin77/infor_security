@@ -538,7 +538,7 @@ end
 
 def test
 	@time = Time.now.ago(1.day)
-	@jobs = Job.joins(:job_detail).where('job_details.updated_at > ? ','2014-01-18 12:00:00')
+	@jobs = Job.joins(:job_detail).where('job_details.updated_at BETWEEN ? AND ? ',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59'))
 	render :layout=>false
 end
 
