@@ -9,7 +9,8 @@
 	<th>最後發生時間</th>
 	<th>記錄次數</th>
 </tr>
-<% @jds.each do |jd|%>
+<% exp_ips = ['140.113.1.1', '140.113.6.2', '140.113.250.135']%>
+<% @jds.reject{|d| exp_ips.include? d.src_ip}.each do |jd|%>
 <tr>
 	<td><%=jd.src_ip%></td>
 	<td>
