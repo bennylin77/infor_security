@@ -538,7 +538,8 @@ end
 
 def test
 	@time = Time.now.ago(1.day)
-	@jds = JobDetail.where('updated_at BETWEEN ? AND ? ',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59'))
+	@jds = JobDetail.joins(:job).where('job_details.updated_at BETWEEN ? AND ? ',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59')).order('jobs.created_at DESC')
+
 	render :layout=>false
 end
 

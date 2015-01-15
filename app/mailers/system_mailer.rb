@@ -137,7 +137,7 @@ class SystemMailer < ActionMailer::Base
  	
 	def dailyStatistics(emails)
 		@time = Time.now.ago(1.day)
-		@jds = JobDetail.where('updated_at BETWEEN ? AND ? ',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59'))
+		@jds = JobDetail.joins(:job).where('job_details.updated_at BETWEEN ? AND ? ',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59')).order('jobs.created_at DESC')
 		mail( to: emails , subject:"資安事件通報系統 - 每日處理事件IP")
 	end
 	
