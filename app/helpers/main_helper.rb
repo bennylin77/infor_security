@@ -86,14 +86,14 @@ module MainHelper
       job_logs=JobLog.find(:all, :conditions => [ "job_id = ?", job_id], :order=>"log_time DESC", :limit=>150)
       message=String.new
       job_logs.each do |j|
-        message=message+j.victim_ip+' @ '+j.log_time.to_formatted_s(:short)+'<br>'
+        message=message+j.victim_ip+' @ '+j.log_time.to_formatted_s(:short)+' ('+j.threat_id.to_s+')<br>'
       end
       message+'...'
     else
       job_logs=JobLog.find(:all, :conditions => [ "job_id = ?", job_id], :order=>"log_time DESC")
       message=String.new
       job_logs.each do |j|
-        message=message+'('+j.threat_id.to_s+')'+j.victim_ip+' @ '+j.log_time.to_formatted_s(:short)+'<br>'
+        message=message+'('+j.threat_id.to_s+')'+j.victim_ip+' @ '+j.log_time.to_formatted_s(:short)+' ('+j.threat_id.to_s+')<br>'
       end
       message
     end                
