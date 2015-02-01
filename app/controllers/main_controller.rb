@@ -538,7 +538,7 @@ end
 
 def test
 	@time = Time.now.ago(1.day)
-	@jds = JobDetail.joins(:job).where('job_details.updated_at BETWEEN ? AND ? AND src_ip REGEXP "^140\.113\.*"',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59')).order('jobs.created_at DESC')
+	@jds = JobDetail.joins(:job).where('job_details.updated_at BETWEEN ? AND ? AND src_ip REGEXP "^140\.113\.*"',@time.strftime('%F 00:00:00'), @time.strftime('%F 23:59:59')).order('job_details.log_count DESC')
 
 	render :layout=>false
 end
