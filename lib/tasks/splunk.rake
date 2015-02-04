@@ -89,11 +89,16 @@ require 'net/ssh/shell'
 
 	desc "move today_count to last_count  (job_details)"
 	task :move_count => :environment do 
-		jds = JobDetails.all
-		jds.each do |jd|
-			jd.last_count = jd.today_count 
-			jd.today_count = 0 
-			jd.save!
+		ActiveRecord::Base.record_timestamps = false
+		begin
+			jds = JobDetail.all
+			jds.each do |jd|
+				jd.last_count = jd.today_count 
+				jd.today_count = 0 
+				jd.save!
+			end
+		ensure
+  			ActiveRecord::Base.record_timestamps = true  # don't forget to enable it again!
 		end
 	end
 	
