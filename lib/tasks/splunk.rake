@@ -3,20 +3,18 @@ require "csv"
 namespace :splunk do
 
 	desc "dump log files from splunk server"
-	task :dump do
+	task :dump => :environment do
 require 'net/ssh'
 require 'net/ssh/shell'
-
-		host = "192.168.0.154"
-		user = Infor::Application.config.itop_username
-		psw = Infor::Application.config.itop_password	
-		time_range = Time.now.ago(1.hour).strftime("%Y/%m/%d@%H")
-		cmd = "ftp export log threat passive-mode equal yes start-time equal #{time_range}:00:00 end-time equal #{time_range}:59:59 to #{Infor::Application.config.dump_to}"
-		test_cmd = "netstat"
-		
-		Net::SSH.start(host, user, :password=>psw) do |session|   # , :verbose=> :debug
-			p cmd 
-			ssh_exec!(session, cmd).inspect 
+		#test_cmd = "netstat"
+		#host = "192.168.0.154"
+		DUMP_HOSTS.each do |host|
+			time_range = Time.now.ago(1.hour).strftime("%Y/%m/%d@%H")
+			cmd = "ftp export log threat passive-mode equal yes start-time equal #{time_range}:00:00 end-time equal #{time_range}:59:59 to #{DUMPTO}"	
+			Net::SSH.start(host, ITOP_USERNAME, :password=>ITOP_PSW) do |session|   # , :verbose=> :debug
+				p cmd 
+				ssh_exec!(session, cmd).inspect 
+			end
 		end
 	end
 

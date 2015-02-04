@@ -65,6 +65,9 @@ GEM
     mime-types (1.25.1)
     multi_json (1.8.2)
     mysql2 (0.3.14)
+    net-ssh (2.9.2)
+    net-ssh-shell (0.1.0)
+      net-ssh (>= 2.0.9)
     orm_adapter (0.5.0)
     paperclip (3.5.2)
       activemodel (>= 3.0.0)
@@ -140,6 +143,8 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   mysql2
+  net-ssh
+  net-ssh-shell
   paperclip
   rails (= 3.2.12)
   rails-i18n
