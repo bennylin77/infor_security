@@ -1,6 +1,9 @@
 # encoding: UTF-8
 module ApplicationHelper
 
+	def current_user
+		AdmUser.find(session[:adm_user_id])
+	end
   def domainIp
     "http://140.113.27.249"
   end

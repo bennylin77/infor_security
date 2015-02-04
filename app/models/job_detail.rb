@@ -7,4 +7,19 @@ class JobDetail < ActiveRecord::Base
   validates :log_date, :presence =>{:message => "事件發生時間"}
   validates :src_ip, :presence =>{:message => "事件來源端IP Address"}    
  
+ 
+	def self.new_from_splunk(row, alert)
+	
+		jd = JobDetail.new
+		jd.src_ip, jd.alert = row["Source address"], alert
+		jd.log_date, jd.region = row["Time Logged"], row["Source Zone"]
+		jd.log_count, jd.today_count = 1, 1
+		if row["Threat/Content Type"]=='flood' or row["Threat/Content Type"]=='scan'
+			jd.isflood_scan = 1
+		end
+		jd.save! 
+		
+		return jd
+	end
+	
 end

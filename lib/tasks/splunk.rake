@@ -8,10 +8,10 @@ require 'net/ssh'
 require 'net/ssh/shell'
 
 		host = "192.168.0.154"
-		user = "itop"
-		psw = "itop%@*^!"		
+		user = Infor::Application.config.itop_username
+		psw = Infor::Application.config.itop_password	
 		time_range = Time.now.ago(1.hour).strftime("%Y/%m/%d@%H")
-		cmd = "ftp export log threat passive-mode equal yes start-time equal #{time_range}:00:00 end-time equal #{time_range}:59:59 to Gway:qazwsx1234@140.113.27.249"
+		cmd = "ftp export log threat passive-mode equal yes start-time equal #{time_range}:00:00 end-time equal #{time_range}:59:59 to #{Infor::Application.config.dump_to}"
 		test_cmd = "netstat"
 		
 		Net::SSH.start(host, user, :password=>psw) do |session|   # , :verbose=> :debug
@@ -21,28 +21,47 @@ require 'net/ssh/shell'
 	end
 
 	desc "parse log file dat to DB"
-	task :parse => :environment do # load rails environment before doing 
+	task :parse => :environment do 
+		CONSTANT_ALERT = ['alert', 'allow', 'forward', 'wildfire-upload-skip', 'wildfire-upload-success']
 		outside_counts = OutsideCount.all
 		outside_count_new = []
 		
 		job_details = JobDetail.all
 		job_detail_new = []
 		
+		ip_maps = IpMap.all
+		
 		Dir.glob('/home/Gway/src/*_threat*.csv') do |rb_file|
 			match1, match2 = /^(140\.113\.)/, /^(211\.76\.)/
  			CSV.foreach(rb_file, :headers => true) do |row|
  				row = row.to_hash
  				if match1.match(row["Source address"]) or match2.match(row["Source address"])
- 					p row["Source address"] + " inside"
- 					alert = (row["Action"]=="alert") ? 1 : 0
- 					findold = job_details.select{|jd| jd.src_ip==row["Source address"] and jd.log_date==row["Time Logged"].to_date and jd.alert==alert}.last
-					if findold.presence
-						findold.log_count+=1
-						findold.save!
-					else
-					
+ 			#		p row["Source address"] + " inside"				
+ 					jd = job_details.select{|jd| jd.src_ip==row["Source address"] and jd.log_date==row["Time Logged"].to_date and jd.alert==alert}.last
+					unless jd.presence
+						jd = job_detail_new.select{|jd| jd.src_ip==row["Source address"] and jd.log_date==row["Time Logged"].to_date and jd.alert==alert}.last
 					end
- 				else
+					
+					
+					if jd.presence # new record
+						jd.log_count+=1
+						jd.today_count+=1
+						if row["Threat/Content Type"]=='flood' or row["Threat/Content Type"]=='scan'
+							jd.isflood_scan = 1
+						end
+						jd.save!
+					else	# old record				
+						ip_map = ip_maps.select{|im| im.ip ==row["Source address"]}.last
+						alert = (CONSTANT_ALERT.include? row["Action"]) ? 1 : 0
+						
+						j = Job.new_from_splunk(row, ip_map)
+						jd = JobDetail.new_from_splunk(row, alert)
+						job_detail_new.push(jd)
+					end
+					JobLog.new_from_splunk(jd, row)
+					
+					
+ 				else # outside ip
  					findold = outside_counts.select{|oc| oc.src_ip==row["Source address"] and oc.log_date==row["Time Logged"].to_date }.last
 
  					if findold.presence
@@ -66,8 +85,8 @@ require 'net/ssh/shell'
 	end
 	
 	desc "just test"
-	task :test do
-		p " I'm test :/ "
+	task :test => :environment do
+		p "aaa"
 	end
 
 	desc "move today_count to last_count  (job_details)"
@@ -116,13 +135,6 @@ private
 	  end
 	end
 	
-	def job_detail_new(row)
-	
-	end
-	
-	def job_log_new(jd_id, row)
-	
-	end
 
 	def outside_count_new(row)
 		oc = OutsideCount.new
