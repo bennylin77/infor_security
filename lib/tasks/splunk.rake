@@ -70,6 +70,16 @@ require 'net/ssh/shell'
 		p " I'm test :/ "
 	end
 
+	desc "move today_count to last_count  (job_details)"
+	task :move_count => :environment do 
+		jds = JobDetails.all
+		jds.each do |jd|
+			jd.last_count = jd.today_count 
+			jd.today_count = 0 
+			jd.save!
+		end
+	end
+	
 private
 	
 	def ssh_exec!(ssh, command)
