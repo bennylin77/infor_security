@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141225071942) do
+ActiveRecord::Schema.define(:version => 20150204034251) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -188,6 +188,8 @@ ActiveRecord::Schema.define(:version => 20141225071942) do
     t.boolean  "alert"
     t.string   "region"
     t.integer  "isflood_scan", :default => 0
+    t.integer  "today_count",  :default => 0
+    t.integer  "last_count",   :default => 0
   end
 
   add_index "job_details", ["job_id"], :name => "index_job_details_on_job_id"
