@@ -48,6 +48,7 @@ require 'net/ssh/shell'
 							jd.isflood_scan = 1
 						end
 						jd.save!
+						jd.touch # need ?
 					else	# old record				
 						ip_map = ip_maps.select{|im| im.ip ==row["Source address"]}.last
 						alert = (CONSTANT_ALERT.include? row["Action"]) ? 1 : 0
