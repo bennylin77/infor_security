@@ -334,10 +334,10 @@ def day7_image(job)
 		if j.job.ip_map_id.blank?	
 			list.add('Unknown IP',1)
 		else			
-			if j.job.ip_map.campus_buildings_list.blank?
+			if j.job.try(:ip_map).try(:campus_buildings_list).blank?
 				list.add('Unknown IP',1)
 			else
-				list.add(j.job.ip_map.campus_buildings_list.building_name,1)
+				list.add(j.job.try(:ip_map).try(:campus_buildings_list).building_name, 1)
 			end	
 		end	
 	end	

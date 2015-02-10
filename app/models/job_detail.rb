@@ -22,4 +22,17 @@ class JobDetail < ActiveRecord::Base
 		return jd
 	end
 	
+	def update_count
+		self.log_count +=1
+		self.today_count +=1
+		self.save!
+		
+	end
+	
+	def check_to_system
+		unless job_id # 
+			
+		end
+	end
+	
 end
