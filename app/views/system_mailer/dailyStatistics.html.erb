@@ -11,6 +11,7 @@
 </tr>
 <% exp_ips = ['140.113.1.1', '140.113.6.2', '140.113.250.135']%>
 <% @jds.reject{|d| exp_ips.include? d.src_ip}.each do |jd|%>
+<% next if jd.last_count == 0 %>
 <tr>
 	<td><%=jd.src_ip%></td>
 	<td>

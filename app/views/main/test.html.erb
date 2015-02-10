@@ -2,6 +2,7 @@
 </br>
 <table border="1">
 <tr>
+	<th>job ip(for debug)</th>
 	<th>事件ip</th>
 	<th>單位名稱</th>
 	<th>事件名稱</th>
@@ -12,6 +13,7 @@
 <% exp_ips = ['140.113.1.1', '140.113.6.2', '140.113.250.135']%>
 <% @jds.reject{|d| exp_ips.include? d.src_ip}.each do |jd|%>
 <tr>
+	<td><%=jd.id.to_s%></td>
 	<td><%=jd.src_ip%></td>
 	<td>
 		<% im = IpMap.where('ip=?',jd.src_ip).last %>

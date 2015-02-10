@@ -64,13 +64,11 @@ require 'net/ssh/shell'
  					findold = outside_counts.select{|oc| oc.src_ip==row["Source address"] and oc.log_date==row["Time Logged"].to_date }.last
 
  					if findold.presence
- 						findold.sum += 1
- 						findold.save!
+ 						findold.update_count
  					else 		
  						findold = outside_count_new.select{|oc| oc.src_ip==row["Source address"] and oc.log_date==row["Time Logged"].to_date }.last				
  						if findold.presence
- 							findold.sum += 1
- 							findold.save!
+ 							findold.update_count
  						else	
  							findold = outside_count_new(row)
  							outside_count_new.push(findold)
