@@ -126,10 +126,10 @@ def count_dep(jobs)
 		if j.job.ip_map_id.blank?	
 			list.add('Unknown IP',1)
 		else			
-			if j.job.ip_map.campus_buildings_list.blank?
+			if j.job.try(:ip_map).try(:campus_buildings_list).blank?
 				list.add('Unknown IP',1)
 			else
-				list.add(j.job.ip_map.campus_buildings_list.building_name,1)
+				list.add(j.job.try(:ip_map).try(:campus_buildings_list).try(:building_name), 1)
 			end	
 		end	
 	end
@@ -197,10 +197,10 @@ def check_dep(j)
 	if j.job.ip_map_id.blank?	
 		msg='Unknown Place(place check ip_map on the web)'	
 	else
-		if j.job.ip_map.campus_buildings_list_id.blank?
+		if j.job.try(:ip_map).try(:campus_buildings_list_id).blank?
 			msg='Unknown Place(place check ip_map on the web)'	
 		else			
-			msg=j.job.ip_map.campus_buildings_list.building_name.to_s
+			msg=j.job.try(:ip_map).try(:campus_buildings_list).try(:building_name).to_s
 		end
 	end	
 	msg
