@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150204034251) do
+ActiveRecord::Schema.define(:version => 20150211053626) do
 
   create_table "adm_user_groups", :force => true do |t|
     t.string   "name"
@@ -173,6 +173,7 @@ ActiveRecord::Schema.define(:version => 20150204034251) do
     t.boolean  "block",                    :default => false, :null => false
     t.boolean  "always_visible",           :default => false, :null => false
     t.boolean  "always_handle",            :default => true,  :null => false
+    t.boolean  "white_list",               :default => true
   end
 
   add_index "ip_maps", ["adm_user_id"], :name => "index_ip_maps_on_adm_user_id"
