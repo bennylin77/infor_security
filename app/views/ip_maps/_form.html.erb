@@ -67,6 +67,10 @@
   	<%end%>
   </div>
   <div class="field">
+    白名單<br />
+    <%=f.select :white_list, options_for_select([[true,true],[false,false]],@ip_map.white_list),{:include_blank => '請選擇..'} %>
+  </div>
+  <div class="field">
     校區建築<br />
   	<%if @ip_map.adm_user==AdmUser.find(session[:adm_user_id]) and !permissionUpdate(AdmUser.find_by_id(session[:adm_user_id]).permission_config.ip)%>
    		<%= f.select :campus_buildings_list_id, options_for_select(areaBuildingsOptions, @ip_map.campus_buildings_list_id), {:include_blank => '請選擇..'}, :disabled => 'disabled'  %> 	
