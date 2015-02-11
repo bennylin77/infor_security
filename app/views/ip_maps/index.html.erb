@@ -30,6 +30,7 @@
     <th>用途</th>
     <th>使用者/管理者</th>
     <th>單位網管</th>
+    <th>更新日期</th>
     <th>校區建築</th>
     <th>房間號碼</th>
     <th>分機</th>
@@ -49,6 +50,9 @@
     	<%else%>
     	無
     	<%end%>
+    </td>
+    <td>
+        <%= ip_map.updated_at %>
     </td>
     <td>
    		<%if !ip_map.campus_buildings_list_id.blank?%>   	
